@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {hasProjectInfo,visibleFacts,projectSections} from '../lib/project-visibility.js';
+test('empty and placeholder facts disappear while numeric zero remains',()=>{assert.deepEqual(visibleFacts([['Empty',null],['Spaces','  '],['Placeholder','To be confirmed'],['Zero',0],['Count',480]]),[['Zero',0],['Count',480]]);assert.equal(hasProjectInfo('—'),false);assert.equal(hasProjectInfo(NaN),false)});
+test('empty facilities, layouts, location and maintenance sections are hidden',()=>{const v=projectSections({facilities:[' ','To be confirmed'],units:[{}],location:'Location to be confirmed',nearbyAmenities:[],maintenance:'',sinkingFund:null});assert.equal(v.facilities.length,0);assert.equal(v.units.length,0);assert.equal(v.location,false);assert.equal(v.maintenance,false)});
+test('filled sections remain and zero-valued coordinates and fees are valid',()=>{const v=projectSections({units:[{carParks:0}],facilities:['Pool'],latitude:0,longitude:0,maintenance:0,nearbyAmenities:[{category:'Schools',name:'School A'}]});assert.equal(v.hasCoordinates,true);assert.equal(v.maintenance,true);assert.equal(v.units.length,1);assert.equal(v.facilities.length,1);assert.equal(v.nearby.length,1)});

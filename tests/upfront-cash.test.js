@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {upfrontCash,legalFee} from '../lib/upfront-cash.js';
+const base={price:'600000',margin:'90',buyer:'local',payment:'loan',legalBasis:'hda',propertyClass:'residential',sst:'yes'};
+test('local HDA loan budget includes balance, duty, legal fees and SST',()=>{const r=upfrontCash(base);assert.equal(r.loan,540000);assert.equal(r.balance,60000);assert.equal(r.transfer,12000);assert.equal(r.spa,4712.5);assert.equal(r.loanLegal,4322.5);assert.equal(r.loanDuty,2700);assert.equal(r.tax,722.8);assert.equal(r.total,84457.8)});
+test('cash purchase removes all financing fees and uses full price',()=>{const r=upfrontCash({...base,payment:'cash',loanQuote:'9999',loanDutyQuote:'9999',valuation:'500',insurance:'900'});assert.equal(r.loan,0);assert.equal(r.loanLegal,0);assert.equal(r.loanDuty,0);assert.equal(r.balance,600000);assert.equal(r.extra,0);assert.ok(r.total>600000)});
+test('foreign residential vs non-residential duty and local/PR bands',()=>{assert.equal(upfrontCash({...base,buyer:'foreign'}).transfer,48000);assert.equal(upfrontCash({...base,buyer:'foreign',propertyClass:'commercial'}).transfer,24000);assert.equal(upfrontCash({...base,payment:'cash'}).transfer,12000)});
+test('confirmed zero fees override defaults and extras are included once',()=>{const r=upfrontCash({...base,dutyQuote:'0',spaQuote:'0',loanQuote:'0',loanDutyQuote:'0',consent:'2000'});assert.equal(r.tax,0);assert.equal(r.total,62000)});
+test('market value, RM100 rounding and negotiated legal scales',()=>{assert.equal(upfrontCash({...base,marketValue:'1000000'}).transfer,24000);assert.equal(legalFee(50000),500);assert.equal(legalFee(8000000),null);assert.equal(legalFee(0),0);assert.equal(upfrontCash({...base,price:'8000000'}).spa,null)});
+test('invalid loan margin and fees are rejected, cash ignores margin',()=>{assert.throws(()=>upfrontCash({...base,margin:'101'}),/margin/);assert.throws(()=>upfrontCash({...base,consent:'-1'}),/Costs/);assert.throws(()=>upfrontCash({...base,price:'0'}),/price/);assert.equal(upfrontCash({...base,payment:'cash',margin:''}).loan,0)});

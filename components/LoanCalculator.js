@@ -5,7 +5,7 @@ const DEFAULTS={price:'',downMode:'pct',downPct:'10',downAmount:'',rate:'4.1',ye
 const rm=v=>`RM${Math.round(v).toLocaleString('en-MY')}`;
 const monthYear=offset=>{const d=new Date();d.setMonth(d.getMonth()+offset);return d.toLocaleDateString('en-MY',{month:'long',year:'numeric'})};
 const span=months=>{const y=Math.floor(months/12),m=months%12;return [y&&`${y} year${y>1?'s':''}`,m&&`${m} month${m>1?'s':''}`].filter(Boolean).join(' ')};
-const startState=initial=>{const s={...DEFAULTS};for(const k of ['price','downPct','downAmount','rate','years'])if(initial[k])s[k]=initial[k];if(initial.downAmount)s.downMode='amount';return s};
+const startState=initial=>{const s={...DEFAULTS};for(const k of ['price','downPct','downAmount','rate','years'])if(initial[k]!==undefined&&initial[k]!=='')s[k]=initial[k];if(initial.downAmount)s.downMode='amount';return s};
 export default function LoanCalculator({initial={}}){const [data,setData]=useState(()=>startState(initial)),[status,setStatus]=useState('');const set=(k,v)=>setData(d=>({...d,[k]:v}));const n=k=>Number(data[k]);
 const price=n('price'),byAmount=data.downMode==='amount',downPct=byAmount?(price>0?n('downAmount')/price*100:0):n('downPct'),rate=n('rate'),years=n('years');
 function setDownMode(mode){setData(d=>{if(d.downMode===mode)return d;const p=Number(d.price);if(mode==='amount')return {...d,downMode:mode,downAmount:p>0&&d.downPct!==''?String(Math.round(p*Number(d.downPct)/100)):d.downAmount};return {...d,downMode:mode,downPct:p>0&&d.downAmount!==''?String(Math.round(Number(d.downAmount)/p*10000)/100):d.downPct}})}
@@ -13,7 +13,7 @@ const errors=[!(price>0)&&'Enter the property price.',(byAmount?!(data.downAmoun
 const r=errors.length?null:loanSummary(price,downPct,rate,years),schedule=r?yearlySchedule(r.loan,rate,years):[],principalShare=r?r.loan/r.totalRepayment*100:0;
 const moves=r?[-.5,-.25,0,.25,.5].map(d=>Math.round((rate+d)*100)/100).filter(v=>v>=0).map(v=>({rate:v,payment:monthlyPayment(r.loan,v,years)})):[];
 function input(name,label,{suffix,placeholder,hint}={}){return <label className="lc-field"><span className="lc-label-text">{label}{hint&&<abbr title={hint} aria-label={hint}>?</abbr>}</span><span className="lc-input"><input type="number" inputMode="decimal" min="0" step="any" value={data[name]} placeholder={placeholder} onChange={e=>set(name,e.target.value)}/>{suffix&&<em>{suffix}</em>}</span></label>}
-async function share(){const q=new URLSearchParams({...(initial.project?{project:initial.project}:{}),price:data.price,...(byAmount?{da:data.downAmount}:{dp:data.downPct}),rate:data.rate,years:data.years}),url=`${location.origin}/tools/loan-calculator?${q}`;history.replaceState(null,'',url);try{await navigator.clipboard.writeText(url);setStatus('Link copied.')}catch{setStatus('Copy the page address to share.')}}
+
 function reset(){setData(DEFAULTS);setStatus('');history.replaceState(null,'','/tools/loan-calculator')}
 return <>{initial.project&&<p className="calculator-note">Project: {initial.project} · Starting price; confirm the actual unit price.</p>}<div className="lc">
 <div className="lc-panel lc-inputs">
@@ -25,7 +25,7 @@ return <>{initial.project&&<p className="calculator-note">Project: {initial.proj
 <h3 className="lc-kicker">Terms</h3>
 <div className="lc-pair">{input('rate','Interest rate',{suffix:'%',hint:'Annual interest rate offered by your bank'})}{input('years','Tenure',{suffix:'yrs'})}</div>
 {r&&<><h3 className="lc-kicker">If the rate moves</h3><table className="lc-moves"><caption className="lc-sr">Monthly instalment at nearby interest rates</caption><tbody>{moves.map(m=>{const d=m.payment-r.payment,base=m.rate===Math.round(rate*100)/100;return <tr key={m.rate} className={base?'base':''}><th scope="row">{m.rate.toFixed(2)}%</th><td>{rm(m.payment)}</td><td className={base?'':d<0?'down':'up'}>{base?'base':`${d<0?'−':'+'}${rm(Math.abs(d))}`}</td></tr>})}</tbody></table></>}
-<div className="lc-foot"><button type="button" className="lc-share" onClick={share} disabled={!r}>Share link</button><span role="status">{status}</span><button type="button" className="lc-reset" onClick={reset}>Reset</button></div>
+<div className="lc-foot"><span role="status">{status}</span><button type="button" className="lc-reset" onClick={reset}>Reset</button></div>
 </div>
 <div className="lc-out" aria-live="polite">{!r?<div className="lc-hero"><span className="lc-hero-label">Monthly instalment</span><strong>RM—</strong><ul className="lc-errors">{errors.map(e=><li key={e}>{e}</li>)}</ul></div>:<>
 <div className="lc-hero"><span className="lc-hero-label">Monthly instalment</span><strong>{rm(r.payment)}</strong><span className="lc-hero-sub">{rate.toFixed(2)}% over {years} years · loan {rm(r.loan)} after {rm(r.down)} down</span>
