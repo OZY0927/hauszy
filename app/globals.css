@@ -83,6 +83,10 @@ body>header nav[aria-label="Main navigation"] .tools-dropdown a:hover{background
 .mc h3{font:600 16px/1.3 Manrope;margin:26px 0 10px}
 .mc h4{font:600 14px/1.3 Manrope;margin:0 0 6px}
 .mc p{font-size:13px;line-height:1.6}
+/* Undo the site-wide form/label/input rules written for the homepage search bar. */
+.mc form.mc-inputs{display:block;background:none;box-shadow:none;border:0;border-radius:0;padding:0;gap:0;flex-wrap:nowrap;align-items:normal}
+.mc input[type=checkbox],.mc input[type=radio]{display:inline-block;width:auto;padding:0;border:revert;background:revert}
+.mc .mc-choice input{width:100%;height:100%}
 .mc-visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .mc-example{margin:0 0 18px;font-size:13px;color:var(--ink)}
 .mc-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;align-items:start}
@@ -108,7 +112,7 @@ body>header nav[aria-label="Main navigation"] .tools-dropdown a:hover{background
 .mc-choice input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
 .mc-choice label:focus-within{outline:2px solid var(--primary);outline-offset:2px}
 .mc .mc-check{display:flex;align-items:flex-start;gap:9px;font-weight:400;grid-column:1/-1;line-height:1.5}
-.mc-check input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--primary);flex:none}
+.mc .mc-check input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--primary);flex:none}
 .mc-items{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--line)}
 .mc-items>li{padding:12px 0;border-bottom:1px solid var(--line)}
 .mc-items>li.mc-missing{background:linear-gradient(90deg,var(--mc-warn-bg),transparent)}
