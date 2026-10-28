@@ -105,3 +105,9 @@ body>header nav[aria-label="Main navigation"] .tools-dropdown a:hover{background
 .calculator-shell .lc-fine{font-size:11px;margin:14px 0 0}
 @media(max-width:800px){.lc{grid-template-columns:1fr}.lc-results{position:static;order:-1}}
 @media(max-width:420px){.lc-pair{grid-template-columns:1fr}.lc-big strong{font-size:28px}}
+.lc-label{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lc .lc-label label{flex:none;border:0;font-size:13px;font-weight:500;letter-spacing:0;color:var(--ink)}
+.lc-toggle{display:inline-flex;border:1px solid #d9c6b1;border-radius:999px;padding:2px;background:var(--paper)}
+.lc-toggle button{border:0;background:none;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;color:var(--muted)}
+.lc-toggle button[aria-pressed=true]{background:var(--ink);color:#fff}
+.lc-field>small{font-size:11px;font-weight:400;color:var(--muted)}
