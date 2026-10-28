@@ -7,7 +7,7 @@
 - Leaflet/OpenStreetMap map with exact admin-entered coordinates, animated branded pin and recenter controls.
 - Compact enquiry card, share/save, WhatsApp placeholder, enquiry/viewing preview forms, project-prefilled loan-calculator link.
 - About Me profile and captioned successful-deal photo gallery.
-- Simple loan calculator: monthly instalment and upfront cash (down payment, stamp duties incl. foreign 8% and first-home exemption, legal fees with SST). Rates live in `lib/property-rules.js`.
+- Monthly instalment calculator: down payment as % or RM, total interest, total repayment and property cost, principal vs interest split and loan insights.
 
 ## Admin
 - Firebase email/password sign-in and friendly credential/network errors.
