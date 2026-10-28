@@ -1,0 +1,2 @@
+export function monthlyPayment(principal,annualRate,years){const months=years*12,rate=annualRate/100/12;return rate===0?principal/months:principal*rate/(1-Math.pow(1+rate,-months))}
+export function transferDuty(value){let remaining=value,total=0;for(const [width,rate]of [[100000,.01],[400000,.02],[500000,.03],[Infinity,.04]]){const amount=Math.min(remaining,width);if(amount>0)total+=Math.ceil(amount/100)*100*rate;remaining-=amount;if(remaining<=0)break}return total}

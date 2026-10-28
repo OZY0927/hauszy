@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'password';
+    }
+    match /siteContent/about { allow read: if true; allow write: if signedIn(); }
+    match /projects/{id} { allow read, write: if signedIn(); }
+    match /publicProjects/{id} {
+      allow read: if true;
+      allow create, update: if signedIn() && request.resource.data.status == 'Published';
+      allow delete: if signedIn();
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

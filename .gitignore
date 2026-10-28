@@ -1,0 +1,15 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+firepit-log.txt
+firebase-debug.log*
+.firestore-debug.log
+.firebase/
+.vercel/
+__pycache__/
+*.pyc
+*service-account*.json
+*serviceAccount*.json
