@@ -18,3 +18,4 @@
 
 ## Pending production setup
 Actual agent details and WhatsApp contact, live enquiry processing, verified project content, Firebase rules deployment, custom domain metadata/sitemap, and hosting deployment. No rankings, financing approvals or investment returns are guaranteed.
+- Motion & icons: inline SVG icon set (`components/Icon.js`, facility icons matched by name), scroll-reveal for sections and cards (`components/Motion.js`), CSS entrance animations for page headings, hover/press micro-interactions, animated dropdown, dialogs and loader; all motion is disabled under "reduce motion".
