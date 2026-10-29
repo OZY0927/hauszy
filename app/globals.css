@@ -301,3 +301,11 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 .phone-dial{color:var(--muted);font-variant-numeric:tabular-nums}
 .phone-popover li .icon{color:var(--primary);width:16px;height:16px}
 .phone-empty{color:var(--muted);cursor:default!important}
+
+/* Whole project card is clickable: the "Explore project" link stretches over the card; the save button stays on top. */
+.card{position:relative;cursor:pointer}
+.card .card-bottom .details::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit}
+.card .save{z-index:2}
+.card .card-bottom .details:focus-visible{outline:none}
+.card:has(.details:focus-visible){outline:2px solid var(--primary);outline-offset:3px}
+.card:hover .details{color:var(--primary)}
