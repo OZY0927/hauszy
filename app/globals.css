@@ -305,6 +305,8 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 /* Whole project card is clickable: the "Explore project" link stretches over the card; the save button stays on top. */
 .card{position:relative;cursor:pointer}
 .card .card-bottom .details::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit}
+.card .card-bottom .details,.card .card-bottom .details:active{transform:none}
+.card:active{transform:translateY(-5px) scale(.99)}
 .card .save{z-index:2}
 .card .card-bottom .details:focus-visible{outline:none}
 .card:has(.details:focus-visible){outline:2px solid var(--primary);outline-offset:3px}
