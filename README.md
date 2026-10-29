@@ -38,7 +38,7 @@ Legacy `.html` URLs redirect to the new routes, preserving existing project IDs 
 - `public/` — static visual assets
 - `tests/` — pricing filters, calculator and editor validation tests
 
-Public Firestore reads run on the server with no service account and honour deployed Security Rules. Public pages have request-time rendering and do not fall back to sample projects. The admin uses the modular Firebase SDK in the browser. Saves atomically update the private `projects` document and published `publicProjects` copy; changing a project to Draft or Archived removes its published copy. Profile information uses `siteContent/about`; media lives in Firebase Storage.
+Public Firestore reads run on the server with no service account and honour deployed Security Rules. Public pages are cached for up to 5 minutes (`lib/firestore-server.js`) and refreshed immediately when the admin saves, via the authenticated `/api/revalidate` route. They do not fall back to sample projects; a failed read is never cached. The admin uses the modular Firebase SDK in the browser. Saves atomically update the private `projects` document and published `publicProjects` copy; changing a project to Draft or Archived removes its published copy. Profile information uses `siteContent/about`; media lives in Firebase Storage.
 
 Public Firebase configuration is in `lib/firebase-config.js`. This configuration is not a private key. No service-account credential is needed or included. Deploy Firebase rules separately.
 

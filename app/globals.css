@@ -276,3 +276,27 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 .lc .roi-rows .total dt,.lc .roi-rows .total dd{color:var(--ink);font-weight:700}
 .lc .roi-rows .total.pos dd{color:#2f6b3a}
 .lc .roi-rows .total.neg dd{color:var(--primary)}
+
+/* Phone field: country code picker + number on one row */
+.phone-field{position:relative;display:flex;flex-direction:column;gap:8px;min-width:0}
+.phone-field .phone-label{display:block;flex:none;border:0;margin:0;font-size:12px;letter-spacing:0;color:var(--ink)}
+.phone-row{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:5px;background:var(--paper);min-height:46px;transition:border-color .2s,box-shadow .2s}
+.phone-row:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px #96351e1f}
+.phone-country{display:inline-flex;align-items:center;gap:6px;flex:none;border:0;border-right:1px solid var(--line);background:none;padding:0 10px 0 12px;font-size:14px;color:var(--ink);cursor:pointer;border-radius:5px 0 0 5px}
+.phone-country:hover{background:#f0e2d1}
+.phone-country .icon{width:14px;height:14px;color:var(--muted);transition:transform .2s}
+.phone-country[aria-expanded=true] .icon{transform:rotate(180deg)}
+.phone-iso{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:4px;padding:1px 4px}
+.phone-field .phone-row input[type=tel],#aboutForm .phone-field .phone-row input[type=tel]{flex:1;min-width:0;width:auto;margin:0;border:0;border-radius:0 5px 5px 0;background:none;padding:12px;font-size:14px;color:var(--ink);outline:none;box-shadow:none}
+.phone-popover{position:absolute;top:100%;left:0;right:0;z-index:30;margin-top:6px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 14px 34px #63341e1f;overflow:hidden;animation:drop-in .18s ease-out}
+.phone-search{display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line)}
+.phone-search .icon{color:var(--muted);width:16px;height:16px}
+.phone-field .phone-search input[type=search],#aboutForm .phone-field .phone-search input[type=search]{flex:1;min-width:0;width:auto;margin:0;border:0;background:none;padding:12px 0;font-size:14px;color:var(--ink);outline:none;box-shadow:none}
+.phone-popover ul{list-style:none;margin:0;padding:6px;max-height:260px;overflow-y:auto}
+.phone-popover li{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:6px;font-size:14px;color:var(--ink);cursor:pointer}
+.phone-popover li[data-active=true]{background:#f5ece1}
+.phone-popover li[aria-selected=true]{font-weight:600}
+.phone-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phone-dial{color:var(--muted);font-variant-numeric:tabular-nums}
+.phone-popover li .icon{color:var(--primary);width:16px;height:16px}
+.phone-empty{color:var(--muted);cursor:default!important}

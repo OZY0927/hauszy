@@ -3,11 +3,13 @@ import Icon from './Icon';
 import SocialIcon,{SOCIALS} from './SocialIcon';
 import {getProfile} from '../lib/firestore-server';
 import {safeUrl} from '../lib/project';
+import {toPhone} from '../lib/phone';
+import {connection} from 'next/server';
 const TOOLS=[['/tools/loan-calculator','calculator','Loan Calculator'],['/tools/upfront-cash-calculator','wallet','Upfront Cash Calculator'],['/tools/loan-eligibility','shieldCheck','Loan Eligibility (DSR)'],['/tools/roi-calculator','trendingUp','ROI Calculator']];
 // Contact details and social links come from siteContent/about, edited in the admin "About me" section.
-export default async function Footer(){let p={};try{p=await getProfile()||{}}catch{}
-  const social=SOCIALS.filter(([key])=>safeUrl(p.social?.[key])),phone=String(p.phone||'').trim(),whatsapp=String(p.whatsapp||'').replace(/\D/g,''),email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email||'')?p.email:'',ren=String(p.ren||'').trim();
-  const contact=[phone&&{icon:'phone',label:phone,href:'tel:'+phone.replace(/[^\d+]/g,'')},whatsapp&&{icon:'message',label:'Chat on WhatsApp',href:'https://wa.me/'+whatsapp,external:true},email&&{icon:'mail',label:email,href:'mailto:'+email},p.serviceArea&&{icon:'mapPin',label:p.serviceArea}].filter(Boolean);
+export default async function Footer(){let p={};try{p=await getProfile()||{}}catch{await connection()}
+  const social=SOCIALS.filter(([key])=>safeUrl(p.social?.[key])),phoneNumber=toPhone(p.phone),phone=phoneNumber?phoneNumber.formatInternational():String(p.phone||'').trim(),whatsapp=toPhone(p.whatsapp)?.number.slice(1)||String(p.whatsapp||'').replace(/\D/g,''),email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email||'')?p.email:'',ren=String(p.ren||'').trim();
+  const contact=[phone&&{icon:'phone',label:phone,href:'tel:'+(phoneNumber?.number||phone.replace(/[^\d+]/g,''))},whatsapp&&{icon:'message',label:'Chat on WhatsApp',href:'https://wa.me/'+whatsapp,external:true},email&&{icon:'mail',label:email,href:'mailto:'+email},p.serviceArea&&{icon:'mapPin',label:p.serviceArea}].filter(Boolean);
   return <footer className="site-footer"><div className="footer-main">
     <div className="footer-brand"><Link className="logo" href="/">hauszy<span>↗</span></Link><p className="footer-tagline">A place for your next chapter.</p><p>New launches and developer-direct homes in Malaysia, with personal guidance from your first enquiry to your keys.</p>
       {social.length>0&&<ul className="footer-social" aria-label="Social media">{social.map(([key,label])=><li key={key}><a href={p.social[key]} target="_blank" rel="noopener noreferrer" aria-label={`${label} (opens in a new tab)`} title={label}><SocialIcon name={key}/></a></li>)}</ul>}</div>
