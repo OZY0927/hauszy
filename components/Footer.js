@@ -3,7 +3,7 @@ import Icon from './Icon';
 import SocialIcon,{SOCIALS} from './SocialIcon';
 import {getProfile} from '../lib/firestore-server';
 import {safeUrl} from '../lib/project';
-const TOOLS=[['/tools/loan-calculator','calculator','Loan Calculator'],['/tools/upfront-cash-calculator','wallet','Upfront Cash Calculator'],['/tools/loan-eligibility','shieldCheck','Loan Eligibility (DSR)']];
+const TOOLS=[['/tools/loan-calculator','calculator','Loan Calculator'],['/tools/upfront-cash-calculator','wallet','Upfront Cash Calculator'],['/tools/loan-eligibility','shieldCheck','Loan Eligibility (DSR)'],['/tools/roi-calculator','trendingUp','ROI Calculator']];
 // Contact details and social links come from siteContent/about, edited in the admin "About me" section.
 export default async function Footer(){let p={};try{p=await getProfile()||{}}catch{}
   const social=SOCIALS.filter(([key])=>safeUrl(p.social?.[key])),phone=String(p.phone||'').trim(),whatsapp=String(p.whatsapp||'').replace(/\D/g,''),email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email||'')?p.email:'',ren=String(p.ren||'').trim();

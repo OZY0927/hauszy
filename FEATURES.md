@@ -20,3 +20,4 @@
 Actual agent details and WhatsApp contact, live enquiry processing, verified project content, Firebase rules deployment, custom domain metadata/sitemap, and hosting deployment. No rankings, financing approvals or investment returns are guaranteed.
 - Motion & icons: inline SVG icon set (`components/Icon.js`, facility icons matched by name), scroll-reveal for sections and cards (`components/Motion.js`), CSS entrance animations for page headings, hover/press micro-interactions, animated dropdown, dialogs and loader; all motion is disabled under "reduce motion".
 - Footer: brand intro, social media icons, Explore and Tools links, agent contact (phone, WhatsApp, email, service area), disclaimer and back-to-top. Contact details and social links are edited in Admin → About me and stored on `siteContent/about`.
+- ROI Calculator (`/tools/roi-calculator`): gross and net rental yield, monthly cash flow, return on cash invested and break-even rent.

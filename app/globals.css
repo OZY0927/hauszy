@@ -269,3 +269,10 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 .social-label .icon{width:16px;height:16px;color:var(--primary)}
 @media(max-width:900px){.footer-main{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}}
 @media(max-width:520px){.footer-main{grid-template-columns:1fr;gap:30px;padding-top:40px}.footer-top{margin-left:0}}
+.roi-rows{margin:12px 0 0}
+.roi-rows>div{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.lc .roi-rows dt{font-size:15px;color:var(--muted);margin:0}
+.lc .roi-rows dd{font-size:15px;margin:0;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lc .roi-rows .total dt,.lc .roi-rows .total dd{color:var(--ink);font-weight:700}
+.lc .roi-rows .total.pos dd{color:#2f6b3a}
+.lc .roi-rows .total.neg dd{color:var(--primary)}
