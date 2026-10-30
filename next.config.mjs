@@ -1,5 +1,10 @@
 const config = {
   trailingSlash: true,
+  // Card photos are resized per screen by next/image. Only the project's Firebase Storage bucket is allowed.
+  images: {
+    remotePatterns: [{ protocol: 'https', hostname: 'firebasestorage.googleapis.com', pathname: '/v0/b/hauszy.firebasestorage.app/o/**' }],
+    qualities: [75]
+  },
   async redirects() {
     return [
       { source: '/index.html', destination: '/', permanent: true },
