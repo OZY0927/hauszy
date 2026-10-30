@@ -2,7 +2,7 @@
 
 ## Public Next.js pages
 - Shared fixed, right-aligned navigation: Explore projects, Tools → Loan Calculator, About Me.
-- Server-rendered published projects from Firestore, searchable location suggestions, property type, minimum/maximum price handles with exact amounts, saved-project filters.
+- Server-rendered published projects from Firestore, searchable location suggestions, property type, minimum/maximum price handles with exact amounts, saved-project filters, sorting (newest, price, price per sqft, completion) and a side-by-side comparison of saved projects.
 - Shareable project routes with metadata, galleries, project facts, unit layouts/floor plans, facilities, maintenance, grouped nearby amenities and automatic km/min units.
 - Leaflet/OpenStreetMap map with exact admin-entered coordinates, animated branded pin and recenter controls.
 - Compact enquiry card, share/save, WhatsApp placeholder, enquiry/viewing preview forms, project-prefilled loan-calculator link.
