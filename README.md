@@ -48,4 +48,4 @@ Import the repository and select the **Next.js** framework preset. Use the defau
 
 ## Known product limits
 
-WhatsApp requires the actual agent number. Enquiry and viewing forms remain clearly marked previews. Loan results are planning estimates with configurable costs. Offline admin demo is browser-only; normal sign-in reads and writes Firestore. No production rules or hosting deployment is performed by a local build.
+WhatsApp, Enquire and Book viewing open WhatsApp to the agent number in the admin profile (WhatsApp field, else phone) with the project and form details filled in; nothing is stored. Loan results are planning estimates with configurable costs. Admin sign-in reads and writes Firestore. No production rules or hosting deployment is performed by a local build.

@@ -14,7 +14,6 @@
 - Manual project editor, custom category/type options, repeatable layouts and nearby amenities, photo picker with cover selection, validation and draft/published/archived status.
 - Batched private/published Firestore writes and server readback verification.
 - Profile/REN/agency/introduction and profile/deal photo management.
-- Explicit offline demo, separate from live Firestore.
 
 ## Pending production setup
 Actual agent details and WhatsApp contact, live enquiry processing, verified project content, Firebase rules deployment, custom domain metadata/sitemap, and hosting deployment. No rankings, financing approvals or investment returns are guaranteed.
