@@ -357,3 +357,4 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 .project-row .publish-toggle.on{color:#2f7d4f;border-color:#bfdcc9;background:#f1f8f3}
 .project-row .publish-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .project-row .publish-toggle:disabled{cursor:wait}
+.card .specs{flex-wrap:wrap;row-gap:8px;gap:8px 14px}
