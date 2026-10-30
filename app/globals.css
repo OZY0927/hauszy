@@ -358,3 +358,29 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 .project-row .publish-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .project-row .publish-toggle:disabled{cursor:wait}
 .card .specs{flex-wrap:wrap;row-gap:8px;gap:8px 14px}
+/* Dropdowns: one look for every <select>. Closed box everywhere; open list where the browser supports styling it. */
+select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2377665B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 12px center!important;background-size:15px!important;padding-right:38px!important;text-overflow:ellipsis;transition:border-color .2s,box-shadow .2s,background-color .2s}
+select:hover:not(:disabled){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2396351E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")!important}
+.contact-form select:hover:not(:disabled),#loanForm select:hover:not(:disabled),.tools select:hover:not(:disabled),#projectForm select:hover:not(:disabled),.uc-field select:hover:not(:disabled),.purchase-fee-table select:hover:not(:disabled){border-color:var(--secondary)}
+.contact-form select:focus-visible,#loanForm select:focus-visible,.tools select:focus-visible,#projectForm select:focus-visible,.uc-field select:focus-visible,.purchase-fee-table select:focus-visible{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px #96351e1f}
+select:disabled{opacity:.55;cursor:not-allowed}
+/* Borderless selects (search bar, sort) keep the chevron tight to the text */
+.search-wrap select,.listing-toolbar .sort-by select{background-position:right 2px center!important;padding-right:24px!important}
+@supports (appearance:base-select){
+  select,::picker(select){appearance:base-select}
+  select,select:hover:not(:disabled){background-image:none!important}
+  select::picker-icon{content:"";width:15px;height:15px;background:currentColor;color:var(--muted);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;position:absolute;right:12px;top:50%;translate:0 -50%;transition:rotate .2s,color .2s}
+  select{position:relative}
+  .search-wrap select::picker-icon,.listing-toolbar .sort-by select::picker-icon{right:2px}
+  select:hover:not(:disabled)::picker-icon,select:open::picker-icon{color:var(--primary)}
+  select:open::picker-icon{rotate:180deg}
+  ::picker(select){margin-top:6px;padding:6px;min-width:max(anchor-size(width),190px);max-height:min(320px,60vh);overflow-y:auto;background:#fffcf7;border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 34px #63341e1f;color:var(--ink);font-family:'DM Sans',sans-serif;animation:drop-in .18s ease-out}
+  select option{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;font-size:13px;letter-spacing:0;color:var(--ink);transition:background-color .15s,color .15s}
+  select option:hover,select option:focus-visible{background:#f0e2d1;color:var(--primary);outline:none}
+  select option:checked{font-weight:600;color:var(--primary)}
+  select option::checkmark{order:1;margin-left:auto;color:var(--primary)}
+  select option:disabled{color:#b5a596}
+  select optgroup{padding-top:4px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+  select optgroup option{text-transform:none;letter-spacing:0;font-size:13px;font-weight:400}
+  select optgroup+optgroup{margin-top:4px;border-top:1px solid var(--line)}
+}
