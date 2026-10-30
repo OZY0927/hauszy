@@ -343,3 +343,8 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 .compare-note{font-size:11px;padding:14px 34px 26px;margin:0;line-height:1.6}
 @media(max-width:800px){.listing-toolbar{flex-wrap:wrap}.listing-toolbar .chips{max-width:none}.listing-meta{justify-content:flex-start}}
 @media(max-width:600px){.compare-head{padding:24px 64px 4px 20px}.compare-scroll{padding:12px 20px 0}.compare-note,.compare-empty{padding-left:20px;padding-right:20px}.compare-table thead th{min-width:160px}.compare-table tbody th,.compare-table thead th:first-child{width:105px;min-width:105px}}
+/* Admin range fields (from – to) */
+#projectForm .range-pair{display:flex;align-items:center;gap:8px;margin-top:7px}
+#projectForm .range-pair input{margin-top:0;min-width:0;flex:1}
+#projectForm .range-pair>span{flex:none;color:var(--muted);font-size:11px}
+#projectForm .field-hint{display:block;margin-top:6px;font-size:10px;line-height:1.5;color:var(--muted)}
