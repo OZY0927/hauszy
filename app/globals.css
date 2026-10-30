@@ -348,3 +348,12 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 #projectForm .range-pair input{margin-top:0;min-width:0;flex:1}
 #projectForm .range-pair>span{flex:none;color:var(--muted);font-size:11px}
 #projectForm .field-hint{display:block;margin-top:6px;font-size:10px;line-height:1.5;color:var(--muted)}
+/* Admin publish / archive switch */
+.project-row .publish-toggle{display:inline-flex;align-items:center;gap:9px;min-width:128px;border:1px solid var(--line);background:var(--paper);border-radius:30px;padding:5px 14px 5px 6px;color:var(--muted);font-size:12px;font-weight:600}
+.publish-track{position:relative;flex:none;width:36px;height:20px;border-radius:20px;background:#d9c9b8;transition:background-color .2s}
+.publish-track span{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #35201540;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+.publish-toggle.on .publish-track{background:#2f7d4f}
+.publish-toggle.on .publish-track span{transform:translateX(16px)}
+.project-row .publish-toggle.on{color:#2f7d4f;border-color:#bfdcc9;background:#f1f8f3}
+.project-row .publish-toggle:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.project-row .publish-toggle:disabled{cursor:wait}
