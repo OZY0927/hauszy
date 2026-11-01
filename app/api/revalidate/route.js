@@ -1,16 +1,15 @@
 import {revalidateTag} from 'next/cache';
-import {firebaseConfig} from '../../../lib/firebase-config';
 import {CACHE_TAGS} from '../../../lib/firestore-server';
-// Called by the admin after a save so the public pages show the change on the next visit.
-// Only signed-in email/password admins (the same users Firestore rules allow to write) can trigger it.
+import {verifyAdminIdToken} from '../../../lib/verify-admin';
+import {revalidationToken,revalidationTags,createRevalidationLimiter,RequestError} from '../../../lib/revalidation-security';
+const limit=createRevalidationLimiter();
+const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
 export async function POST(request){
-  const token=(request.headers.get('authorization')||'').replace(/^Bearer\s+/i,'');
-  if(!token)return Response.json({ok:false},{status:401});
-  const check=await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${firebaseConfig.apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken:token}),cache:'no-store',signal:AbortSignal.timeout(8000)}).catch(()=>null);
-  const user=check?.ok?(await check.json()).users?.[0]:null;
-  if(!user||user.disabled||!user.providerUserInfo?.some(p=>p.providerId==='password'))return Response.json({ok:false},{status:401});
-  let body={};try{body=await request.json()}catch{}
-  const tags=(Array.isArray(body.tags)?body.tags:CACHE_TAGS).filter(tag=>CACHE_TAGS.includes(tag));
+ try{
+  const token=revalidationToken(request),tags=await revalidationTags(request,CACHE_TAGS);
+  const uid=await verifyAdminIdToken(token);
+  if(!limit(uid))return Response.json({ok:false,error:'Too many refreshes. Try again in a minute.'},{status:429,headers:{...headers,'Retry-After':'60'}});
   for(const tag of tags)revalidateTag(tag,{expire:0});
-  return Response.json({ok:true,revalidated:tags});
+  return Response.json({ok:true,revalidated:tags},{headers});
+ }catch(error){const status=error instanceof RequestError?error.status:500;return Response.json({ok:false,error:status===500?'Unable to refresh pages.':error.message},{status,headers});}
 }

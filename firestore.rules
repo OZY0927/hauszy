@@ -1,17 +1,18 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() {
+    function isAdmin() {
       return request.auth != null
-        && request.auth.token.firebase.sign_in_provider == 'password';
+        && request.auth.token.firebase.sign_in_provider == 'password'
+        && request.auth.uid == '7gyEPhGlL6V8DlLb5dNGzuwO95A2';
     }
-    match /siteContent/about { allow read: if true; allow write: if signedIn(); }
-    match /adminSettings/projectOptions { allow read, write: if signedIn(); }
-    match /projects/{id} { allow read, write: if signedIn(); }
+    match /siteContent/about { allow read: if true; allow write: if isAdmin(); }
+    match /adminSettings/projectOptions { allow read, write: if isAdmin(); }
+    match /projects/{id} { allow read, write: if isAdmin(); }
     match /publicProjects/{id} {
-      allow read: if true;
-      allow create, update: if signedIn() && request.resource.data.status == 'Published';
-      allow delete: if signedIn();
+      allow read: if isAdmin() || resource.data.status == 'Published';
+      allow create, update: if isAdmin() && request.resource.data.status == 'Published';
+      allow delete: if isAdmin();
     }
     match /{document=**} { allow read, write: if false; }
   }

@@ -1,32 +1,35 @@
 # Firebase admin setup (Next.js)
 
-1. Firebase Authentication → Sign-in method: enable Email/Password.
-2. Create permitted accounts in Authentication → Users.
-3. Create Firestore if needed and deploy the reviewed `firestore.rules`.
-4. Deploy reviewed `storage.rules` for project and profile image uploads.
-5. Open `/admin` and sign in with email and password.
+Admin access is restricted to Firebase UID `7gyEPhGlL6V8DlLb5dNGzuwO95A2` using Email/Password authentication. Other signed-in users have no management access, even if they create an account through Firebase's public API. This approved UID is intentionally public configuration, not a password or secret.
 
-Public configuration for project `hauszy` is in `lib/firebase-config.js`. No email verification or custom admin claim is required by the current account policy. Any Firebase email/password account has management access. Hiding sign-up in this application does not prevent account creation through Firebase Auth APIs; configure server-enforced sign-up restrictions if only owner-created accounts should have access.
+The approved UID must match in `lib/admin-access.js`, `firestore.rules` and `storage.rules`. No custom claim or service-account key is required for the application. Changing the public profile email does not grant admin privileges. To change the owner, verify the new UID in Firebase Authentication and update all three allowlists together.
 
-## Data
+## Deployment order
 
-- `projects/{id}`: authenticated project editing, including drafts and archived records.
-- `publicProjects/{id}`: customer-facing published copy; anonymous public reads.
-- `siteContent/about`: public profile and successful-deal gallery.
-- Storage `projects/{id}/{file}` and `profile/{file}`: authenticated JPEG/PNG/WebP uploads, max 5 MB each. Download URLs are shareable bearer links; do not upload confidential media.
-
-The admin verifies committed saves with a Firestore server read. Public Next.js pages fetch published records server-side on each request using anonymous REST requests that honour rules. Profile uploads and project saves show errors without pretending they succeeded. Offline demo is explicitly separate and browser-only. Removed/abandoned uploaded media is not automatically deleted from Storage.
-
-## Deployment
-
-With Firebase CLI installed and logged into the intended project, review existing rules before running:
+1. Confirm the approved UID belongs to the intended account in Firebase Authentication → Users. The owner supplied the UID above.
+2. Deploy the reviewed database and upload rules to close direct Firebase access to other accounts:
 
 ```sh
 firebase deploy --only firestore:rules,storage --project hauszy
 ```
 
-Deploy Next.js on Vercel using the Next.js preset. Add the hosted admin domain to Firebase Authentication authorised domains as needed. Existing Firebase resources and rules are not modified merely by running this app or its production build.
+3. Deploy the Next.js app. Sign out and sign in as the approved owner; verify project editing, Categories, About Me, image uploads, publishing and cache refresh. A production build alone does not deploy the Firebase rules.
+4. Test denial using an ordinary account in an emulator/staging environment. Do not weaken the UID checks to debug sign-in failures.
+
+## Data and sessions
+
+- `projects/{id}` and `adminSettings/projectOptions`: approved owner only.
+- `publicProjects/{id}`: anonymous reads require Published status; owner controls writes. Public project queries must filter by Published status.
+- `siteContent/about`: public profile and gallery; approved owner controls writes.
+- Storage `projects/{id}/{file}` and `profile/{file}`: approved owner can upload JPEG/PNG/WebP files up to 5 MB and delete them. Updates and other paths are denied. Download-token URLs remain shareable bearer links; do not upload confidential documents.
+- Admin authentication uses browser-session persistence and signs out after 30 minutes of inactivity. The browser needs to stay online for remote sign-out and saves. Public pages cache data for up to five minutes, with authenticated cache refresh after saves.
+
+## Additional Firebase / hosting controls
+
+Enable Firebase email-enumeration protection, enforce a strong password policy, restrict authorized sign-in domains to trusted hosts, and review unexpected users. Use MFA on the Google/Firebase/Vercel administrator accounts. Consider Firebase Auth MFA for the app owner as a separate, tested sign-in feature; it is not implemented by these changes. Configure spending alerts, backups and hosting firewall/rate-limit rules. App Check can be added after configuring providers and testing legitimate traffic; do not enable enforcement blindly.
+
+See `SECURITY.md` for the implemented defenses, their limits, and validation.
 
 ## Admin sections
 
-The admin workspace has Project listing, About Me, Categories, and Settings sections. Settings changes the signed-in account password after verifying its current password. Categories stores shared dropdown values in `adminSettings/projectOptions`; deploy the updated Firestore rules before using this section. Its initial values include defaults, existing project values, and any legacy categories saved in the current browser. Removing or renaming an option does not rewrite existing projects.
+Project listing, About Me, Categories and Settings separate the workspace. Categories stores shared dropdown options in `adminSettings/projectOptions`. Settings reauthenticates the current account before changing its password. Removing or renaming dropdown values does not rewrite existing projects.
