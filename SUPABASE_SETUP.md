@@ -4,7 +4,7 @@ New image uploads use Supabase Storage. Firebase remains the source of admin aut
 
 ## 1. Bucket
 
-In Supabase Storage create `website-images` (or set your chosen name below):
+In Supabase Storage create `hauszy-project` (or set your chosen name below):
 
 - Public bucket: enabled. Only upload media intended for public website display, including media on archived projects: anyone with the public URL can view it.
 - File size restriction: 5 MB (5,242,880 bytes).
@@ -20,7 +20,7 @@ Bucket-level MIME and size restrictions are essential because the binary upload 
 | `NEXT_PUBLIC_SUPABASE_URL` | Project Connect dialog: HTTPS project origin such as `https://your-project.supabase.co`; public build and runtime value. |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Settings → API Keys → publishable key (`sb_publishable_…`); public build value. |
 | `SUPABASE_SECRET_KEY` | Settings → API Keys → secret key (`sb_secret_…`); server-only runtime secret. Never add a `NEXT_PUBLIC_` prefix. |
-| `SUPABASE_STORAGE_BUCKET` | `website-images` or the bucket you created; runtime variable. |
+| `SUPABASE_STORAGE_BUCKET` | `hauszy-project` or the bucket you created; runtime variable. |
 
 For `npm run dev`, copy the appropriate settings into ignored `.env.local`. Keep real values out of `.env.example`, source control, screenshots and chat messages. `.dev.vars*` is ignored for Cloudflare local runtime secrets too.
 
@@ -68,3 +68,9 @@ Official documentation:
 ## Floor plans
 
 Each unit layout has an optional single-image picker. Choose JPG, PNG or WebP up to 5 MB; it uploads on Save project and its URL is saved as `units[].floorPlanUrl`. Existing links (including JSON imports) preview as the selected image. Remove a selected image before choosing a replacement. Removing it clears the saved URL on the next save but does not delete the storage object.
+
+## Bucket-name mismatch
+
+The confirmed bucket for this site is `hauszy-project`, now also the code default. If Cloudflare already has `SUPABASE_STORAGE_BUCKET=website-images`, change it to `hauszy-project` in the deployed environment and redeploy. An explicit environment value overrides the code default. Do not rename or recreate the bucket just to match an outdated example. The project URL and both API keys must belong to the same Supabase project as this bucket.
+
+Authorization failures now distinguish missing/inaccessible buckets, rejected keys, denied access, file restrictions and timeouts without displaying raw upstream responses or keys.
