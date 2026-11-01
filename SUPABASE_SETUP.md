@@ -40,7 +40,7 @@ No separate Supabase login or Firebase-to-Supabase Auth migration is needed.
 
 ## 4. Upload flow and coverage
 
-1. Admin chooses a project image, profile portrait or deal-gallery image.
+1. Admin chooses a project image, unit floor-plan image, profile portrait or deal-gallery image.
 2. Existing client resizing converts suitable images to WebP at a maximum 2400px long edge; file validation runs first.
 3. Browser POSTs metadata and its Firebase ID token to `/api/uploads/sign/`.
 4. The server verifies the approved Firebase UID, validates folder/MIME/size, applies a best-effort per-instance quota, and uses the server secret to create a signed upload token for a random object path.
@@ -64,3 +64,7 @@ Official documentation:
 - https://supabase.com/docs/guides/storage/buckets/fundamentals
 - https://supabase.com/docs/guides/getting-started/api-keys
 - https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/
+
+## Floor plans
+
+Each unit layout has an optional single-image picker. Choose JPG, PNG or WebP up to 5 MB; it uploads on Save project and its URL is saved as `units[].floorPlanUrl`. Existing links (including JSON imports) preview as the selected image. Remove a selected image before choosing a replacement. Removing it clears the saved URL on the next save but does not delete the storage object.
