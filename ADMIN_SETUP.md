@@ -33,3 +33,7 @@ See `SECURITY.md` for the implemented defenses, their limits, and validation.
 ## Admin sections
 
 Project listing, About Me, Categories and Settings separate the workspace. Categories stores shared dropdown options in `adminSettings/projectOptions`. Settings reauthenticates the current account before changing its password. Removing or renaming dropdown values does not rewrite existing projects.
+
+## Supabase uploads
+
+New uploads use Supabase Storage; Firebase Storage rules apply only to legacy media/access. Configure the Supabase environment values and bucket restrictions in `SUPABASE_SETUP.md`. Project, portrait and deal-gallery URLs remain stored in Firestore.

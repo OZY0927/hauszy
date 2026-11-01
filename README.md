@@ -4,7 +4,7 @@ A Next.js App Router application for Malaysian developer-direct projects, using 
 
 ## Development
 
-Requires Node.js 20.9 or later.
+Requires Node.js 22 or later (including the Supabase SDK requirement).
 
 ```sh
 npm ci
@@ -53,3 +53,7 @@ WhatsApp, Enquire and Book viewing open WhatsApp to the agent number in the admi
 ## Search and optional analytics
 
 See `.env.example` and `GOOGLE_POLICY_REVIEW.md`. Set `NEXT_PUBLIC_SITE_URL` to the verified production origin before deployment to enable canonical URLs, structured data and sitemap entries. The existing GA4 ID is consent-controlled; confirm the intended property and disable GA4 Enhanced Measurement before production use because pageviews are sent manually. Then set `NEXT_PUBLIC_ANALYTICS_ENABLED=true` and rebuild; analytics stays inactive until this step. `GOOGLE_SITE_VERIFICATION` optionally accepts a Search Console HTML verification token. The Google tag measures visits and does not guarantee search ranking, AI citations or Ads approval.
+
+## Supabase image uploads
+
+New project photos, profile portraits and deal-gallery images upload to Supabase Storage using Firebase-admin-authorized signed upload tokens. Existing image URLs remain valid. Configure the four variables in `.env.example`, create the restricted public image bucket and rebuild/deploy. See `SUPABASE_SETUP.md` for Cloudflare runtime/build settings and verification. No real credentials are committed.

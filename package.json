@@ -11,9 +11,10 @@
   },
   "type": "module",
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=22.0.0"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
     "firebase": "^13.1.0",
     "jose": "^6.2.14",
     "leaflet": "^1.9.4",

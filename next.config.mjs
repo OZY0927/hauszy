@@ -1,11 +1,12 @@
+import {supabaseImagePattern} from './lib/supabase-config.js';
 import {securityHeaders} from './lib/security-headers.js';
 const config = {
   trailingSlash: true,
   poweredByHeader: false,
   async headers(){return [{source:'/:path*',headers:securityHeaders(process.env.NODE_ENV==='production')}]},
-  // Card photos are resized per screen by next/image. Only the project's Firebase Storage bucket is allowed.
+  // Restrict optimized images to legacy Firebase media and the configured Supabase project.
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: 'firebasestorage.googleapis.com', pathname: '/v0/b/hauszy.firebasestorage.app/o/**' }],
+    remotePatterns: [{ protocol: 'https', hostname: 'firebasestorage.googleapis.com', pathname: '/v0/b/hauszy.firebasestorage.app/o/**' },...(supabaseImagePattern()?[supabaseImagePattern()]:[])],
     qualities: [75]
   },
   async redirects() {

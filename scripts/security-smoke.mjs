@@ -7,3 +7,7 @@ const denied=await fetch(origin+'/api/revalidate/',{method:'POST',headers:{'Cont
 const cross=await fetch(origin+'/api/revalidate/',{method:'POST',headers:{Origin:'https://evil.example',Authorization:'Bearer abc.def.ghi','Content-Type':'application/json'},body:JSON.stringify({tags:['projects']})});assert.equal(cross.status,403);
 const oversized=await fetch(origin+'/api/revalidate/',{method:'POST',headers:{Authorization:'Bearer abc.def.ghi','Content-Type':'application/json'},body:'x'.repeat(4097)});assert.equal(oversized.status,413);
 console.log('HTTP checks passed: security headers, fresh admin nonces, nonce injection, no-store, API 401/403/413.');
+
+const uploadDenied=await fetch(origin+'/api/uploads/sign/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({folder:'profile',contentType:'image/png',size:100})});assert.equal(uploadDenied.status,401);assert.equal(uploadDenied.headers.get('cache-control'),'no-store');
+const uploadInvalid=await fetch(origin+'/api/uploads/sign/',{method:'POST',headers:{Authorization:'Bearer abc.def.ghi','Content-Type':'application/json'},body:JSON.stringify({folder:'projects/../private',contentType:'image/png',size:100})});assert.equal(uploadInvalid.status,400);
+console.log('Upload API checks passed: unauthenticated and invalid-folder requests are rejected.');
