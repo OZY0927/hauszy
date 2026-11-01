@@ -38,7 +38,7 @@ return <div className="lc">
 <li>{r.cashFlow>=0?<>The rent covers all costs and the loan, leaving about <strong>{rm(r.cashFlow/12)}</strong> a month.</>:<>You’d top up about <strong>{rm(-r.cashFlow/12)}</strong> a month from your own pocket to cover the loan and costs.</>}</li>
 {r.instalment>0&&<li>Break-even rent is about <strong>{rm(r.breakEvenRent)}</strong> a month, allowing for vacancy.</li>}
 <li>Net yield is <strong>{(r.grossYield-r.netYield).toFixed(2)} percentage points</strong> below gross yield after vacancy and running costs.</li>
-<li>For reference, recent portal data puts Malaysia’s average gross rental yield at around 5%.</li>
-</ul><p className="lc-fine">Estimate only. Excludes rental income tax, agent fees, repairs and any change in property value. Results depend on actual rent, costs and loan terms.</p></div>
+
+</ul><p className="lc-fine">Estimate only. Excludes rental income tax, agent fees, repairs and any change in property value. Results depend on actual rent, costs and loan terms. Rental income, occupancy and investment returns are not guaranteed.</p></div>
 </>}</div>
 </div>}

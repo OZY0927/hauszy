@@ -49,3 +49,7 @@ Import the repository and select the **Next.js** framework preset. Use the defau
 ## Known product limits
 
 WhatsApp, Enquire and Book viewing open WhatsApp to the agent number in the admin profile (WhatsApp field, else phone) with the project and form details filled in; nothing is stored. Loan results are planning estimates with configurable costs. Admin sign-in reads and writes Firestore. No production rules or hosting deployment is performed by a local build.
+
+## Search and optional analytics
+
+See `.env.example` and `GOOGLE_POLICY_REVIEW.md`. Set `NEXT_PUBLIC_SITE_URL` to the verified production origin before deployment to enable canonical URLs, structured data and sitemap entries. The existing GA4 ID is consent-controlled; confirm the intended property and disable GA4 Enhanced Measurement before production use because pageviews are sent manually. Then set `NEXT_PUBLIC_ANALYTICS_ENABLED=true` and rebuild; analytics stays inactive until this step. `GOOGLE_SITE_VERIFICATION` optionally accepts a Search Console HTML verification token. The Google tag measures visits and does not guarantee search ranking, AI citations or Ads approval.

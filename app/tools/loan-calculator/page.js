@@ -1,4 +1,5 @@
+import {pageMetadata} from '../../../lib/seo';
 import LoanCalculator from '../../../components/LoanCalculator';
-export const metadata={title:'Loan Calculator'};
+export const metadata=pageMetadata("Malaysia Housing Loan Calculator","Estimate monthly housing-loan repayments, interest and repayment schedules using your selected rate and tenure. Planning estimates only.","/tools/loan-calculator/");
 const number=v=>typeof v==='string'&&v!==''&&Number.isFinite(Number(v))&&Number(v)>=0;
 export default async function CalculatorPage({searchParams}){const params=await searchParams,initial={};if(typeof params.project==='string')initial.project=params.project;for(const [param,key] of [['price','price'],['dp','downPct'],['da','downAmount'],['rate','rate'],['years','years']])if(number(params[param]))initial[key]=params[param];return <main className="calculator-shell"><div className="eyebrow">PLAN YOUR NEXT CHAPTER</div><h1>A clearer view of<br/>your <em>next move.</em></h1><p>Work out your monthly instalment and what the loan really costs over time.</p><LoanCalculator key={JSON.stringify(initial)} initial={initial}/></main>}
