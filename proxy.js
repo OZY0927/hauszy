@@ -6,7 +6,7 @@ export function proxy(request){
  const headers=new Headers(request.headers);headers.set('x-nonce',nonce);headers.set('Content-Security-Policy',policy);
  const response=NextResponse.next({request:{headers}});
  response.headers.set('Content-Security-Policy',policy);
- response.headers.set('Cache-Control','private, no-store');
+ response.headers.set('Cache-Control','private, no-store, no-transform');
  return response;
 }
 export const config={matcher:'/admin/:path*'};

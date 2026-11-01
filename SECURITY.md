@@ -36,3 +36,7 @@ Firebase emulator rule execution was unavailable because no Java runtime is inst
 - https://firebase.google.com/docs/reference/rest/auth#section-get-account-info
 - https://nextjs.org/docs/app/guides/content-security-policy
 - https://github.com/panva/jose
+
+## Cloudflare/font compatibility follow-up
+
+The CSP explicitly permits Google Fonts CSS/font origins and the public Cloudflare Web Analytics beacon/reporting origins. Admin script nonce restrictions remain intact, and admin responses prohibit intermediary HTML transformation. Shared navigation prefetching is disabled to avoid unnecessary speculative requests. See `CLOUDFLARE_TROUBLESHOOTING.md` for the live checks and the distinction between CSP violations and HTTP 503 responses.

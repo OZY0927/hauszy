@@ -23,3 +23,17 @@ const lookup=user=>async()=>Response.json({users:[{localId:ADMIN_UIDS[0],validSi
 test('API verifies JWT signatures and current admin account status',async()=>{assert.equal(await verifyAdminIdToken(await token(),{keys,lookup:lookup({})}),ADMIN_UIDS[0]);const other=await generateKeyPair('RS256');await assert.rejects(verifyAdminIdToken(await token({},other.privateKey),{keys,lookup:lookup({})}),e=>e.status===401);for(const claims of [{firebase:{sign_in_provider:'google.com'}}])await assert.rejects(verifyAdminIdToken(await token(claims),{keys,lookup:lookup({})}),e=>e.status===403);for(const user of [{disabled:true},{validSince:String(now)},{localId:'other'}])await assert.rejects(verifyAdminIdToken(await token(),{keys,lookup:lookup(user)}),e=>e.status===401);await assert.rejects(verifyAdminIdToken(await token(),{keys,lookup:async()=>{throw Error('offline')}}),e=>e.status===503)});
 
 test('API rejects correctly signed tokens for other projects, expired sessions and unapproved users',async()=>{for(const options of [{issuer:'https://evil.example'},{audience:'another-project'},{expiry:now-1}])await assert.rejects(verifyAdminIdToken(await token({},privateKey,options),{keys,lookup:lookup({})}),e=>e.status===401);await assert.rejects(verifyAdminIdToken(await token({},privateKey,{subject:'unapproved-user'}),{keys,lookup:lookup({})}),e=>e.status===403);});
+
+test('public CSP permits the stylesheet, font files and Cloudflare beacon without broadening script permissions',()=>{
+ const csp=securityHeaders(true).find(h=>h.key==='Content-Security-Policy').value;
+ const directive=name=>csp.split(';').find(value=>value.trim().startsWith(name+' '));
+ assert.ok(directive('style-src').includes('https://fonts.googleapis.com'));
+ assert.ok(directive('font-src').includes('https://fonts.gstatic.com'));
+ assert.ok(directive('script-src').includes('https://static.cloudflareinsights.com'));
+ assert.ok(directive('connect-src').includes('https://cloudflareinsights.com'));
+ assert.ok(!directive('script-src').includes('https: '));assert.ok(!directive('script-src').includes('*'));
+ const admin=securityHeaders(true,'test-nonce').find(h=>h.key==='Content-Security-Policy').value;
+ assert.ok(admin.includes("'nonce-test-nonce' 'strict-dynamic'"));
+ assert.ok(!admin.split(';').find(value=>value.trim().startsWith('script-src ')).includes("'unsafe-inline'"));
+ assert.ok(!admin.includes('static.cloudflareinsights.com'));
+});
