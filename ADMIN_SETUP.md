@@ -26,3 +26,7 @@ firebase deploy --only firestore:rules,storage --project hauszy
 ```
 
 Deploy Next.js on Vercel using the Next.js preset. Add the hosted admin domain to Firebase Authentication authorised domains as needed. Existing Firebase resources and rules are not modified merely by running this app or its production build.
+
+## Admin sections
+
+The admin workspace has Project listing, About Me, Categories, and Settings sections. Settings changes the signed-in account password after verifying its current password. Categories stores shared dropdown values in `adminSettings/projectOptions`; deploy the updated Firestore rules before using this section. Its initial values include defaults, existing project values, and any legacy categories saved in the current browser. Removing or renaming an option does not rewrite existing projects.
