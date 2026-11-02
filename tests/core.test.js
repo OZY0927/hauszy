@@ -18,8 +18,8 @@ test('layout prices persist as numbers, blank prices remain optional and invalid
 
 test('project range follows layout prices on reads and saves, ignoring stale manual prices',async()=>{const {layoutPriceRange}=await import('../lib/project.js');const units=[{name:'A',price:'650000'},{name:'B',price:450000},{name:'C',price:''},{name:'D',price:0}];assert.deepEqual(layoutPriceRange(units),{price:450000,priceMax:650000});const form={name:'Home',location:'KL',price:1,priceMax:2};const saved=buildProject(form,units,[],'id');assert.equal(saved.price,450000);assert.equal(saved.priceMax,650000);assert.equal(normaliseProject({...form,units},'id').price,450000);assert.deepEqual(layoutPriceRange([{price:500000}]),{price:500000,priceMax:500000});assert.deepEqual(layoutPriceRange([]),{price:null,priceMax:null});assert.equal(buildProject(form,[],[],'id').price,null);});
 
-test('project video links become muted looping players, unsupported links are hidden',async()=>{const {videoSource}=await import('../lib/video.js');
-  assert.equal(videoSource('https://www.youtube.com/watch?v=dQw4w9WgXcQ').src,'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1&loop=1&playlist=dQw4w9WgXcQ&rel=0');
+test('project video links become looping players, unsupported links are hidden',async()=>{const {videoSource}=await import('../lib/video.js');
+  assert.equal(videoSource('https://www.youtube.com/watch?v=dQw4w9WgXcQ').src,'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1&loop=1&playlist=dQw4w9WgXcQ&rel=0&enablejsapi=1');
   for(const url of ['https://youtu.be/dQw4w9WgXcQ?t=5','https://youtube.com/shorts/dQw4w9WgXcQ','https://m.youtube.com/watch?v=dQw4w9WgXcQ'])assert.match(videoSource(url).src,/embed\/dQw4w9WgXcQ\?/);
   assert.equal(videoSource('https://vimeo.com/123456789/abcdef12').src,'https://player.vimeo.com/video/123456789?autoplay=1&muted=1&loop=1&playsinline=1&h=abcdef12');
   assert.deepEqual(videoSource('https://cdn.example.com/tour.MP4?token=1'),{kind:'file',src:'https://cdn.example.com/tour.MP4?token=1'});
