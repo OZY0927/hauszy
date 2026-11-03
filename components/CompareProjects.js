@@ -1,11 +1,11 @@
 'use client';
 import {useEffect,useRef} from 'react';
 import Link from 'next/link';
-import {completionTime,largestSize,maintenanceFee,money,pricePerSqft,unitRange} from '../lib/project';
+import {completionTime,largestSize,maintenanceFee,money,pricePerSqft,unitRange,vpQuarter} from '../lib/project';
 import {hasProjectInfo} from '../lib/project-visibility';
 import Icon from './Icon';
 const text=v=>hasProjectInfo(v)?String(v):null,fmt=n=>n.toLocaleString('en-MY');
-const completion=p=>{const t=Date.parse(p.vp),date=Number.isFinite(t)?new Date(t).toLocaleDateString('en-MY',{month:'short',year:'numeric'}):null;return [date,text(p.construction)].filter(Boolean).join(' · ')||null};
+const completion=p=>[vpQuarter(p.vp),text(p.construction)].filter(Boolean).join(' · ')||null;
 // [label, shown text, figure to rank by, 'low'|'high' is better, tag on the best]
 const ROWS=[
  ['Price',p=>p.price?(p.priceMax>p.price?`${money(p.price)} – ${money(p.priceMax)}`:`From ${money(p.price)}`):null,p=>p.price||null,'low','Lowest'],
