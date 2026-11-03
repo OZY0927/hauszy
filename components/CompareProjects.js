@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useRef} from 'react';
 import Link from 'next/link';
-import {completionTime,largestSize,maintenanceFee,money,pricePerSqft,unitRange,vpQuarter} from '../lib/project';
+import {completionTime,largestSize,maintenanceFee,money,pricePerSqft,unitRange,unitText,vpQuarter} from '../lib/project';
 import {hasProjectInfo} from '../lib/project-visibility';
 import Icon from './Icon';
 const text=v=>hasProjectInfo(v)?String(v):null,fmt=n=>n.toLocaleString('en-MY');
@@ -11,8 +11,8 @@ const ROWS=[
  ['Price',p=>p.price?(p.priceMax>p.price?`${money(p.price)} – ${money(p.priceMax)}`:`From ${money(p.price)}`):null,p=>p.price||null,'low','Lowest'],
  ['Price per sqft',p=>{const v=pricePerSqft(p);return v?`RM ${fmt(v)}`:null},pricePerSqft,'low','Lowest'],
  ['Built-up size',p=>unitRange(p.units,'size',' sqft'),largestSize,'high','Largest'],
- ['Bedrooms',p=>unitRange(p.units,'bedrooms')],
- ['Bathrooms',p=>unitRange(p.units,'bathrooms')],
+ ['Bedrooms',p=>unitText(p.units,'bedrooms')],
+ ['Bathrooms',p=>unitText(p.units,'bathrooms')],
  ['Tenure',p=>text(p.tenure)],
  ['Maintenance fee',p=>{const v=maintenanceFee(p);return v?`RM ${v} / sqft`:null},maintenanceFee,'low','Lowest'],
  ['Completion',completion,completionTime,'low','Earliest'],
