@@ -2,8 +2,36 @@
 import {useState} from 'react';
 import {EmailAuthProvider,reauthenticateWithCredential,updatePassword} from 'firebase/auth';
 import {authErrorMessage} from '../lib/auth-errors';
+import Icon from './Icon';
+const when=time=>time?new Date(time).toLocaleString('en-MY',{dateStyle:'medium',timeStyle:'short'}):'—';
+function Secret({name,label,autoComplete,value,onChange,disabled}){
+ const [shown,setShown]=useState(false);
+ return <label>{label}<span className="secret-input"><input name={name} type={shown?'text':'password'} autoComplete={autoComplete} required disabled={disabled} value={value} onChange={e=>onChange(e.target.value)}/><button type="button" aria-label={shown?`Hide ${label.toLowerCase()}`:`Show ${label.toLowerCase()}`} aria-pressed={shown} onClick={()=>setShown(!shown)}><Icon name={shown?'eyeOff':'eye'}/></button></span></label>;
+}
 export default function AdminSettings({user}){
- const [busy,setBusy]=useState(false),[status,setStatus]=useState('');
- async function save(e){e.preventDefault();const form=e.currentTarget,data=new FormData(form),password=String(data.get('password'));if(password!==data.get('confirm')){setStatus('New passwords do not match.');return}setBusy(true);setStatus('Updating password…');try{await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,String(data.get('current'))));await updatePassword(user,password);form.reset();setStatus('Password changed successfully.')}catch(error){setStatus(error.code==='auth/weak-password'||error.code==='auth/password-does-not-meet-requirements'?'Choose a stronger password that meets your account password policy.':authErrorMessage(error))}finally{setBusy(false)}}
- return <section className="admin-panel"><div className="eyebrow">ACCOUNT SETTINGS</div><h2>Change password.</h2><p>Signed in as {user.email}</p><form method="post" className="admin-password-form" onSubmit={save}><label>Current password<input name="current" type="password" autoComplete="current-password" required disabled={busy}/></label><label>New password<input name="password" type="password" autoComplete="new-password" minLength={6} required disabled={busy}/></label><label>Confirm new password<input name="confirm" type="password" autoComplete="new-password" minLength={6} required disabled={busy}/></label><button className="search-btn" disabled={busy}>{busy?'Updating…':'Change password'}</button><p role="status">{status}</p></form></section>;
+ const blank={current:'',password:'',confirm:''},[form,setForm]=useState(blank),[busy,setBusy]=useState(false),[status,setStatus]=useState({text:'',tone:''});
+ const set=key=>value=>{setForm({...form,[key]:value});setStatus({text:'',tone:''})};
+ const checks=[['At least 6 characters',form.password.length>=6],['Different from your current password',!!form.password&&form.password!==form.current],['Both new passwords match',!!form.confirm&&form.password===form.confirm]],ok=!!form.current&&checks.every(([,pass])=>pass);
+ async function save(e){e.preventDefault();if(!ok)return;setBusy(true);setStatus({text:'Updating password…',tone:''});try{await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,form.current));await updatePassword(user,form.password);setForm(blank);setStatus({text:'Password changed successfully.',tone:'good'})}catch(error){setStatus({text:error.code==='auth/weak-password'||error.code==='auth/password-does-not-meet-requirements'?'Choose a stronger password that meets your account password policy.':authErrorMessage(error),tone:'bad'})}finally{setBusy(false)}}
+ return <section className="admin-panel">
+  <div className="eyebrow">ACCOUNT SETTINGS</div><h2>Your account.</h2>
+  <div className="settings-grid">
+   <div className="settings-card">
+    <h3><Icon name="users"/>Signed in</h3>
+    <div className="account-id"><span aria-hidden="true">{(user.email||'?')[0].toUpperCase()}</span><div><strong>{user.email}</strong><small>Administrator</small></div></div>
+    <dl className="account-facts"><div><dt>Last sign-in</dt><dd>{when(user.metadata?.lastSignInTime)}</dd></div><div><dt>Account created</dt><dd>{when(user.metadata?.creationTime)}</dd></div></dl>
+    <p className="settings-note"><Icon name="clock"/>For security, you are signed out automatically after 30 minutes of inactivity.</p>
+   </div>
+   <form method="post" className="settings-card admin-password-form" onSubmit={save}>
+    <h3><Icon name="lock"/>Change password</h3>
+    <p className="settings-note">Enter your current password to confirm it’s you, then choose a new one.</p>
+    <Secret name="current" label="Current password" autoComplete="current-password" value={form.current} onChange={set('current')} disabled={busy}/>
+    <Secret name="password" label="New password" autoComplete="new-password" value={form.password} onChange={set('password')} disabled={busy}/>
+    <Secret name="confirm" label="Confirm new password" autoComplete="new-password" value={form.confirm} onChange={set('confirm')} disabled={busy}/>
+    <ul className="password-checks">{checks.map(([label,pass])=><li key={label} className={pass?'pass':undefined}><Icon name={pass?'circleCheck':'minus'}/>{label}</li>)}</ul>
+    <button className="search-btn" disabled={busy||!ok}><Icon name="key"/>{busy?'Updating…':'Change password'}</button>
+    <p className={`admin-status ${status.tone}`} role="status">{status.text}</p>
+   </form>
+  </div>
+ </section>;
 }
