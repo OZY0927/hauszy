@@ -2,7 +2,9 @@ import {securityHeaders} from './lib/security-headers.js';
 const config = {
   trailingSlash: true,
   poweredByHeader: false,
-  async headers(){return [{source:'/:path*',headers:securityHeaders(process.env.NODE_ENV==='production')}]},
+  // Admin pages get their own nonce CSP (which allows uploads to storage) from proxy.js. Browsers enforce every CSP header
+  // they receive, so the public CSP must not also be sent there or it blocks those uploads.
+  async headers(){const all=securityHeaders(process.env.NODE_ENV==='production'),isCsp=h=>h.key==='Content-Security-Policy';return [{source:'/:path*',headers:all.filter(h=>!isCsp(h))},{source:'/:path((?!admin(?:/|$)).*)',headers:all.filter(isCsp)}]},
   // Optimize legacy Firebase media only; Supabase uploads load directly from our /media/ route.
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'firebasestorage.googleapis.com', pathname: '/v0/b/hauszy.firebasestorage.app/o/**' }],
