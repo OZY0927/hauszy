@@ -3,10 +3,9 @@ const config = {
   trailingSlash: true,
   poweredByHeader: false,
   async headers(){return [{source:'/:path*',headers:securityHeaders(process.env.NODE_ENV==='production')}]},
-  // Optimize legacy Firebase media and our own /media/ images (Supabase uploads served from this domain).
+  // Optimize legacy Firebase media only; Supabase uploads load directly from our /media/ route.
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'firebasestorage.googleapis.com', pathname: '/v0/b/hauszy.firebasestorage.app/o/**' }],
-    localPatterns: [{ pathname: '/media/**', search: '' }],
     qualities: [75]
   },
   async redirects() {
