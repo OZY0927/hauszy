@@ -1,12 +1,12 @@
-import {supabaseImagePattern} from './lib/supabase-config.js';
 import {securityHeaders} from './lib/security-headers.js';
 const config = {
   trailingSlash: true,
   poweredByHeader: false,
   async headers(){return [{source:'/:path*',headers:securityHeaders(process.env.NODE_ENV==='production')}]},
-  // Restrict optimized images to legacy Firebase media and the configured Supabase project.
+  // Optimize legacy Firebase media and our own /media/ images (Supabase uploads served from this domain).
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: 'firebasestorage.googleapis.com', pathname: '/v0/b/hauszy.firebasestorage.app/o/**' },...(supabaseImagePattern()?[supabaseImagePattern()]:[])],
+    remotePatterns: [{ protocol: 'https', hostname: 'firebasestorage.googleapis.com', pathname: '/v0/b/hauszy.firebasestorage.app/o/**' }],
+    localPatterns: [{ pathname: '/media/**', search: '' }],
     qualities: [75]
   },
   async redirects() {
