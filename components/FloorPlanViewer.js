@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useId,useRef,useState} from 'react';
 import Icon from './Icon';
+import PreviewImage from './PreviewImage';
 
 // Zoom limits for the floor plan: 1 = whole plan fits the viewport.
 const MIN_ZOOM=1,MAX_ZOOM=4,TAP_ZOOM=2.5,START={s:1,x:0,y:0};
@@ -59,7 +60,7 @@ export default function FloorPlanViewer({plans=[],name}){
   function show(i=0){goTo(i);dialog.current.showModal();setOpen(true)}
   function close(){dialog.current.close()}
   return <>
-    <div className="floorplan-placeholder"><button type="button" className="floorplan-open" onClick={()=>show(0)} aria-label={`Open ${label(0).toLowerCase()}`}><img className="sample-floorplan" src={plans[0]} alt={label(0)} loading="lazy"/><small><Icon name="maximize"/> {count>1?`Open floor plans (${count})`:'Open floor plan'}</small></button>{count>1&&<div className="floorplan-thumbs">{plans.map((plan,i)=><button type="button" key={i+plan} onClick={()=>show(i)} aria-label={`Open ${label(i).toLowerCase()}`}><img src={plan} alt="" loading="lazy" draggable={false}/></button>)}</div>}</div>
+    <div className="floorplan-placeholder"><button type="button" className="floorplan-open" onClick={()=>show(0)} aria-label={`Open ${label(0).toLowerCase()}`}><PreviewImage className="sample-floorplan" src={plans[0]} alt={label(0)} loading="lazy"/><small><Icon name="maximize"/> {count>1?`Open floor plans (${count})`:'Open floor plan'}</small></button>{count>1&&<div className="floorplan-thumbs">{plans.map((plan,i)=><button type="button" key={i+plan} onClick={()=>show(i)} aria-label={`Open ${label(i).toLowerCase()}`}><PreviewImage src={plan} alt="" loading="lazy" draggable={false}/></button>)}</div>}</div>
     <dialog ref={dialog} className="floorplan-dialog" aria-labelledby={titleId} onClose={()=>{setOpen(false);pointers.current.clear();setDragging(false)}} onClick={event=>{if(event.target===dialog.current)close()}}>
       <div className="floorplan-dialog-heading"><h2 id={titleId}>{name} · Floor plan{count>1&&` ${index+1} of ${count}`}</h2><div className="floorplan-dialog-actions">{count>1&&<><button type="button" onClick={()=>goTo(index-1)} aria-label="Previous floor plan"><Icon name="chevronLeft"/></button><button type="button" onClick={()=>goTo(index+1)} aria-label="Next floor plan"><Icon name="chevronRight"/></button></>}<button type="button" onClick={close} aria-label="Close floor plan" autoFocus><Icon name="x"/></button></div></div>
       <p className="floorplan-help">Pinch or scroll to zoom, drag to move. Double-tap to zoom in or out.<output aria-live="polite" aria-label="Zoom level">{Math.round(view.s*100)}%</output></p>

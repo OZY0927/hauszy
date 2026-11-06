@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {createClient} from '@supabase/supabase-js';
 import {authorizeImageUpload,validateUploadRequest,MAX_IMAGE_BYTES} from '../lib/storage-upload.js';
 import {supabaseOrigin} from '../lib/supabase-config.js';
-import {isOptimizedImage,hideStorageUrls,mediaSource} from '../lib/media.js';
+import {isOptimizedImage,hideStorageUrls,mediaSource,isMediaPath,previewUrl,photoName} from '../lib/media.js';
 import {safeUrl} from '../lib/project.js';
 import {securityHeaders} from '../lib/security-headers.js';
 const valid={folder:'projects/project-id',contentType:'image/webp',size:1234};
@@ -56,4 +56,17 @@ test('storage links become /media/ paths, and /media/ only maps back to images i
  assert.equal(mediaSource(['hauszy-project','projects','p1','a.webp'],origin,'hauszy-project'),full);
  for(const path of [['other-bucket','a.jpg'],['hauszy-project','..','a.jpg'],['hauszy-project','a.html'],['hauszy-project'],undefined])assert.equal(mediaSource(path,origin,'hauszy-project'),null);
  assert.equal(mediaSource(['hauszy-project','a.jpg'],null,'hauszy-project'),null);
+});
+test('previews are signed beside their photo as WebP and never overwrite',async()=>{
+ const calls=[],client={storage:{from:()=>({createSignedUploadUrl:async(path,options)=>{calls.push({path,options});return {data:{token:'t'}}},getPublicUrl:path=>({data:{publicUrl:'https://project.supabase.co/storage/v1/object/public/hauszy-project/'+path}})})}};
+ const result=await authorizeImageUpload({...valid,previewOf:'abc-123'},{bucket:'hauszy-project',client,uuid:()=>{throw Error('preview names are not random')}});
+ assert.deepEqual(calls,[{path:'projects/project-id/abc-123-preview.webp',options:{upsert:false}}]);assert.ok(result.publicUrl.endsWith('/abc-123-preview.webp'));
+ for(const previewOf of ['','../x','a/b','a.webp','x-preview',1,'a'.repeat(129)])assert.throws(()=>validateUploadRequest({...valid,previewOf}),error=>error.status===400);
+ assert.throws(()=>validateUploadRequest({...valid,contentType:'image/png',previewOf:'abc'}),error=>error.status===400);
+});
+test('pages ask for the preview of uploaded photos only',()=>{
+ assert.equal(previewUrl('/media/hauszy-project/projects/p1/abc-123.jpg'),'/media/hauszy-project/projects/p1/abc-123-preview.webp');assert.ok(isMediaPath(previewUrl('/media/hauszy-project/projects/p1/abc-123.webp')));
+ assert.equal(previewUrl('https://project.supabase.co/storage/v1/object/public/hauszy-project/profile/id.png'),'https://project.supabase.co/storage/v1/object/public/hauszy-project/profile/id-preview.webp');
+ for(const src of ['/media/hauszy-project/projects/p1/abc-preview.webp','https://example.com/photo.jpg','https://firebasestorage.googleapis.com/v0/b/hauszy.firebasestorage.app/o/photo','/project-placeholder.svg',undefined])assert.equal(previewUrl(src),src);
+ assert.equal(photoName('/media/b/projects/p/abc.webp'),'abc');assert.equal(photoName('/media/b/projects/p/abc-preview.webp'),null);
 });
