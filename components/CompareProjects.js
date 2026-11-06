@@ -1,14 +1,14 @@
 'use client';
 import {useEffect,useRef} from 'react';
 import Link from 'next/link';
-import {compactMoney,completionTime,largestSize,maintenanceFee,priceText,pricePerSqft,unitRange,unitText,vpQuarter} from '../lib/project';
+import {compactMoney,completionTime,largestSize,maintenanceFee,priceLow,priceText,pricePerSqft,unitRange,unitText,vpQuarter} from '../lib/project';
 import {hasProjectInfo} from '../lib/project-visibility';
 import Icon from './Icon';
 const text=v=>hasProjectInfo(v)?String(v):null,fmt=n=>n.toLocaleString('en-MY');
 const completion=p=>[vpQuarter(p.vp),text(p.construction)].filter(Boolean).join(' · ')||null;
 // [label, shown text, figure to rank by, 'low'|'high' is better, tag on the best]
 const ROWS=[
- ['Price',p=>priceText(p,compactMoney),p=>p.price||null,'low','Lowest'],
+ ['Price',p=>priceText(p,compactMoney),priceLow,'low','Lowest'],
  ['Price per sqft',p=>{const v=pricePerSqft(p);return v?`RM ${fmt(v)}`:null},pricePerSqft,'low','Lowest'],
  ['Built-up size',p=>unitRange(p.units,'size',' sqft'),largestSize,'high','Largest'],
  ['Bedrooms',p=>unitText(p.units,'bedrooms')],
