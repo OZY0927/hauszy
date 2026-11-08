@@ -29,3 +29,14 @@ test('project video links become looping players, unsupported links are hidden',
   assert.deepEqual(videoSource('https://cdn.example.com/tour.MP4?token=1'),{kind:'file',src:'https://cdn.example.com/tour.MP4?token=1'});
   for(const url of ['','http://example.com/a.mp4','https://example.com/page','https://www.youtube.com/watch','javascript:alert(1)'])assert.equal(videoSource(url),null)});
 test('cards and the project page show the minimum price in full ringgit',async()=>{const {startingPrice,wholeMoney}=await import('../lib/project.js');assert.equal(wholeMoney(3200000),'RM3,200,000');assert.equal(wholeMoney(450000.5),'RM450,001');assert.deepEqual(startingPrice(normaliseProject({price:3200000,priceMax:4500000},'a')),['From','RM3,200,000']);assert.deepEqual(startingPrice(normaliseProject({units:[{price:650000},{price:450000}]},'b')),['From','RM450,000']);assert.deepEqual(startingPrice(normaliseProject({priceMax:900000},'c')),['Up to','RM900,000']);assert.equal(startingPrice(normaliseProject({},'d')),null)});
+
+test('listing names prefer trimmed display names and fall back to the real project name',async()=>{
+ const {listingName,normaliseProject,cardProject,sortProjects}=await import('../lib/project.js');
+ for(const displayName of [undefined,null,'','   '])assert.equal(listingName({name:'Actual name',displayName}),'Actual name');
+ const project=normaliseProject({name:'Actual name',displayName:'  Marketing name  '},'id');
+ assert.equal(listingName(project),'Marketing name');assert.equal(project.name,'Actual name');
+ assert.equal(cardProject(project).displayName,'Marketing name');assert.equal(cardProject(project).name,'Actual name');
+ const projects=[{id:'a',name:'Alpha',displayName:'Zulu'},{id:'b',name:'Beta'}];
+ assert.deepEqual(sortProjects(projects,'name-asc').map(p=>p.id),['b','a']);
+ assert.deepEqual(sortProjects(projects,'name-desc').map(p=>p.id),['a','b']);
+});

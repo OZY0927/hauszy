@@ -14,3 +14,11 @@ test('rejects malformed JSON, wrong shapes and invalid specifications',()=>{
  for(const data of [[],{name:'Home'},{name:'Home',location:'KL',units:{}},{name:'Home',location:'KL',units:[null]},{name:42,location:'KL'},{name:'Home',location:'KL',latitude:3},{name:'Home',location:'KL',images:['javascript:alert(1)']},{name:'Home',location:'KL',units:[{name:'A',price:-1}]},{name:'Home',location:'KL',vp:'Q5 2029'},{name:'Home',location:'KL',vp:'March 2029'}])assert.throws(()=>parse(data));
 });
 test('imports up to six https showroom photos',()=>{assert.deepEqual(parse({name:'Home',location:'KL',showroomImages:['https://example.com/s.jpg']}).showroomPhotos,[{url:'https://example.com/s.jpg'}]);assert.deepEqual(parse({name:'Home',location:'KL'}).showroomPhotos,[]);assert.throws(()=>parse({name:'Home',location:'KL',showroomImages:Array(7).fill('https://example.com/s.jpg')}),/up to 6 showroom/);assert.throws(()=>parse({name:'Home',location:'KL',showroomImages:['http://example.com/s.jpg']}));assert.throws(()=>parse({name:'Home',location:'KL',showroomImages:'https://example.com/s.jpg'}))});
+
+test('display name imports and saves as optional text while the project name stays required',()=>{
+ assert.equal(parse({name:'Official name',displayName:'  Marketing name ',location:'Penang'}).form.displayName,'Marketing name');
+ assert.equal(parse({name:'Official name',location:'Penang'}).form.displayName,'');
+ assert.throws(()=>parse({displayName:'Marketing name',location:'Penang'}),/project name/);
+ assert.throws(()=>parse({name:'Official name',displayName:123,location:'Penang'}),/text/);
+ assert.throws(()=>parse({name:'Official name',displayName:'a'.repeat(501),location:'Penang'}),/500/);
+});
