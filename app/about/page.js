@@ -1,8 +1,12 @@
 import {pageMetadata} from '../../lib/seo';
-import Link from 'next/link';
 import {getProfile} from '../../lib/firestore-server';
 import {safeUrl} from '../../lib/project';
-import Gallery from '../../components/Gallery';
-import Icon from '../../components/Icon';
-export const metadata=pageMetadata("Your Penang Property Contact","Get personal guidance for your Penang property search. Meet your Hauszy contact, view profile and agency details, and arrange an enquiry or viewing.","/about/");
-export default async function About(){let data={},failed=false;try{data=await getProfile()||{}}catch{failed=true}const photos=(data.gallery||[]).filter(p=>safeUrl(p.url));return <main><section className="all-projects-heading"><div className="eyebrow">A PERSONAL APPROACH TO PENANG PROPERTY</div><h1>A Penang focus.<br/>A <em>personal touch.</em></h1><p>Looking for a home, a business space or your next property in Penang? Get to know the person behind your search.</p></section><section className="about" id="about"><div><div className="eyebrow">MEET YOUR PENANG PROPERTY CONTACT</div><h2>{data.heading||<>Your Penang search.<br/>A little guidance helps.</>}</h2><p>{data.bio||'Explore property options across Penang Island and the mainland, with a personal approach to understanding your budget, preferred location and plans. Ask about project details, compare your options and arrange a viewing when you’re ready.'}</p>{failed&&<p role="status">Profile updates could not be loaded. Please try again later.</p>}</div><div className="agent-card"><div className="agent-icon" id="aboutPortrait">{safeUrl(data.portrait)?<img src={data.portrait} alt={data.name||'Your property partner'}/>:'h.'}</div><div><h3>{data.name||'Your property partner'}</h3><p><Icon name="badgeCheck"/> Property contact</p><span>{[data.ren,data.agency].filter(Boolean).join(' · ')||'Contact details coming soon'}</span></div><div className="agent-bottom"><Link className="about-project-link" href="/projects">Explore Penang projects <Icon name="arrowRight"/></Link></div></div></section><section className="success-gallery-section"><div className="section-heading"><div><div className="eyebrow">MOMENTS THAT MATTER</div><h2>New keys. Happy beginnings.</h2></div><p>A look at the people and moments<br/>behind successful property journeys.</p></div>{photos.length?<Gallery photos={photos} deals/>:<p className="empty-state">Success stories and photos will be shared here soon.</p>}</section></main>}
+import {whatsappNumber} from '../../lib/whatsapp';
+import AboutJourney from '../../components/AboutJourney';
+export const metadata=pageMetadata('Your Penang Property Contact','Get personal guidance for your Penang property search. Meet your Hauszy contact, view profile and agency details, and arrange an enquiry or viewing.','/about/');
+export default async function About(){
+ let data={},failed=false;try{data=await getProfile()||{}}catch{failed=true}
+ const profile={name:data.name||'Your property partner',heading:data.heading||'Your Penang search. A little guidance helps.',bio:data.bio||'Explore property options across Penang Island and the mainland, with a personal approach to understanding your budget, preferred location and plans. Ask about project details, compare your options and arrange a viewing when you’re ready.',portrait:safeUrl(data.portrait)?data.portrait:null,ren:data.ren||'',agency:data.agency||'',whatsapp:whatsappNumber(data)};
+ const photos=(data.gallery||[]).filter(p=>safeUrl(p.url));
+ return <AboutJourney profile={profile} photos={photos} failed={failed}/>;
+}
