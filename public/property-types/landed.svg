@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" role="img" aria-labelledby="title desc">
+<title id="title">Minimal 3D landed property icon</title>
+<desc id="desc">Isometric two-storey ivory house with a sand pitched roof, sheltered porch and blue-grey windows. Pure vector shapes on a transparent background.</desc>
+<path d="M64 373 291 440 455 346 228 279Z" fill="#C9B298"/>
+<path d="M64 365 291 432 455 338 228 271Z" fill="#EBDBC5"/>
+<path d="M112 207 292 260V411L112 358Z" fill="#F2E9DB"/>
+<path d="M292 260 421 186V337L292 411Z" fill="#C9B79F"/>
+<path d="M112 207 202 107 292 260Z" fill="#FFF7EB"/>
+<path d="M202 107 332 33 435 188 292 270Z" fill="#C5A47E"/>
+<path d="M94 212 195 95 211 100 113 217Z" fill="#E8CAA3"/>
+<path d="M195 95 332 17 350 24 211 104Z" fill="#F1D9B9"/>
+<path d="M211 104 350 24 450 184 311 264Z" fill="#D8B88F"/>
+<path d="M195 95 211 104 311 264 292 259Z" fill="#EBD0AB"/>
+<path d="M311 264 450 184V197L311 277Z" fill="#B8976D"/>
+<path d="M292 259 311 264V277L292 272Z" fill="#D0AE85"/>
+<path d="M147 218 190 231V273L147 260Z" fill="#D8C8B2"/>
+<path d="M152 224 185 234V267L152 257Z" fill="#77909A"/>
+<path d="M169 229V262" stroke="#E8DDCD" stroke-width="3"/>
+<path d="M219 239 265 253V295L219 281Z" fill="#D8C8B2"/>
+<path d="M224 246 260 257V288L224 277Z" fill="#77909A"/>
+<path d="M242 251V282" stroke="#E8DDCD" stroke-width="3"/>
+<path d="M323 264 356 245V288L323 307Z" fill="#A99479"/>
+<path d="M327 267 352 253V284L327 298Z" fill="#637D88"/>
+<path d="M376 234 405 217V260L376 277Z" fill="#A99479"/>
+<path d="M380 237 401 225V256L380 268Z" fill="#637D88"/>
+<path d="M323 330 356 311V354L323 373Z" fill="#A99479"/>
+<path d="M327 333 352 319V350L327 364Z" fill="#637D88"/>
+<path d="M376 300 405 283V326L376 343Z" fill="#A99479"/>
+<path d="M380 303 401 291V322L380 334Z" fill="#637D88"/>
+<path d="M219 321 260 333V402L219 390Z" fill="#BEA78A"/>
+<path d="M225 328 254 337V400L225 391Z" fill="#9E8061"/>
+<path d="M247 362V376" stroke="#EBD8BC" stroke-width="3" stroke-linecap="round"/>
+<path d="M136 297 185 312V350L136 335Z" fill="#D8C8B2"/>
+<path d="M141 304 180 316V344L141 332Z" fill="#77909A"/>
+<path d="M161 310V338" stroke="#E8DDCD" stroke-width="3"/>
+<path d="M82 286 191 318 226 298 117 266Z" fill="#F8EBD6"/>
+<path d="M82 286V298L191 330V318Z" fill="#D8B88F"/>
+<path d="M191 318 226 298V310L191 330Z" fill="#B8976D"/>
+<path d="M88 300 100 304V367L88 363Z" fill="#E8DDCC"/>
+<path d="M100 304 107 300V363L100 367Z" fill="#BDA98E"/>
+<path d="M175 326 187 330V393L175 389Z" fill="#E8DDCC"/>
+<path d="M187 330 194 326V389L187 393Z" fill="#BDA98E"/>
+</svg>

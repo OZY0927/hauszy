@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';
+import {ViewTransition,useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import Icon from './Icon';
 import PreviewImage from './PreviewImage';
@@ -13,11 +13,11 @@ export default function ProjectGallery({photos=[],name,hero=null}){
  useEffect(()=>{if(!open)return;const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=previous}},[open]);
  const controls=count>1?<div className="project-gallery-controls gallery-controls"><button type="button" onClick={()=>go(-1)} aria-label="Previous project photo"><Icon name="arrowLeft"/></button><span>{String(current+1).padStart(2,'0')} <i>/</i> {String(count).padStart(2,'0')}</span><button type="button" onClick={()=>go(1)} aria-label="Next project photo"><Icon name="arrowRight"/></button></div>:null;
  return <>
-  {hero?<section className={'project-story-hero'+(count?' has-photo':'')} aria-labelledby="project-story-title">
-   {count>0&&<button type="button" className="project-story-cover gallery-tile" onClick={show} aria-label={`Open project photo ${current+1}`}><img key={current} src={failed?'/project-placeholder.svg':items[current]} alt={`${name} — project photo ${current+1}`} fetchPriority="high" onError={()=>setFailed(true)}/></button>}
+  {hero?<section className={'project-story-hero'+(count?' has-photo':'')} data-project-id={hero.id} aria-labelledby="project-story-title">
+   {count>0&&<ViewTransition name={`project-photo-${hero.id}`} share="project-morph" default="none"><button type="button" className="project-story-cover gallery-tile" onClick={show} aria-label={`Open project photo ${current+1}`}><img key={current} src={failed?'/project-placeholder.svg':items[current]} alt={`${name} — project photo ${current+1}`} fetchPriority="high" onError={()=>setFailed(true)}/></button></ViewTransition>}
    <div className="project-story-hero-shade"/>
    <Link className="project-story-back" href="/projects"><Icon name="arrowLeft"/> All projects</Link>
-   <div className="project-story-hero-copy">{hero.location&&<p>{hero.location}</p>}<h1 id="project-story-title">{name}</h1><span>{hero.type}{hero.mode&&` · ${hero.mode}`}</span></div>
+   <div className="project-story-hero-copy">{hero.location&&<p>{hero.location}</p>}<ViewTransition name={`project-name-${hero.id}`} share="project-morph" default="none"><h1 id="project-story-title">{name}</h1></ViewTransition><span>{hero.type}{hero.mode&&` · ${hero.mode}`}</span></div>
    <div className="project-story-hero-bottom"><div>{controls}{count>0&&<button type="button" className="project-photo-open gallery-tile" onClick={show}><Icon name="images"/> View all {count} photos</button>}</div>{hero.target&&<a className="project-hero-discover" href={'#'+hero.target}>Discover the project <Icon name="arrowDown"/></a>}{hero.price&&<div className="project-hero-price"><small>{hero.price[0]}</small><strong>{hero.price[1]}</strong></div>}</div>
   </section>:<div className="project-editorial-gallery">
    <button className="project-editorial-photo gallery-tile" type="button" onClick={show} aria-label={`Open project photo ${current+1}`}><PreviewImage key={current} src={items[current]||'/project-placeholder.svg'} alt={`${name} — project photo ${current+1}`} loading="lazy"/><span><Icon name="maximize"/> Open gallery</span></button>

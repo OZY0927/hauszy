@@ -2,6 +2,7 @@
 import {useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import CollectionCard from './CollectionCard';
+import TiltCard from './TiltCard';
 import Icon from './Icon';
 import {sampleProjects} from '../lib/featured-projects';
 
@@ -23,6 +24,7 @@ export default function FeaturedProjectCloud({candidates}){
     const ease=1-Math.pow(1-t,3),angle=ANGLES[index]||0;
     card.style.setProperty('--cloud-opacity',Math.min(1,t*2));
     card.style.setProperty('--cloud-transform',small.matches||reduced.matches?`translateY(${(1-ease)*24}px) scale(${.96+.04*ease})`:`translate3d(0,${(1-ease)*(130+index*12)}px,${-420*(1-ease)}px) rotateX(${12*(1-ease)}deg) rotateY(${(index%2?1:-1)*30*(1-ease)}deg) rotateZ(${angle*(1-.2*ease)}deg) scale(${.6+.4*ease})`);
+
    });
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
@@ -34,7 +36,7 @@ export default function FeaturedProjectCloud({candidates}){
  return <section ref={section} className="project-cloud" aria-label="Project spotlight">
   <div ref={stage} className="project-cloud-stage">
    <div className="project-cloud-heading"><Link href="/projects">Explore all projects <Icon name="arrowUpRight"/></Link></div>
-   <div className="project-cloud-cards">{projects.map((project,index)=><div className={'project-cloud-item cloud-place-'+index} key={project.id}><CollectionCard project={project} titleOnly/></div>)}</div>
+   <div className="project-cloud-cards">{projects.map((project,index)=><div className={'project-cloud-item cloud-place-'+index} key={project.id}><TiltCard><CollectionCard project={project} titleOnly/></TiltCard></div>)}</div>
   </div>
  </section>;
 }

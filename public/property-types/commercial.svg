@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" role="img" aria-labelledby="title desc">
+<title id="title">Minimal 3D commercial property icon</title><desc id="desc">Isometric three-storey commercial shop building in ivory and sand with blue-grey glazing and a terracotta shop awning. Pure vector shapes on a transparent background.</desc>
+<path d="M65 379 297 448 451 361 220 292Z" fill="#C9B298"/>
+<path d="M65 371 297 440 451 353 220 284Z" fill="#EBDBC5"/>
+<path d="M103 158 294 214V419L103 363Z" fill="#F2E9DB"/>
+<path d="M294 214 421 142V347L294 419Z" fill="#C9B79F"/>
+<path d="M92 145 224 70 433 132 300 207Z" fill="#FFF7EB"/>
+<path d="M92 145V161L300 223V207Z" fill="#DDCAB0"/>
+<path d="M300 207 433 132V148L300 223Z" fill="#B6A186"/>
+<path d="M116 144 224 83 408 137 300 198Z" fill="#CBBCA7"/>
+<path d="M129 145 225 91 395 141 299 195Z" fill="#F1E6D6"/>
+<path d="M125 185 271 228V270L125 227Z" fill="#D8C8B2"/>
+<path d="M131 193 265 232V262L131 223Z" fill="#77909A"/>
+<path d="M175 206V236M220 219V249" stroke="#E8DDCD" stroke-width="4"/>
+<path d="M125 247 271 290V332L125 289Z" fill="#D8C8B2"/>
+<path d="M131 255 265 294V324L131 285Z" fill="#77909A"/>
+<path d="M175 268V298M220 281V311" stroke="#E8DDCD" stroke-width="4"/>
+<path d="M316 224 400 177V218L316 265Z" fill="#A99479"/>
+<path d="M322 228 394 188V214L322 254Z" fill="#637D88"/>
+<path d="M358 208V235" stroke="#D0C1AC" stroke-width="4"/>
+<path d="M316 285 400 238V279L316 326Z" fill="#A99479"/>
+<path d="M322 289 394 249V275L322 315Z" fill="#637D88"/>
+<path d="M358 269V296" stroke="#D0C1AC" stroke-width="4"/>
+<path d="M121 309 274 354V410L121 365Z" fill="#D5C3AA"/>
+<path d="M128 318 199 339V386L128 365Z" fill="#77909A"/>
+<path d="M207 341 266 358V405L207 388Z" fill="#637D88"/>
+<path d="M236 351V396" stroke="#E8DDCD" stroke-width="4"/>
+<path d="M229 375V383M244 379V387" stroke="#E8DDCD" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M118 294 281 342 281 359 118 311Z" fill="#E3C9A5"/>
+<path d="M118 294 281 342 266 362 103 314Z" fill="#AD5B42"/>
+<path d="M118 294 141 301 126 321 103 314Z" fill="#EEDAC0"/>
+<path d="M164 307 187 314 172 334 149 327Z" fill="#EEDAC0"/>
+<path d="M211 321 234 328 219 348 196 341Z" fill="#EEDAC0"/>
+<path d="M258 335 281 342 266 362 243 355Z" fill="#EEDAC0"/>
+<path d="M103 314 266 362V373L103 325Z" fill="#963F2C"/>
+<path d="M103 314 126 321V332L103 325ZM149 327 172 334V345L149 338ZM196 341 219 348V359L196 352ZM243 355 266 362V373L243 366Z" fill="#DDC09B"/>
+<path d="M266 362 281 342V353L266 373Z" fill="#824330"/>
+</svg>
