@@ -34,7 +34,7 @@ export default function FeaturedProjectCloud({candidates}){
  return <section ref={section} className="project-cloud" aria-label="Project spotlight">
   <div ref={stage} className="project-cloud-stage">
    <div className="project-cloud-heading"><Link href="/projects">Explore all projects <Icon name="arrowUpRight"/></Link></div>
-   <div className="project-cloud-cards">{projects.map((project,index)=><div className={'project-cloud-item cloud-place-'+index} key={project.id}><CollectionCard project={project}/></div>)}</div>
+   <div className="project-cloud-cards">{projects.map((project,index)=><div className={'project-cloud-item cloud-place-'+index} key={project.id}><CollectionCard project={project} titleOnly/></div>)}</div>
   </div>
  </section>;
 }
