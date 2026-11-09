@@ -5,7 +5,7 @@ import {interactionSound,playUISound} from '../lib/ui-sounds';
 import Icon from './Icon';
 
 const KEY='hauszy-ui-sounds';
-export default function SiteSounds(){
+export default function SiteSounds({showControl=true}){
  const [enabled,setEnabled]=useState(true),[supported,setSupported]=useState(true);
  const enabledRef=useRef(true),audio=useRef(null),lastPlayed=useRef(0),path=usePathname();
  function play(name){
@@ -46,6 +46,6 @@ export default function SiteSounds(){
   try{localStorage.setItem(KEY,next?'on':'off')}catch{}
   if(next)play('tick');else if(audio.current?.state==='running')audio.current.suspend().catch(()=>{});
  }
- if(!supported||path.startsWith('/admin'))return null;
+ if(!showControl||!supported||path.startsWith('/admin'))return null;
  return <button type="button" className="site-sound-toggle" aria-label="Interface sounds" aria-pressed={enabled} onClick={toggle} title={enabled?'Turn interface sounds off':'Turn interface sounds on'}><Icon name={enabled?'volume':'volumeOff'}/><span>Sound {enabled?'on':'off'}</span></button>;
 }

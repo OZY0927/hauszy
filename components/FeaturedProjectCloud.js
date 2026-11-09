@@ -4,13 +4,13 @@ import Link from 'next/link';
 import CollectionCard from './CollectionCard';
 import TiltCard from './TiltCard';
 import Icon from './Icon';
-import {sampleProjects} from '../lib/featured-projects';
+import {HOT_PROJECT_LIMIT,sampleProjects} from '../lib/featured-projects';
 
 const ANGLES=[-9,7,-6,9,8,-7,6,-9];
-export default function FeaturedProjectCloud({candidates}){
+export default function FeaturedProjectCloud({candidates,priorityIds=[]}){
  const section=useRef(null),stage=useRef(null);
- const [projects,setProjects]=useState(()=>candidates.slice(0,8));
- useEffect(()=>setProjects(sampleProjects(candidates)),[candidates]);
+ const [projects,setProjects]=useState(()=>candidates.slice(0,HOT_PROJECT_LIMIT));
+ useEffect(()=>setProjects(sampleProjects(candidates,HOT_PROJECT_LIMIT,Math.random,priorityIds)),[candidates,priorityIds]);
  useEffect(()=>{
   if(!projects.length)return;
   const root=section.current,scene=stage.current,reduced=matchMedia('(prefers-reduced-motion: reduce)'),small=matchMedia('(max-width: 800px)');
