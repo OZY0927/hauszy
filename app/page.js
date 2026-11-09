@@ -1,9 +1,8 @@
 import JsonLd from '../components/JsonLd';
-import {pageMetadata,absoluteUrl} from '../lib/seo';
-import Link from 'next/link';
-import ProjectBrowser from '../components/ProjectBrowser';
+import PenangHome from '../components/PenangHome';
 import {getPublishedProjects} from '../lib/firestore-server';
+import {getFeaturedProjectPool} from '../lib/featured-projects-server';
 import {cardProject} from '../lib/project';
-import Icon from '../components/Icon';
-export const metadata=pageMetadata("Penang Property & New Launch Projects","Explore properties across Penang Island and the mainland. Compare homes, commercial spaces and industrial projects, with tools to plan your next move.","/");
-export default async function Home(){let projects=[],error=false;try{projects=(await getPublishedProjects()).map(cardProject)}catch{error=true}return <main><JsonLd data={absoluteUrl('/')?{'@context':'https://schema.org','@type':'WebSite',name:'Hauszy',url:absoluteUrl('/'),inLanguage:'en-MY'}:null}/><section className="hero"><div className="hero-copy"><div className="eyebrow"><span/>PENANG PROPERTY. A PERSONAL APPROACH.</div><h1>Find your place<br/>in <em>Penang.</em></h1><p>Explore new launches across Penang Island and the mainland.<br/>Homes, commercial spaces and industrial properties, in one place.</p><Link className="text-link" href="/projects">Explore Penang projects <span><Icon name="arrowRight"/></span></Link><div className="hero-note"><span><Icon name="sparkles"/></span> A clearer search. A more personal approach.</div></div><div className="hero-image"><img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1500&q=85" alt="Bright contemporary living room"/><div className="image-caption"><span>SPACES TO MAKE YOUR OWN</span><span>Illustrative interior photo</span></div><div className="image-label">For life. For work.<br/>For what’s next.</div></div></section><ProjectBrowser projects={projects} error={error} home/></main>}
+import {pageMetadata,absoluteUrl} from '../lib/seo';
+export const metadata=pageMetadata('Discover Penang. Find Your Place.','Get to know Penang, from heritage streets and coastal neighbourhoods to green hills and the mainland. Discover the place behind your next move with Hauszy.','/');
+export default async function Home(){let featured={projects:[],popular:false};try{const projects=(await getPublishedProjects()).map(cardProject);featured=await getFeaturedProjectPool(projects)}catch{}return <><JsonLd data={absoluteUrl('/')?{'@context':'https://schema.org','@type':'WebSite',name:'Hauszy',url:absoluteUrl('/'),inLanguage:'en-MY'}:null}/><PenangHome featuredProjects={featured.projects} popularProjects={featured.popular}/></>}

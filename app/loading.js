@@ -1,1 +1,2 @@
-export default function Loading(){return <main className="page-loading" role="status">Loading…</main>}
+import BrandLoader from '../components/BrandLoader';
+export default function Loading(){return <BrandLoader/>}
