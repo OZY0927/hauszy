@@ -498,10 +498,10 @@ img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select
 
 /* Property collection: a persistent filter rail and quiet, image-led cards. */
 .projects-page{max-width:1600px;padding:48px 4% 70px;margin:auto}
-.projects-page .all-projects-heading{max-width:none;padding:0;margin:0 0 38px;display:grid;grid-template-columns:1fr 1fr;gap:12px 60px;align-items:end}
+.projects-page .all-projects-heading{max-width:none;padding:0;margin:0 0 38px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:end}
 .projects-page .all-projects-heading>.eyebrow{grid-column:1/-1;font-size:var(--text-caption)}
 .projects-page .all-projects-heading h1{font-size:clamp(2.25rem,4vw,3.625rem);line-height:1.13;margin:8px 0 0;letter-spacing:-2px}
-.projects-page .all-projects-heading p{max-width:470px;font-size:var(--text-body);line-height:1.8;margin:0 0 4px;justify-self:end}
+.projects-page .all-projects-heading p{max-width:none;font-size:var(--text-body);line-height:1.8;margin:0 0 4px;justify-self:start}
 .project-catalog{display:grid;grid-template-columns:minmax(260px,310px) minmax(0,1fr);gap:28px;align-items:start}
 .project-catalog .catalog-filters{position:sticky;top:20px;max-height:calc(100dvh - 40px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--secondary) transparent;background:#f1eae0;border:1px solid var(--line);border-radius:12px;margin:0;padding:22px;max-width:none;overscroll-behavior:contain}
 .catalog-filter-heading{display:flex;align-items:center;gap:12px;padding-bottom:22px;border-bottom:1px solid #352a2514}
@@ -527,8 +527,7 @@ img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select
 .project-catalog .listing-toolbar{margin:0 0 18px;gap:14px;align-items:center;flex-wrap:wrap;min-height:42px}
 .project-catalog .listing-toolbar .chips{gap:6px;max-width:none}.project-catalog .chips button{font-size:var(--text-caption);padding:8px 11px}.project-catalog .listing-meta{gap:14px;flex-wrap:wrap;justify-content:space-between;flex:1;font-size:var(--text-caption)}.project-catalog .listing-meta>span{white-space:nowrap;color:var(--muted)}
 .project-catalog .sort-by{font-size:var(--text-caption);gap:6px}.project-catalog .sort-by select{font-size:var(--text-control);max-width:170px}
-.project-catalog .cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-@media(min-width:561px) and (max-width:1100px){.project-catalog .cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.project-catalog .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
 .property-tile{position:relative;min-width:0;aspect-ratio:4/5;min-height:380px;border-radius:10px;overflow:hidden;isolation:isolate;background:#655d52;color:white}
 .property-tile-photo{position:absolute;inset:0}.property-tile-photo img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.22,1,.36,1)}
 .property-tile-link{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:26px;outline-offset:-5px}
