@@ -19,21 +19,21 @@ export default function PenangHome({featuredProjects=[],popularProjects=false,pr
  useEffect(()=>{if(playing)closeFilm.current?.focus({preventScroll:true})},[playing]);
  useEffect(()=>{
   const page=root.current,media=window.matchMedia('(prefers-reduced-motion: reduce)');
-  let frame=0;
+  const hero=page.querySelector('.pg-hero'),heroImage=hero.querySelector('.pg-hero-image'),intro=page.querySelector('.pg-intro-statement'),words=[...intro.querySelectorAll('[data-pg-word]')],track=filmTrack.current,film=track.querySelector('.pg-film-window');
+  let frame=0,shift='',read=-1,inset='';
   const update=()=>{
    frame=0;
    const reduced=media.matches,vh=window.innerHeight;
-   const hero=page.querySelector('.pg-hero');
-   const heroBox=hero.getBoundingClientRect();
-   if(heroBox.bottom>0)hero.style.setProperty('--pg-hero-shift',reduced?'0px':`${Math.min(vh*.2,Math.max(0,-heroBox.top)*.2)}px`);
-   const intro=page.querySelector('.pg-intro-statement'),box=intro.getBoundingClientRect();
-   const words=intro.querySelectorAll('[data-pg-word]');
+   // Read every rect first, then write, so a scroll frame lays out once. Each value is set on the element that uses it.
+   const heroBox=hero.getBoundingClientRect(),box=intro.getBoundingClientRect(),rect=track.getBoundingClientRect();
+   const nextShift=heroBox.bottom>0?(reduced?'0px':`${Math.min(vh*.2,Math.max(0,-heroBox.top)*.2)}px`):shift;
+   if(nextShift!==shift){shift=nextShift;heroImage.style.setProperty('--pg-hero-shift',shift)}
    const progress=reduced?1:Math.max(0,Math.min(1,(vh*.85-box.top)/(vh*.65)));
-   words.forEach((word,index)=>word.classList.toggle('is-read',progress>index/words.length));
-   const track=filmTrack.current,rect=track.getBoundingClientRect();
+   const count=words.filter((word,index)=>progress>index/words.length).length;
+   if(count!==read){read=count;words.forEach((word,index)=>word.classList.toggle('is-read',index<count))}
    const filmProgress=reduced?1:Math.max(0,Math.min(1,(vh*.3-rect.top)/(vh*.55)));
-   track.style.setProperty('--pg-film-inset',`${(1-filmProgress)*9}%`);
-   track.style.setProperty('--pg-film-radius',`${(1-filmProgress)*24}px`);
+   const nextInset=`${(1-filmProgress)*9}%`;
+   if(nextInset!==inset){inset=nextInset;film.style.setProperty('--pg-film-inset',inset);film.style.setProperty('--pg-film-radius',`${(1-filmProgress)*24}px`)}
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
   const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.12});

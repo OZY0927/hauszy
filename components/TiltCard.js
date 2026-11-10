@@ -1,6 +1,6 @@
 'use client';
 // Adapted from Bencho Tilt card, MIT licensed: https://bencho.dev/licence
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 /* ── inlined from lab/spring ──────────────────────── */
 /* ── one spring, for everything that settles ───────────────
@@ -70,52 +70,24 @@ const springOf = (tune) => ({
 
 /* Units matter. The snap threshold is absolute, so a caller
    works in pixels or in 0..100 — a spring driven over 0..1
-   would be "settled" before it had visibly moved. */
-function useSpring(target, tune = 50, instant = false) {
-  const [at, setAt] = useState(target);
-  const cur = useRef(target);
-  const vel = useRef(0);
-  const raf = useRef(0);
+   would be "settled" before it had visibly moved.
 
-  useEffect(() => {
-    if (instant) {
-      cur.current = target;
-      vel.current = 0;
-      setAt(target);
-      return;
-    }
-    const { k, d } = springOf(tune);
-    let prev = 0;
-    const tick = (t) => {
-      const dt = prev ? clamp((t - prev) / 16.67, 0, 2.5) : 1;
-      prev = t;
-      vel.current += (target - cur.current) * k * dt;
-      vel.current *= Math.pow(d, dt);
-      cur.current += vel.current * dt;
-      if (Math.abs(target - cur.current) < 0.02 && Math.abs(vel.current) < 0.02) {
-        cur.current = target;
-        vel.current = 0;
-        setAt(target);
-        raf.current = 0;
-        return;
-      }
-      setAt(cur.current);
-      raf.current = requestAnimationFrame(tick);
-    };
-    raf.current = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(raf.current);
-      raf.current = 0;
-    };
-    /* `tune` sits here beside `target` for the reason
-       Brightness spells out: the loop closes over it, so
-       without it a knob turned mid-flight would do nothing
-       until something else restarted the effect. Restarting
-       picks up from the refs, so it continues rather than
-       snapping. */
-  }, [target, tune, instant]);
-
-  return at;
+   One step of one spring, in place. It used to be a hook with
+   a loop and a setState of its own, which put three loops and
+   three React renders into every frame of every card; now the
+   card steps all three from one loop and paints the result
+   itself. The maths is unchanged. Returns true once settled. */
+const SPRING = springOf(50);
+function settle(s, target, dt) {
+  s.v += (target - s.at) * SPRING.k * dt;
+  s.v *= Math.pow(SPRING.d, dt);
+  s.at += s.v * dt;
+  if (Math.abs(target - s.at) < 0.02 && Math.abs(s.v) < 0.02) {
+    s.at = target;
+    s.v = 0;
+    return true;
+  }
+  return false;
 }
 
 /* Read once, the way the wheel and the pill nav do. A
@@ -196,31 +168,11 @@ const CORNER = 20;
 const TILT = 10;
 const SHADE = 60;
 
-export default function TiltCard({children, tilt = TILT, corner = CORNER, shade = SHADE}) {
-  const skin = useRef(null);
-  const [at, setAt] = useState({ x: 0, y: 0 });
-  const [on, setOn] = useState(false);
-  const still = stillness();
 
-  /* ── the state, and there is only this ───────────────────
-     Where the pointer is, as -1..1 on each axis, sprung. The
-     spring is on the POSITION rather than on the rotation, so
-     the gradients and the transform can never disagree about
-     where the finger is — they are three readings of one
-     number instead of three things being animated towards
-     the same place.
-
-     Sprung rather than tracked one-to-one because a card with
-     no weight follows the cursor exactly and reads as a
-     texture pinned to the mouse. The lag is what gives it
-     mass, and the settle on the way out is the only reason
-     leaving the card feels like anything at all. */
-  const sx = useSpring(on ? at.x : 0, 50, still);
-  const sy = useSpring(on ? at.y : 0, 50, still);
-  /* one more for how much of any of this applies, so the
-     shadow and the sheen fade rather than cutting */
-  const lit = useSpring(on ? 1 : 0, 50, still);
-
+/* Everything the card shows, read off the three sprung numbers.
+   Pure, so the server's first paint and every frame after it
+   come from the same place and cannot drift apart. */
+function look(sx, sy, lit, tilt, shade) {
   const max = clamp(tilt, 0, 20);
   const rx = -sy * max;
   const ry = sx * max;
@@ -235,20 +187,135 @@ export default function TiltCard({children, tilt = TILT, corner = CORNER, shade 
   const dark = (clamp(shade, 0, 100) / 100) * 0.55 * lit;
   const rim = (clamp(shade, 0, 100) / 100) * 0.34 * lit;
 
-  const track = (e) => {
-    const el = skin.current;
-    if (!el || still) return;
-    /* measured from the FRAME, which never moves. Reading the
-       card instead would be asking a rotating object where it
-       is, and near the edges it has already turned away from
-       the pointer that is asking. */
-    const r = el.getBoundingClientRect();
-    setAt({
-      x: clamp(((e.clientX - r.left) / r.width) * 2 - 1, -1, 1),
-      y: clamp(((e.clientY - r.top) / r.height) * 2 - 1, -1, 1),
-    });
-    setOn(true);
+  return {
+    /* translateZ FIRST, so the retreat is measured in
+       the room's axes rather than in the card's own —
+       after a rotation, the card's z points somewhere
+       off to the side and "back" stops meaning back. */
+    transform: `translateZ(${-SINK * lit}px) rotateX(${rx}deg) rotateY(${ry}deg)`,
+    /* ── the shadow TIGHTENS ────────────────────────
+       A thing pressed into a surface has less air under
+       it, so the gap closes and the shadow draws in.
+       Growing it on hover is the reflex — it is what a
+       card that LIFTS would do — and it fights every
+       other cue here. */
+    boxShadow: `0 ${mix(20, 9, lit)}px ${mix(44, 24, lit)}px -8px rgba(53, 42, 37, ${mix(
+      0.22,
+      0.15,
+      lit,
+    )})`,
+    /* ── the dent, and the rim opposite it ───────────
+       The shadow pools where the surface is deepest,
+       which is under the pointer, and the light catches
+       the far edge that has risen — so the two are
+       placed at mirrored points and neither is centred
+       on anything. This is the layer that makes the
+       transform read as a press. */
+    backgroundImage: `radial-gradient(42% 34% at ${px}% ${py}%, rgba(53, 42, 37, ${dark}) 0%, rgba(53, 42, 37, 0) 100%), radial-gradient(52% 42% at ${
+      100 - px
+    }% ${100 - py}%, rgba(252, 248, 242, ${rim}) 0%, rgba(252, 248, 242, 0) 100%)`,
   };
+}
+
+export default function TiltCard({children, tilt = TILT, corner = CORNER, shade = SHADE}) {
+  const skin = useRef(null);
+  const face = useRef(null);
+  const sheen = useRef(null);
+  const still = stillness();
+
+  /* ── the state, and there is only this ───────────────────
+     Where the pointer is, as -1..1 on each axis, sprung. The
+     spring is on the POSITION rather than on the rotation, so
+     the gradients and the transform can never disagree about
+     where the finger is — they are three readings of one
+     number instead of three things being animated towards
+     the same place.
+
+     Sprung rather than tracked one-to-one because a card with
+     no weight follows the cursor exactly and reads as a
+     texture pinned to the mouse. The lag is what gives it
+     mass, and the settle on the way out is the only reason
+     leaving the card feels like anything at all.
+
+     `lit` is one more for how much of any of this applies, so
+     the shadow and the sheen fade rather than cutting.
+
+     It lives in a ref, not in React state: a frame of this is
+     three numbers and three style writes, and routing it
+     through a render made the card's whole subtree reconcile
+     sixty times a second for nothing. */
+  const st = useRef(null);
+  if (!st.current) st.current = { x: { at: 0, v: 0 }, y: { at: 0, v: 0 }, lit: { at: 0, v: 0 }, on: false, aim: { x: 0, y: 0 }, pointer: null, raf: 0, prev: 0 };
+  const knobs = useRef({ tilt, shade });
+  knobs.current = { tilt, shade };
+
+  const paint = () => {
+    const s = st.current;
+    if (!face.current || !sheen.current) return;
+    const l = look(s.x.at, s.y.at, s.lit.at, knobs.current.tilt, knobs.current.shade);
+    face.current.style.transform = l.transform;
+    face.current.style.boxShadow = l.boxShadow;
+    sheen.current.style.backgroundImage = l.backgroundImage;
+  };
+
+  /* One loop for all three springs, parked the moment they have
+     all settled. The pointer is only measured here, once a frame
+     and before anything is written, so a fast mouse costs one
+     layout read per frame rather than one per event, and never
+     a read straight after a write. */
+  const tick = (t) => {
+    const s = st.current;
+    const dt = s.prev ? clamp((t - s.prev) / 16.67, 0, 2.5) : 1;
+    s.prev = t;
+    if (s.pointer && skin.current) {
+      /* measured from the FRAME, which never moves. Reading the
+         card instead would be asking a rotating object where it
+         is, and near the edges it has already turned away from
+         the pointer that is asking. */
+      const r = skin.current.getBoundingClientRect();
+      s.aim = {
+        x: clamp(((s.pointer.x - r.left) / r.width) * 2 - 1, -1, 1),
+        y: clamp(((s.pointer.y - r.top) / r.height) * 2 - 1, -1, 1),
+      };
+      s.pointer = null;
+    }
+    const x = settle(s.x, s.on ? s.aim.x : 0, dt);
+    const y = settle(s.y, s.on ? s.aim.y : 0, dt);
+    const l = settle(s.lit, s.on ? 1 : 0, dt);
+    paint();
+    if (x && y && l) {
+      s.raf = 0;
+      s.prev = 0;
+      return;
+    }
+    s.raf = requestAnimationFrame(tick);
+  };
+  const wake = () => {
+    if (!st.current.raf) st.current.raf = requestAnimationFrame(tick);
+  };
+  const release = () => {
+    if (!st.current.on) return;
+    st.current.on = false;
+    wake();
+  };
+
+  useEffect(() => () => {
+    cancelAnimationFrame(st.current.raf);
+    st.current.raf = 0;
+  }, []);
+  /* a knob turned mid-flight lands on the next frame, and at
+     rest it repaints once rather than waiting for a pointer */
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(paint, [tilt, shade]);
+
+  const track = (e) => {
+    if (!skin.current || still) return;
+    st.current.pointer = { x: e.clientX, y: e.clientY };
+    st.current.on = true;
+    wake();
+  };
+
+  const rest = look(0, 0, 0, tilt, shade);
 
   return (
     <div
@@ -260,7 +327,7 @@ export default function TiltCard({children, tilt = TILT, corner = CORNER, shade 
          while it is being touched rather than getting nothing
          at all. */
       onPointerMove={track}
-      onPointerUp={e => {if(e.pointerType !== 'mouse') setOn(false)}}
+      onPointerUp={e => {if(e.pointerType !== 'mouse') release()}}
       /* ── `out` with a containment test, NOT `leave` ───────
          Which is what leave IS — the browser derives it from
          exactly this event by asking whether the thing you
@@ -279,50 +346,29 @@ export default function TiltCard({children, tilt = TILT, corner = CORNER, shade 
       onPointerOut={(e) => {
         const el = skin.current;
         const to = e.relatedTarget;
-        if (!el || !to || !el.contains(to)) setOn(false);
+        if (!el || !to || !el.contains(to)) release();
       }}
       /* a touch taken over by a scroll never reports leaving */
-      onPointerCancel={() => setOn(false)}
+      onPointerCancel={release}
     >
+      {/* The style props are the resting pose only and never
+          change between renders, so React writes them once and
+          then leaves the loop's own writes alone. */}
       <div
+        ref={face}
         className="tlt-card"
         style={{
           borderRadius: clamp(corner, 0, 40),
-
-          /* translateZ FIRST, so the retreat is measured in
-             the room's axes rather than in the card's own —
-             after a rotation, the card's z points somewhere
-             off to the side and "back" stops meaning back. */
-          transform: `translateZ(${-SINK * lit}px) rotateX(${rx}deg) rotateY(${ry}deg)`,
-          /* ── the shadow TIGHTENS ────────────────────────
-             A thing pressed into a surface has less air under
-             it, so the gap closes and the shadow draws in.
-             Growing it on hover is the reflex — it is what a
-             card that LIFTS would do — and it fights every
-             other cue here. */
-          boxShadow: `0 ${mix(20, 9, lit)}px ${mix(44, 24, lit)}px -8px rgba(53, 42, 37, ${mix(
-            0.22,
-            0.15,
-            lit,
-          )})`,
+          transform: rest.transform,
+          boxShadow: rest.boxShadow,
         }}
       >
         {children}
-        {/* ── the dent, and the rim opposite it ───────────
-            The shadow pools where the surface is deepest,
-            which is under the pointer, and the light catches
-            the far edge that has risen — so the two are
-            placed at mirrored points and neither is centred
-            on anything. This is the layer that makes the
-            transform read as a press. */}
         <span
+          ref={sheen}
           className="tlt-sheen"
           aria-hidden="true"
-          style={{
-            backgroundImage: `radial-gradient(42% 34% at ${px}% ${py}%, rgba(53, 42, 37, ${dark}) 0%, rgba(53, 42, 37, 0) 100%), radial-gradient(52% 42% at ${
-              100 - px
-            }% ${100 - py}%, rgba(252, 248, 242, ${rim}) 0%, rgba(252, 248, 242, 0) 100%)`,
-          }}
+          style={{ backgroundImage: rest.backgroundImage }}
         />
       </div>
     </div>

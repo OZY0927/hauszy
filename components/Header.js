@@ -22,12 +22,13 @@ export default function Header(){
  const close=()=>drawer.current?.close();
  const show=()=>{tools.current.open=false;drawer.current.showModal();drawer.current.querySelector('button').focus();setOpen(true)};
  useEffect(()=>{
-  let previousY=window.scrollY;
-  const update=()=>{const y=window.scrollY;setScrolled(y>80);if(y!==previousY&&!header.current?.querySelector(':focus-visible'))setExpanded(false);previousY=y};
+  let previousY=window.scrollY,frame=0;
+  const update=()=>{frame=0;const y=window.scrollY;setScrolled(y>80);if(y!==previousY&&!header.current?.querySelector(':focus-visible'))setExpanded(false);previousY=y};
+  const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
   const outside=e=>{if(tools.current&&!tools.current.contains(e.target))tools.current.open=false;if(!header.current?.contains(e.target))setExpanded(false)};
   const escape=e=>{if(e.key==='Escape'&&tools.current?.open){tools.current.open=false;tools.current.querySelector('summary').focus()}else if(e.key==='Escape'&&!drawer.current?.open){setExpanded(false);if(window.scrollY>80)requestAnimationFrame(()=>compact.current?.focus())}};
-  update();window.addEventListener('scroll',update,{passive:true});document.addEventListener('click',outside);document.addEventListener('keydown',escape);
-  return()=>{window.removeEventListener('scroll',update);document.removeEventListener('click',outside);document.removeEventListener('keydown',escape)};
+  update();window.addEventListener('scroll',schedule,{passive:true});document.addEventListener('click',outside);document.addEventListener('keydown',escape);
+  return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);document.removeEventListener('click',outside);document.removeEventListener('keydown',escape)};
  },[]);
  useEffect(()=>{drawer.current?.close();if(tools.current)tools.current.open=false},[path]);
  useEffect(()=>{if(!open)return;const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=previous}},[open]);

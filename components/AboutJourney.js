@@ -13,9 +13,12 @@ export default function AboutJourney({profile:p,photos,failed}){
  const root=useRef(null);
  useEffect(()=>{
   const el=root.current;if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  el.classList.add('aj-motion');let frame=0;
-  const update=()=>{frame=0;const hero=el.querySelector('.aj-hero'),box=hero.getBoundingClientRect(),travel=Math.min(Math.max(-box.top,0),box.height);el.style.setProperty('--aj-travel',`${travel}px`);
-   const statement=el.querySelector('.aj-statement'),bounds=statement.getBoundingClientRect(),progress=Math.max(0,Math.min(1,(innerHeight*.8-bounds.top)/(bounds.height*.85)));const words=statement.querySelectorAll('span');words.forEach((word,i)=>word.classList.toggle('is-read',i/words.length<=progress));
+  el.classList.add('aj-motion');let frame=0,last=-1,read=-1;
+  // Elements are found once; rects are read before anything is written, and --aj-travel lives on the scene that uses it.
+  const hero=el.querySelector('.aj-hero'),scene=hero.querySelector('.aj-hero-scene'),statement=el.querySelector('.aj-statement'),words=[...statement.querySelectorAll('span')];
+  const update=()=>{frame=0;const box=hero.getBoundingClientRect(),bounds=statement.getBoundingClientRect(),travel=Math.min(Math.max(-box.top,0),box.height),progress=Math.max(0,Math.min(1,(innerHeight*.8-bounds.top)/(bounds.height*.85)));
+   if(travel!==last){last=travel;scene.style.setProperty('--aj-travel',`${travel}px`)}
+   const count=words.filter((word,i)=>i/words.length<=progress).length;if(count!==read){read=count;words.forEach((word,i)=>word.classList.toggle('is-read',i<count))}
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
   const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('aj-visible');observer.unobserve(entry.target)}}),{threshold:.12});
