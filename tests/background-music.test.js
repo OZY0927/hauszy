@@ -1,30 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createBackgroundMusic,MUSIC_VOLUME} from '../lib/background-music.js';
+import {createBackgroundMusic,MUSIC_VOLUME,backgroundMusicUrl} from '../lib/background-music.js';
 
-test('music starts softly, fades and suspends for video, resumes, and cleans up',async t=>{
- t.mock.timers.enable({apis:['setInterval','setTimeout']});
- const gains=[];let notes=0,closed=false;
- const parameter=()=>({value:0,setValueAtTime(value){this.value=value},linearRampToValueAtTime(value){this.value=value},exponentialRampToValueAtTime(value){this.value=value},setTargetAtTime(value){this.value=value}});
- const node=()=>({connect(){},disconnect(){}});
- const context={currentTime:0,state:'suspended',destination:node(),
-  createGain(){const gain={...node(),gain:parameter()};gains.push(gain);return gain},
-  createDynamicsCompressor:()=>({...node(),threshold:parameter(),ratio:parameter()}),
-  createDelay:()=>({...node(),delayTime:parameter()}),
-  createOscillator:()=>({...node(),frequency:parameter(),start(){notes++},stop(){}}),
-  async resume(){this.state='running'},async suspend(){this.state='suspended'},async close(){closed=true;this.state='closed'},
- };
- const music=createBackgroundMusic(context);
- assert.equal(gains[0].gain.value,0);
- music.setPlaying(true);await Promise.resolve();
- assert.equal(gains[0].gain.value,MUSIC_VOLUME);assert.ok(notes>0);
- music.setVolume(1);assert.equal(gains[0].gain.value,.6);
- music.setPlaying(false);assert.equal(gains[0].gain.value,0);
- t.mock.timers.tick(160);assert.equal(context.state,'suspended');
- const pausedNotes=notes;t.mock.timers.tick(2000);assert.equal(notes,pausedNotes);
- music.setPlaying(true);await Promise.resolve();assert.equal(context.state,'running');assert.equal(gains[0].gain.value,.6);
- // A quick resume cancels a pending suspension instead of stopping the music afterward.
- music.setPlaying(false);music.setPlaying(true);await Promise.resolve();t.mock.timers.tick(200);assert.equal(context.state,'running');
- music.dispose();assert.equal(closed,true);
- const finalNotes=notes;t.mock.timers.tick(3000);assert.equal(notes,finalNotes);
+test('music URLs accept direct HTTPS and signed audio links, reject unsafe or oversized values',()=>{
+ for(const url of ['https://cdn.example/music.mp3','https://cdn.example/audio?token=abc&download=1'])assert.equal(backgroundMusicUrl(' '+url+' '),url);
+ for(const url of ['',null,{},'http://example.com/music.mp3','javascript:alert(1)','data:audio/mp3,hi','https://user:pass@example.com/song.mp3','https://example.com/a\nb','https://example.com/'+ 'a'.repeat(2048)])assert.equal(backgroundMusicUrl(url),'');
+});
+
+test('URL music fades softly, preserves position through videos, and cleans up',async t=>{
+ t.mock.timers.enable({apis:['setInterval']});
+ const audio={volume:1,paused:true,currentTime:42,error:null,async play(){this.paused=false},pause(){this.paused=true}};
+ const music=createBackgroundMusic(audio);
+ assert.equal(audio.volume,0);assert.equal(audio.loop,true);
+ music.setPlaying(true);await Promise.resolve();t.mock.timers.tick(160);
+ assert.equal(audio.volume,MUSIC_VOLUME);assert.equal(audio.paused,false);
+ music.setVolume(1);t.mock.timers.tick(160);assert.equal(audio.volume,.6);
+ music.setPlaying(false);t.mock.timers.tick(160);assert.equal(audio.volume,0);assert.equal(audio.paused,true);assert.equal(audio.currentTime,42);
+ music.setPlaying(true);await Promise.resolve();t.mock.timers.tick(160);assert.equal(audio.paused,false);assert.equal(audio.currentTime,42);
+ music.setPlaying(false);music.setPlaying(true);await Promise.resolve();t.mock.timers.tick(200);assert.equal(audio.paused,false);
+ music.dispose();assert.equal(audio.paused,true);assert.equal(audio.volume,0);
+});
+
+test('autoplay rejection retries on interaction without overriding music off',async t=>{
+ t.mock.timers.enable({apis:['setInterval']});
+ let allowed=false,attempts=0;
+ const audio={volume:0,paused:true,error:null,async play(){attempts++;if(!allowed)throw Error('NotAllowedError');this.paused=false},pause(){this.paused=true}};
+ const music=createBackgroundMusic(audio);
+ music.setPlaying(true);await Promise.resolve();await Promise.resolve();assert.equal(audio.paused,true);
+ allowed=true;music.retry();await Promise.resolve();t.mock.timers.tick(160);assert.equal(audio.paused,false);
+ music.setPlaying(false);t.mock.timers.tick(160);const before=attempts;music.retry();assert.equal(attempts,before);assert.equal(audio.paused,true);
+ music.dispose();
 });

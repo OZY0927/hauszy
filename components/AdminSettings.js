@@ -3,6 +3,7 @@ import {useState} from 'react';
 import {EmailAuthProvider,reauthenticateWithCredential,updatePassword} from 'firebase/auth';
 import {authErrorMessage} from '../lib/auth-errors';
 import Icon from './Icon';
+import AdminMusicSettings from './AdminMusicSettings';
 const when=time=>time?new Date(time).toLocaleString('en-MY',{dateStyle:'medium',timeStyle:'short'}):'—';
 function Secret({name,label,autoComplete,value,onChange,disabled}){
  const [shown,setShown]=useState(false);
@@ -14,6 +15,7 @@ export default function AdminSettings({user}){
  const checks=[['At least 6 characters',form.password.length>=6],['Different from your current password',!!form.password&&form.password!==form.current],['Both new passwords match',!!form.confirm&&form.password===form.confirm]],ok=!!form.current&&checks.every(([,pass])=>pass);
  async function save(e){e.preventDefault();if(!ok)return;setBusy(true);setStatus({text:'Updating password…',tone:''});try{await reauthenticateWithCredential(user,EmailAuthProvider.credential(user.email,form.current));await updatePassword(user,form.password);setForm(blank);setStatus({text:'Password changed successfully.',tone:'good'})}catch(error){setStatus({text:error.code==='auth/weak-password'||error.code==='auth/password-does-not-meet-requirements'?'Choose a stronger password that meets your account password policy.':authErrorMessage(error),tone:'bad'})}finally{setBusy(false)}}
  return <section className="st-settings" aria-label="Account settings">
+   <AdminMusicSettings user={user}/>
    <div className="st-card">
     <div className="st-card-head"><h3><Icon name="users"/>Signed in</h3></div>
     <div className="st-card-body">
