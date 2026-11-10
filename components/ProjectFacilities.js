@@ -21,7 +21,7 @@ export default function ProjectFacilities({facilities}){
     <FacilityList items={facilities.slice(0,8)} className="facility-preview"/>
     {facilities.length>8&&<button type="button" className="facilities-see-all" onClick={show} aria-haspopup="dialog">See all {facilities.length} facilities</button>}
     <dialog ref={dialog} className="facilities-dialog" aria-labelledby={titleId} onClose={()=>setOpen(false)} onClick={event=>{if(event.target===dialog.current)close()}}>
-      <div className="facilities-dialog-heading"><h2 id={titleId}>Project amenities &amp; facilities</h2><button type="button" onClick={close} aria-label="Close facilities" autoFocus><Icon name="x"/></button></div>
+      <div className="facilities-dialog-heading"><h2 id={titleId}>Project Facilities</h2><button type="button" onClick={close} aria-label="Close facilities" autoFocus><Icon name="x"/></button></div>
       <div className="facilities-dialog-body"><FacilityList items={facilities}/></div>
     </dialog>
   </>;
