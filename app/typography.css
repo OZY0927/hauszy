@@ -1,0 +1,77 @@
+/* Shared typography roles. Sizes live in globals.css; keep this after page styles. */
+:is(.hero-copy,.pg-hero-copy,.project-story-hero-copy)>h1,
+.aj-hero h1 {
+  font-size:var(--text-title);
+  line-height:1.1;
+  letter-spacing:-.045em;
+}
+
+.projects-page .all-projects-heading h1,.all-projects-heading h1,
+.calculator-shell>h1,.policy-page>h1,.property-missing>h1,
+.property-heading h1,.tools-studio .tools-intro>h1 {
+  font-size:var(--text-page);
+  line-height:1.15;
+  letter-spacing:-.035em;
+}
+
+:is(.section-heading,.pg-chapter-heading,.pg-perspectives-heading,.project-story-section-heading) h2,
+.pg-film-copy h2,.pg-next h2,.project-story-intro h2,
+.project-story-contact-copy h2,.about h2,.aj-path-heading h2,
+.aj-moments h2,.aj-contact h2,.footer-editorial .footer-invitation h2,
+.cs-title,.pg-intro-statement,.aj-statement {
+  font-size:var(--text-section);
+  line-height:1.2;
+  letter-spacing:-.035em;
+}
+
+.pg-chapter-copy h3,.pg-perspectives-grid h3,.aj-step-copy h3,
+.aj-mission h2,.project-story .project-story-unit-copy h3,
+.project-story .nearby-amenities>h3,.project-story-location-name h3,
+.policy-page h2,.property-content h2,.contact-form h2,
+.enquiry-confirmation h2,.dialog-content h2,.compare-head h2,
+.cookie-banner h2,.tools-workbench .dsr-step-panel>h2,
+.tools-workbench :is(.purchase-basics,.purchase-fees) h2 {
+  font-size:var(--text-subheading);
+  line-height:1.3;
+  letter-spacing:-.025em;
+}
+
+.property-tile-info h3,.project-story-related-grid .property-tile-info h3,
+.card h3,.project-row h3,.enquiry-card h3,.unit-preview h3 {
+  font-size:var(--text-card);
+  line-height:1.35;
+  letter-spacing:-.02em;
+}
+
+.cs-copy,.pg-hero-copy>p,.aj-hero>p,
+.pg-chapter-copy>p,.pg-next-layout>div>p,.pg-perspectives-grid p,
+.project-story-intro-main>p,.project-story-contact-copy>p,
+.about p,.policy-page p,.tools-studio .tools-intro>p {
+  font-size:var(--text-body);
+  line-height:1.75;
+}
+
+.tools-workbench .lc-hero strong,.tools-workbench .uc-total strong,
+.tool-design-eligibility .dsr-final-result .uc-total>strong {
+  font-size:var(--text-metric);
+  line-height:1.2;
+  letter-spacing:-.025em;
+  overflow-wrap:anywhere;
+}
+
+.dsr-panel-marker,.dsr-plan-snapshot>span,
+.tool-design-eligibility .dsr-plan-snapshot>p,
+.tool-design-eligibility .dsr-step-tabs button {
+  font-size:var(--text-caption);
+  line-height:1.5;
+}
+
+/* Form values stay readable on phones and avoid focus zoom on iOS. */
+@media(max-width:800px) {
+  body input:not([type=range]):not([type=checkbox]):not([type=radio]),
+  body select,body textarea {
+    font-size:max(1rem,1em);
+  }
+}
+
+:where(h1,h2,h3,h4) { overflow-wrap:break-word; }
