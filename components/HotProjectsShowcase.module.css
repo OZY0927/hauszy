@@ -94,11 +94,11 @@
 .track .finale .finaleCopy{font-family:var(--font-site);font-size:var(--text-body);font-weight:400;line-height:1.75;letter-spacing:normal;max-width:38ch;margin:0;color:var(--muted)}
 
 /* A local SVG boundary keeps the island and mainland sharp at every screen size. */
-.penangOutline{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(78%,780px);height:88%;z-index:0;pointer-events:none;overflow:visible;color:var(--accent)}
+.penangOutline{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:98%;height:98%;z-index:0;pointer-events:none;overflow:visible;color:var(--accent)}
 .penangBase{stroke:currentColor;stroke-width:1;opacity:.16}
-.penangGlow{stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:130 870;opacity:.55;filter:drop-shadow(0 0 4px #a7573670) drop-shadow(0 0 10px #a7573640)}
+.penangGlow{stroke:#e58b48;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:130 870;opacity:.95;filter:drop-shadow(0 0 3px #ffbd78) drop-shadow(0 0 9px #e58b48cc) drop-shadow(0 0 20px #a7573680)}
 .penangGlow path{animation:penangTrace 12s linear infinite;animation-play-state:paused}
 .track[data-in-view="true"] .penangGlow path{animation-play-state:running}
 @keyframes penangTrace{from{stroke-dashoffset:0}to{stroke-dashoffset:-1000}}
-@media(max-width:800px){.penangOutline{width:94%;height:78%}.penangBase{opacity:.12}.penangGlow{opacity:.4}}
+@media(max-width:800px){.penangBase{opacity:.12}.penangGlow{opacity:.8}}
 @media(prefers-reduced-motion:reduce){.penangGlow path{animation:none;stroke-dasharray:none}.penangGlow{opacity:.14;filter:none}}
