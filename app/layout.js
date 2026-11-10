@@ -4,6 +4,7 @@ import './typography.css';
 import './home-motion.css';
 import './project-listing.css';
 import './catalog-controls.css';
+import './project-entry.css';
 import Header from '../components/Header';
 import SiteIntro from '../components/SiteIntro';
 import Motion from '../components/Motion';

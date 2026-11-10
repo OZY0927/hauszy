@@ -32,7 +32,7 @@ export default async function Project({params}){
  const visibility=projectSections(p),groups=groupAmenities(visibility.nearby),related=(all||[]).filter(v=>v.id!==id&&v.mode===p.mode).slice(0,2);
  const sections=[...(visibility.overview?[['overview','The project']]:[]),...(visibility.photos&&p.images.length?[['project-photos','Gallery']]:[]),...(visibility.details?[['details','Details']]:[]),...(visibility.units.length?[['units','Layouts']]:[]),...(visibility.facilities.length?[['amenities','Facilities']]:[]),...(visibility.location?[['location','Neighbourhood']]:[]),...(visibility.maintenance?[['maintenance','Charges']]:[]),...(visibility.showroom.length?[['showroom','Showroom']]:[])];
  const introFacts=visibleFacts([['Construction',p.construction],['Estimated VP',vpQuarter(p.vp)],['Location',p.location],['Tenure',p.tag]]);
- return <ProjectStory>
+ return <ProjectStory key={id}>
   <JsonLd data={projectStructuredData(p)}/>
   <ProjectGallery photos={visibility.photos?p.images:[]} name={p.name} hero={{id:p.id,location:hasProjectInfo(p.location)?p.location:null,type:p.type,mode:p.mode,price:startingPrice(p),target:sections[0]?.[0]||(visibility.enquiry?'enquiry':null)}}/>
   <ProjectSectionNav sections={sections} enquiry={visibility.enquiry}/>

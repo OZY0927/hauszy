@@ -30,11 +30,11 @@ export default function Header(){
   update();window.addEventListener('scroll',schedule,{passive:true});document.addEventListener('click',outside);document.addEventListener('keydown',escape);
   return()=>{cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);document.removeEventListener('click',outside);document.removeEventListener('keydown',escape)};
  },[]);
- useEffect(()=>{drawer.current?.close();if(tools.current)tools.current.open=false},[path]);
+ useEffect(()=>{drawer.current?.close();if(tools.current)tools.current.open=false;setExpanded(false);setScrolled(false)},[path]);
  useEffect(()=>{if(!open)return;const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=previous}},[open]);
  const brand=<Link prefetch={false} className="logo hz-brand" href="/" aria-label="Hauszy home">hauszy</Link>;
  return <>
-  <header ref={header} className={'hz-header'+(scrolled?' is-scrolled':'')+(collapsed?' is-collapsed':'')+(scrolled&&!collapsed?' is-expanded':'')} onPointerEnter={e=>{if(e.pointerType==='mouse')setExpanded(true)}} onPointerLeave={e=>{if(e.pointerType==='mouse'&&!header.current.querySelector(':focus-visible')){setExpanded(false);tools.current.open=false}}} onFocusCapture={e=>{if(e.target!==compact.current)setExpanded(true)}} onBlurCapture={e=>{if(!header.current.contains(e.relatedTarget))setExpanded(false)}}>
+  <header ref={header} data-project-page={/^\/projects\/[^/]+/.test(path)?'':undefined} className={'hz-header'+(scrolled?' is-scrolled':'')+(collapsed?' is-collapsed':'')+(scrolled&&!collapsed?' is-expanded':'')} onPointerEnter={e=>{if(e.pointerType==='mouse')setExpanded(true)}} onPointerLeave={e=>{if(e.pointerType==='mouse'&&!header.current.querySelector(':focus-visible')){setExpanded(false);tools.current.open=false}}} onFocusCapture={e=>{if(e.target!==compact.current)setExpanded(true)}} onBlurCapture={e=>{if(!header.current.contains(e.relatedTarget))setExpanded(false)}}>
    <button ref={compact} type="button" className="hz-compact-logo" aria-label="Expand navigation" aria-expanded={!collapsed} aria-controls="hauszy-expanded-navigation" tabIndex={collapsed?0:-1} inert={!collapsed} onClick={()=>{setExpanded(true);requestAnimationFrame(()=>trigger.current?.focus())}}>hauszy</button>
    <div id="hauszy-expanded-navigation" className="hz-expanded-bar" inert={collapsed}>
    <button ref={trigger} type="button" className="hz-menu-button" aria-label="Open navigation menu" aria-expanded={open} aria-controls="hauszy-navigation-panel" onClick={show}><span/><span/></button>
