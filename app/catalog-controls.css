@@ -1,6 +1,6 @@
 /* Editorial collection tools: one calm, sticky surface in Hauszy's palette. */
 .catalog-top{--catalog-sticky-top:108px;--catalog-tools-height:74px}
-.catalog-top.project-catalog .catalog-filters{position:sticky;top:var(--catalog-sticky-top);z-index:45;margin-bottom:24px;isolation:isolate}
+.catalog-top.project-catalog .catalog-filters{position:relative;top:auto;z-index:45;margin-bottom:24px;isolation:isolate}
 .catalog-top .catalog-filter-heading{min-height:var(--catalog-tools-height);padding:12px 16px;border:1px solid #e7d8c7d9;border-radius:18px;background:#fcf8f2f2;backdrop-filter:blur(20px);box-shadow:0 8px 30px #352a2510;gap:20px}
 .catalog-collection-tabs{display:flex;align-items:center;gap:4px;flex:none;padding:4px;background:#efe5d8;border-radius:999px}
 .catalog-collection-tabs>button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:8px 16px;border:0;border-radius:999px;background:none;color:var(--muted);font-family:var(--font-site);font-size:var(--text-control);white-space:nowrap;transition:background .25s,color .25s}
@@ -108,3 +108,42 @@
  .compare-head{padding:24px 74px 20px 20px}
 }
 @media(prefers-reduced-motion:reduce){.catalog-top .catalog-filters form{animation:none}.catalog-top :is(button,select){transition:none}}
+
+/* Once the full toolbar scrolls away, only this independent icon floats beside the logo. */
+.catalog-floating-trigger{position:fixed;top:27px;left:calc(50% + 80px);z-index:90;display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--primary);box-shadow:0 6px 24px #352a251c;animation:catalog-icon-arrive .3s cubic-bezier(.22,1,.36,1)}
+.catalog-floating-trigger>.icon{width:20px;height:20px}
+.catalog-floating-trigger:hover,.catalog-floating-trigger[aria-expanded=true]{background:var(--primary);color:var(--paper)}
+.catalog-floating-trigger:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
+.catalog-floating-dot{position:absolute;right:3px;top:3px;width:8px;height:8px;border-radius:50%;background:var(--primary);border:2px solid var(--paper)}
+.catalog-tools-compact .catalog-filter-heading{visibility:hidden;pointer-events:none}
+.catalog-tools-compact.project-catalog .catalog-filters form{position:fixed;inset:108px 24px auto;max-width:1180px;margin-inline:auto;max-height:calc(100dvh - 132px)}
+.catalog-floating-options{grid-column:1/-1;grid-row:1;display:flex;align-items:center;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.catalog-floating-options .catalog-collection-tabs{margin-right:auto}
+.catalog-floating-options .catalog-floating-sort{display:flex;align-items:center;gap:8px;width:auto;min-width:0;padding:0 12px;border:1px solid var(--line);border-radius:999px;letter-spacing:0}
+.catalog-floating-sort>.icon{width:15px;height:15px;flex:none}
+.catalog-floating-sort>select{width:auto;max-width:200px;padding:11px 0;font-family:var(--font-site);font-size:var(--text-control);letter-spacing:0}
+.catalog-tools-compact .catalog-filters .location{grid-row:2}
+.catalog-tools-compact .catalog-types{grid-row:2}
+.catalog-tools-compact.project-catalog .price-filter{grid-row:2}
+.catalog-tools-compact .catalog-filter-note,.catalog-tools-compact .catalog-apply-filters{grid-row:3}
+/* The expanded navigation has its own controls; avoid covering its links. */
+body:has(.hz-header.is-expanded) .catalog-floating-trigger:not(:focus){opacity:0;visibility:hidden;pointer-events:none}
+@keyframes catalog-icon-arrive{from{opacity:0;transform:translateY(8px) scale(.85)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:900px){
+ .catalog-floating-options{flex-wrap:wrap}
+ .catalog-tools-compact .catalog-types{grid-column:2;grid-row:2}
+ .catalog-tools-compact.project-catalog .price-filter{grid-column:1/-1;grid-row:3}
+ .catalog-tools-compact .catalog-filter-note,.catalog-tools-compact .catalog-apply-filters{grid-row:4}
+}
+@media(max-width:800px){
+ .catalog-floating-trigger{top:20px;left:calc(50% + 71px);width:44px;height:44px}
+ .catalog-tools-compact.project-catalog .catalog-filters form{inset:88px 14px auto;max-height:calc(100dvh - 108px)}
+}
+@media(max-width:560px){
+ .catalog-floating-options{gap:12px}
+ .catalog-floating-options .catalog-collection-tabs{width:100%;margin:0}
+ .catalog-floating-options .catalog-floating-sort{flex:1;width:0}
+ .catalog-floating-sort>select{width:100%;min-width:0}
+ .catalog-floating-options .catalog-compare-button{grid-column:auto;grid-row:auto}
+}
+@media(prefers-reduced-motion:reduce){.catalog-floating-trigger{animation:none;transition:none}}
