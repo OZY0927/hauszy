@@ -1,20 +1,21 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import {usePathname} from 'next/navigation';
-import {interactionSound,playUISound} from '../lib/ui-sounds';
+import {interactionSound,changeSound,navigationHoverTarget,playUISound} from '../lib/ui-sounds';
+import {observeVideoAudioFocus} from '../lib/video-audio-focus';
 import Icon from './Icon';
 
 const KEY='hauszy-ui-sounds';
 export default function SiteSounds({showControl=true}){
  const [enabled,setEnabled]=useState(true),[supported,setSupported]=useState(true);
- const enabledRef=useRef(true),audio=useRef(null),lastPlayed=useRef(0),path=usePathname();
+ const enabledRef=useRef(true),audio=useRef(null),lastPlayed=useRef(-Infinity),videoActive=useRef(false),path=usePathname();
  function play(name){
-  if(!enabledRef.current||document.visibilityState==='hidden')return;
+  if(!enabledRef.current||videoActive.current||document.visibilityState==='hidden')return;
   try{
    const Audio=window.AudioContext||window.webkitAudioContext;
    if(!Audio)return;
    const context=audio.current||(audio.current=new Audio());
-   const sound=()=>{if(enabledRef.current&&context.state==='running')playUISound(context,name)};
+   const sound=()=>{if(enabledRef.current&&!videoActive.current&&document.visibilityState!=='hidden'&&context.state==='running')playUISound(context,name)};
    if(context.state==='suspended')context.resume().then(sound).catch(()=>{});else sound();
   }catch{/* Unsupported or blocked audio never interferes with the interaction. */}
  }
@@ -28,18 +29,29 @@ export default function SiteSounds({showControl=true}){
  },[]);
  useEffect(()=>{
   if(path.startsWith('/admin'))return;
-  const click=event=>{
+  const stopVideoObserver=observeVideoAudioFocus(document,active=>{videoActive.current=active});
+  const respond=(event,change=false)=>{
    if(!event.isTrusted||!enabledRef.current||!(event.target instanceof Element))return;
-   const element=event.target.closest('button,a,summary,[role="tab"]');
+   const element=change?event.target:event.target.closest('button,a,summary,[role="tab"]');
    if(!element||element.matches(':disabled,[aria-disabled="true"]'))return;
-   // Let films and project videos keep their own audio space.
-   if(document.querySelector('.pg-film-player')||[...document.querySelectorAll('video')].some(v=>!v.paused&&!v.muted))return;
-   const name=interactionSound(element),now=performance.now();
+   const name=change?changeSound(element):interactionSound(element),now=performance.now();
    if(!name||now-lastPlayed.current<90)return;
    lastPlayed.current=now;play(name);
   };
+  const click=event=>respond(event),change=event=>respond(event,true);
+  let lastHover=-Infinity;
+  const hover=event=>{
+   if(!event.isTrusted||event.pointerType!=='mouse'||!(event.target instanceof Element)||!enabledRef.current||videoActive.current||document.visibilityState==='hidden')return;
+   // Hover cannot unlock browser audio. Never queue a tone for a later gesture.
+   if(audio.current?.state!=='running'||!navigationHoverTarget(event.target,event.relatedTarget))return;
+   const now=performance.now();
+   if(now-lastHover<160)return;
+   lastHover=now;play('hover');
+  };
   document.addEventListener('click',click,true);
-  return()=>document.removeEventListener('click',click,true);
+  document.addEventListener('change',change,true);
+  document.addEventListener('pointerover',hover,true);
+  return()=>{document.removeEventListener('click',click,true);document.removeEventListener('change',change,true);document.removeEventListener('pointerover',hover,true);stopVideoObserver();videoActive.current=false};
  },[path]);
  function toggle(){
   const next=!enabledRef.current;enabledRef.current=next;setEnabled(next);
