@@ -17,7 +17,8 @@ export default function Header(){
  const path=usePathname();
  const drawer=useRef(null),tools=useRef(null),trigger=useRef(null),hoveringTools=useRef(false),header=useRef(null),compact=useRef(null);
  const [open,setOpen]=useState(false),[scrolled,setScrolled]=useState(false),[expanded,setExpanded]=useState(false);
- const collapsed=scrolled&&!expanded&&!open;
+ const catalog=path==='/projects'||path==='/projects/';
+ const collapsed=!catalog&&scrolled&&!expanded&&!open;
  const active=href=>href==='/'?path==='/':path===href||path.startsWith(href+'/');
  const close=()=>drawer.current?.close();
  const show=()=>{tools.current.open=false;drawer.current.showModal();drawer.current.querySelector('button').focus();setOpen(true)};
@@ -34,7 +35,7 @@ export default function Header(){
  useEffect(()=>{if(!open)return;const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=previous}},[open]);
  const brand=<Link prefetch={false} className="logo hz-brand" href="/" aria-label="Hauszy home">hauszy</Link>;
  return <>
-  <header ref={header} className={'hz-header'+(scrolled?' is-scrolled':'')+(collapsed?' is-collapsed':'')+(scrolled&&!collapsed?' is-expanded':'')} onPointerEnter={e=>{if(e.pointerType==='mouse')setExpanded(true)}} onPointerLeave={e=>{if(e.pointerType==='mouse'&&!header.current.querySelector(':focus-visible')){setExpanded(false);tools.current.open=false}}} onFocusCapture={e=>{if(e.target!==compact.current)setExpanded(true)}} onBlurCapture={e=>{if(!header.current.contains(e.relatedTarget))setExpanded(false)}}>
+  <header ref={header} className={'hz-header'+(catalog?' is-catalog':'')+(scrolled?' is-scrolled':'')+(collapsed?' is-collapsed':'')+(scrolled&&!collapsed?' is-expanded':'')} onPointerEnter={e=>{if(e.pointerType==='mouse')setExpanded(true)}} onPointerLeave={e=>{if(e.pointerType==='mouse'&&!header.current.querySelector(':focus-visible')){setExpanded(false);tools.current.open=false}}} onFocusCapture={e=>{if(e.target!==compact.current)setExpanded(true)}} onBlurCapture={e=>{if(!header.current.contains(e.relatedTarget))setExpanded(false)}}>
    <button ref={compact} type="button" className="hz-compact-logo" aria-label="Expand navigation" aria-expanded={!collapsed} aria-controls="hauszy-expanded-navigation" tabIndex={collapsed?0:-1} inert={!collapsed} onClick={()=>{setExpanded(true);requestAnimationFrame(()=>trigger.current?.focus())}}>hauszy</button>
    <div id="hauszy-expanded-navigation" className="hz-expanded-bar" inert={collapsed}>
    <button ref={trigger} type="button" className="hz-menu-button" aria-label="Open navigation menu" aria-expanded={open} aria-controls="hauszy-navigation-panel" onClick={show}><span/><span/></button>
@@ -48,6 +49,7 @@ export default function Header(){
     </details>
     <Link prefetch={false} className="hz-nav-link" href="/about" aria-current={active('/about')?'page':undefined}>About<br/>me</Link>
    </nav>
+   {catalog&&<div id="hauszy-catalog-controls" className="hz-catalog-slot"/>}
    <Link prefetch={false} className="hz-header-cta" href="/projects"><span className="hz-cta-label">Find your space</span><span className="hz-cta-short">Explore</span><Icon name="chevronRight"/></Link>
    </div>
   </header>
