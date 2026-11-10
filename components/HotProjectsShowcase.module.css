@@ -52,7 +52,7 @@
 .finale{position:absolute;inset:0;z-index:35;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:24px;padding:24px 6%;opacity:var(--ending,0);transform:translateY(calc((1 - var(--ending,0)) * 40px));pointer-events:none}
 .finale[aria-hidden="false"]{pointer-events:auto}
 .finale p{font-family:Georgia,'Times New Roman',serif;font-size:clamp(2.5rem,6vw,6rem);font-weight:400;line-height:1.03;letter-spacing:-.05em;margin:0}
-.bigExplore{display:inline-flex;align-items:center;justify-content:center;gap:clamp(24px,5vw,80px);background:var(--accent);color:#fffaf2;text-decoration:none;border-radius:8px;padding:24px 32px;font-size:clamp(1.15rem,2vw,1.8rem);letter-spacing:-.025em;box-shadow:0 16px 36px #a7573622;transition:background .25s,transform .25s}
+.bigExplore{display:inline-flex;align-items:center;justify-content:center;gap:clamp(24px,5vw,80px);background:var(--accent);color:#fffaf2;text-decoration:none;border-radius:8px;padding:24px 32px;font-family:var(--font-site);font-size:var(--text-control);font-weight:500;line-height:1.5;letter-spacing:normal;box-shadow:0 16px 36px #a7573622;transition:background .25s,transform .25s}
 .bigExplore:hover{background:#853e23;transform:translateY(-3px)}.bigExplore>span{display:grid;place-items:center;width:48px;height:48px;border:1px solid #ffffff66;border-radius:50%}.bigExplore svg{width:26px;height:26px}
 @media(max-width:800px){.track .section{top:80px;height:calc(100svh - 80px);min-height:590px}.track .header{padding-bottom:16px}.header>.scrollLabel{font-size:8px;gap:5px;letter-spacing:0}.track .projectInfo{top:18px}.track .cardSlot{top:50%;--card-width:clamp(250px,68vw,420px)}.track .bottom{gap:10px}.bottom>.scrollLabel{font-size:8px;gap:4px;letter-spacing:0}.track .note{font-size:10px}.track .note>span{font-size:9px}.bigExplore{padding:18px 22px;gap:20px}.bigExplore>span{width:38px;height:38px}.finale{gap:24px}}
 @media(max-height:720px) and (min-width:801px){.track .section{min-height:440px}.track .cardSlot{--card-width:clamp(280px,30vw,420px)}.track .watermark{font-size:2.5rem}}
@@ -75,22 +75,19 @@
 .intro h2>span{color:var(--muted)}.intro>p{max-width:340px;font-size:var(--text-body);line-height:1.8;color:var(--muted);margin:0 0 30px}
 .track .finale{left:62%;right:5%;padding:20px 0;align-items:flex-start;text-align:left;gap:26px}
 .track .finale p{font-size:clamp(2rem,3.7vw,4rem)}
-.track .finale .bigExplore{font-size:clamp(1rem,1.5vw,1.4rem);padding:20px 24px;gap:22px}
-@media(max-width:800px){.intro{top:5%;left:7%;width:86%;transform:none}.intro h2{font-size:clamp(1.8rem,6vw,2.8rem);margin:12px 0}.intro>p{font-size:var(--text-small);max-width:85%;line-height:1.6;margin-bottom:16px}.intro>.scrollLabel{font-size:9px}.track .finale{inset:48% 7% 2%;justify-content:center;align-items:center;text-align:center;gap:16px}.track .finale p{font-size:clamp(1.8rem,6vw,2.5rem)}.track .finale .bigExplore{padding:16px 22px;font-size:1.05rem}}
+.track .finale .bigExplore{font-size:var(--text-control);padding:16px 22px;gap:22px;max-width:100%}
+@media(max-width:800px){.intro{top:5%;left:7%;width:86%;transform:none}.intro h2{font-size:clamp(1.8rem,6vw,2.8rem);margin:12px 0}.intro>p{font-size:var(--text-small);max-width:85%;line-height:1.6;margin-bottom:16px}.intro>.scrollLabel{font-size:9px}.track .finale{inset:48% 7% 2%;justify-content:center;align-items:center;text-align:center;gap:16px}.track .finale p{font-size:clamp(1.8rem,6vw,2.5rem)}.track .finale .bigExplore{padding:16px 22px;font-size:var(--text-control)}}
 @media(prefers-reduced-motion:reduce){.intro{position:relative;left:auto;top:auto;transform:none;width:auto;opacity:1;padding:36px 6%}.track .finale{inset:auto;align-items:center;text-align:center;padding:36px 6%}}
 
-/* Loose, edge-to-edge collage. Independent drifts continue without scrolling. */
+/* Keep the final grid inside its own panel without clipping the message. */
 .track .orbit{clip-path:inset(0 calc(var(--ending,0) * 39%) 0 0)}
-.cardDrift{width:100%;height:100%;animation:collageDrift var(--drift-duration,20s) ease-in-out var(--drift-delay,0s) infinite alternate;animation-play-state:paused}
-.track[data-finale="true"][data-in-view="true"] .cardDrift{animation-play-state:running}
-.cardDrift:has(a:hover),.cardDrift:has(a:focus-visible){animation-play-state:paused!important}
-@keyframes collageDrift{from{transform:translate3d(calc(var(--drift-x) * var(--grid,0) * -.5),calc(var(--drift-y) * var(--grid,0) * -.5),0) rotate(calc(var(--drift-angle) * var(--grid,0) * -.5))}to{transform:translate3d(calc(var(--drift-x) * var(--grid,0) * .5),calc(var(--drift-y) * var(--grid,0) * .5),0) rotate(calc(var(--drift-angle) * var(--grid,0) * .5))}}
+.cardDrift{width:100%;height:100%}
 @media(max-width:800px){.track .orbit{clip-path:inset(0 0 calc(var(--ending,0) * 55%) 0)}}
 @media(prefers-reduced-motion:reduce){.track .orbit{clip-path:none}.cardDrift{animation:none;transform:none}}
 
 /* Center the closing message in the right column of the desktop collage. */
 .track .finale{align-items:center;text-align:center}
-.finale .finaleTitle{font-family:var(--font-site);font-size:var(--text-section);font-weight:700;line-height:1.2;letter-spacing:-.035em;margin:0;max-width:100%;overflow-wrap:break-word}
+.finale .finaleTitle{font-family:var(--font-site);font-size:var(--text-section);font-weight:500;line-height:1.2;letter-spacing:-.035em;margin:0;max-width:100%;overflow-wrap:break-word}
 .track .finale .finaleCopy{font-family:var(--font-site);font-size:var(--text-body);font-weight:400;line-height:1.75;letter-spacing:normal;max-width:38ch;margin:0;color:var(--muted)}
 
 /* A local SVG boundary keeps the island and mainland sharp at every screen size. */
@@ -102,3 +99,13 @@
 @keyframes penangTrace{from{stroke-dashoffset:0}to{stroke-dashoffset:-1000}}
 @media(max-width:800px){.penangBase{opacity:.12}.penangGlow{opacity:.8}}
 @media(prefers-reduced-motion:reduce){.penangGlow path{animation:none;stroke-dasharray:none}.penangGlow{opacity:.14;filter:none}}
+
+@media(prefers-reduced-motion:reduce){
+ .track .scene{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.8fr);align-items:center;gap:32px 8%;padding:36px 6%}
+ .intro{grid-column:1/-1;padding:0}
+ .track .orbit{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0}
+ .track .finale{padding:0}
+}
+@media(prefers-reduced-motion:reduce) and (max-width:800px){
+ .track .scene{grid-template-columns:minmax(0,1fr)}
+}
