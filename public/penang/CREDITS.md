@@ -4,16 +4,19 @@
 
 Added on 2026-11-10. These assets were supplied by the site owner; photographer
 and license details were not provided. Existing stock-photo credits below do
-not apply to these files. WebP copies preserve the source resolution without
-upscaling and are bundled locally with the site.
+not apply to these files. WebP copies are capped at 1600px without upscaling
+and are bundled locally with the site. Updated to the replacement set supplied
+on 2026-11-10.
 
-| Local asset | Supplied file | Homepage placement |
+| Local asset | Supplied file | Placement |
 | --- | --- | --- |
-| `bridge-sunrise.webp` | `images.jpg` | Island and mainland: bridge |
-| `george-town-lanterns.webp` | `daefa2f0-228c-430a-9529-cbba8bf5ef65.png` | Heritage and culture |
-| `kek-lok-si.webp` | `istockphoto-517803440-612x612.jpg` | Island perspective |
-| `hill-canopy.webp` | `ya4foliliexa1iuu8w76.jpg` | Hills and horizons |
-| `national-park.webp` | `Penang_National_Park_1_u3yevc.jpg` | Coast and calm |
+| `bridge-sunrise.webp` | `dfaa06a0-0885-4220-91ac-b774d330bb56.png` | Island and mainland: bridge |
+| `george-town-lanterns.webp` | `Lantern-Lit Trishaw Through Historic Streets.png` | Heritage and culture |
+| `kek-lok-si.webp` | `Golden-Hour Temple on the Hillside.png` | Island perspective |
+| `hill-canopy.webp` | `9b3e504e-da75-4932-ae87-5d34d5b161dc.png` | Hills and horizons |
+| `tropical-beach.webp` | `Tropical Beach with Boats and Hills.png` | Coast and calm |
+| `vintage-rickshaw.webp` | `Vintage Rickshaw and Tropical Plant.png` | About: opening scene |
+| `colonial-corner.webp` | `Colonial Corner with Malaysian Motorcyclist.png` | About: first journey step |
 
 ## State outline
 

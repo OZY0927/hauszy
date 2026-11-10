@@ -5,7 +5,7 @@ import Gallery from './Gallery';
 import Icon from './Icon';
 import {whatsappLink} from '../lib/whatsapp';
 const steps=[
- {title:<>Your plans.<br/>The starting point.</>,copy:'A home, a business space or your next property in Penang. Start with your budget, preferred location and what matters to you.',image:'/penang/streets.jpg',alt:'Penang shophouses and neighbourhood streets',label:'01 / LISTEN'},
+ {title:<>Your plans.<br/>The starting point.</>,copy:'A home, a business space or your next property in Penang. Start with your budget, preferred location and what matters to you.',image:'/penang/colonial-corner.webp',alt:'A motorcyclist passing a white colonial corner building with green shutters',label:'01 / LISTEN'},
  {title:<>A little clarity.<br/>A clearer direction.</>,copy:'Explore project details and compare locations, layouts and prices. Make room for the options that fit your plans.',image:'/penang/coast.jpg',alt:'An evening along the Penang coastline',label:'02 / EXPLORE'},
  {title:<>See the space.<br/>Feel the possibility.</>,copy:'Ask your questions and arrange a viewing when you’re ready. Take a closer look before deciding on your next move.',image:'/penang/hills.jpg',alt:'Penang homes against a backdrop of green hills',label:'03 / TAKE THE NEXT STEP'},
 ];
@@ -31,7 +31,7 @@ export default function AboutJourney({profile:p,photos,failed}){
    <h1 id="aj-title"><span>A Penang focus.</span><span>A personal <em>touch.</em></span></h1>
    <p>Places to discover. Possibilities to explore.<br/>A little guidance along the way.</p>
    <div className="aj-hero-scene">
-    <figure className="aj-landscape aj-landscape-left"><img src="/penang/heritage.jpg" alt="The character of George Town, Penang"/><figcaption>ROOTED IN PENANG</figcaption></figure>
+    <figure className="aj-landscape aj-landscape-left"><img src="/penang/vintage-rickshaw.webp" alt="A vintage trishaw and tropical plant against a vivid blue wall" width="1402" height="1122"/><figcaption>ROOTED IN PENANG</figcaption></figure>
     <a className="aj-portrait" href="#meet"><div className="aj-portrait-image">{p.portrait?<img src={p.portrait} alt={p.name} fetchPriority="high"/>:<span>hauszy</span>}</div><div className="aj-portrait-caption"><span>MEET YOUR PROPERTY CONTACT</span><strong>{p.name}</strong><Icon name="arrowDown"/></div></a>
     <figure className="aj-landscape aj-landscape-right"><img src="/penang/skyline.jpg" alt="Penang skyline and the bridge"/><figcaption>ISLAND & MAINLAND</figcaption></figure>
    </div>
