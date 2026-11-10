@@ -120,7 +120,7 @@
 .catalog-tools-compact .catalog-filter-heading{opacity:0;transform:translateY(-18px) scale(.8,.7);border-radius:20px;visibility:hidden;pointer-events:none;transition:opacity .2s ease,transform .45s cubic-bezier(.22,1,.36,1),border-radius .45s,visibility 0s .25s}
 .catalog-tools-compact.project-catalog .catalog-filters form{position:fixed;inset:108px 24px auto;max-width:1180px;margin-inline:auto;max-height:calc(100dvh - 132px)}
 .catalog-floating-options{grid-column:1/-1;grid-row:1;display:flex;align-items:center;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--line)}
-.catalog-floating-options .catalog-collection-tabs{margin-right:auto}
+.catalog-floating-options .catalog-collection-tabs{margin-right:0}
 .catalog-floating-options .catalog-floating-sort{display:flex;align-items:center;gap:8px;width:auto;min-width:0;padding:0 12px;border:1px solid var(--line);border-radius:999px;letter-spacing:0}
 .catalog-floating-sort>.icon{width:15px;height:15px;flex:none}
 .catalog-floating-sort>select{width:auto;max-width:200px;padding:11px 0;font-family:var(--font-site);font-size:var(--text-control);letter-spacing:0}
@@ -149,3 +149,20 @@ body:has(.hz-header.is-expanded) .catalog-floating-trigger:not(:focus){opacity:0
  .catalog-floating-options .catalog-compare-button{grid-column:auto;grid-row:auto}
 }
 @media(prefers-reduced-motion:reduce){.catalog-floating-trigger,.catalog-tools-compact .catalog-floating-trigger,.catalog-top .catalog-filter-heading,.catalog-tools-compact .catalog-filter-heading{animation:none;transition:none;transform:none}}
+
+/* Keep the panel mounted so the transition runs in both directions. Closed controls are inert. */
+.catalog-top.project-catalog .catalog-filters form{display:grid;animation:none;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-14px) scale(.97,.94);transform-origin:50% 0;transition:opacity .2s ease,transform .35s cubic-bezier(.22,1,.36,1),visibility 0s .35s}
+.catalog-top.project-catalog .catalog-filters.is-open form{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0) scale(1);transition:opacity .25s ease,transform .4s cubic-bezier(.22,1,.36,1),visibility 0s}
+.catalog-tools-compact.project-catalog .catalog-filters form{transform-origin:calc(50% + 113px) 0}
+.catalog-tools-compact.project-catalog .catalog-filters:not(.is-open) form{transform:translateY(-34px) scale(.88,.76)}
+.catalog-top .catalog-filters form>*{opacity:0;transform:translateY(8px);transition:opacity .12s ease,transform .2s ease}
+.catalog-top .catalog-filters.is-open form>*{opacity:1;transform:translateY(0);transition:opacity .3s ease .07s,transform .4s cubic-bezier(.22,1,.36,1) .07s}
+.catalog-top .catalog-filters.is-open form>:nth-child(2){transition-delay:.1s}
+.catalog-top .catalog-filters.is-open form>:nth-child(3){transition-delay:.13s}
+.catalog-top .catalog-filters.is-open form>:nth-child(n+4){transition-delay:.16s}
+.catalog-floating-trigger>.icon{transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.catalog-floating-trigger[aria-expanded=true]>.icon{transform:rotate(90deg)}
+@media(max-width:800px){.catalog-tools-compact.project-catalog .catalog-filters form{transform-origin:calc(50% + 101px) 0}}
+@media(prefers-reduced-motion:reduce){
+ .catalog-top.project-catalog .catalog-filters form,.catalog-top.project-catalog .catalog-filters.is-open form,.catalog-tools-compact.project-catalog .catalog-filters:not(.is-open) form,.catalog-top .catalog-filters form>*,.catalog-top .catalog-filters.is-open form>*,.catalog-floating-trigger>.icon{transition:none;transform:none}
+}
