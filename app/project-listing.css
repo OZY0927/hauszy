@@ -41,7 +41,7 @@
 
 /* Compact list rows keep details outside the image. Grid cards retain their design. */
 .project-catalog.catalog-view-list .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 32px}
-.catalog-list-row{display:grid;grid-template-columns:160px minmax(0,1fr);gap:22px;align-items:start;padding:0 0 24px;border-bottom:1px solid var(--line)}
+.catalog-list-row{display:grid;grid-template-columns:160px minmax(0,1fr);gap:22px;align-items:start;padding:22px;border:1px solid color-mix(in srgb,var(--line) 65%,transparent);border-radius:18px;background:color-mix(in srgb,var(--secondary) 13%,var(--paper))}
 .catalog-list-photo{position:relative;display:block;height:170px;overflow:hidden;border-radius:8px;background:var(--line)}
 .catalog-list-photo img{display:block;width:100%;height:100%;object-fit:cover}
 .catalog-list-summary{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;gap:16px;padding:8px 0;min-width:0}
@@ -100,7 +100,7 @@
  .catalog-view-toggle .icon{width:18px;height:18px}
  .catalog-top.project-catalog .catalog-filters form{grid-template-columns:minmax(0,1fr);padding:20px}
  .catalog-top .catalog-filters form>*{grid-column:1!important;grid-row:auto!important}
- .catalog-list-row{grid-template-columns:100px minmax(0,1fr);gap:14px;align-items:start;padding-bottom:20px}
+ .catalog-list-row{grid-template-columns:100px minmax(0,1fr);gap:14px;align-items:start;padding:16px;border-radius:14px}
  .catalog-list-photo{height:110px}
  .catalog-list-summary{padding:0}
  .catalog-list-summary dl{gap:10px 16px}
