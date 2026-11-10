@@ -3,7 +3,7 @@
 import {useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import Icon from './Icon';
-import FeaturedProjectCloud from './FeaturedProjectCloud';
+import HotProjectsShowcase from './HotProjectsShowcase';
 
 const CHAPTERS=[
  {name:'Heritage & culture',place:'GEORGE TOWN',image:'/penang/streets.jpg',alt:'A traditional Penang shophouse framed by greenery',title:<>Streets with stories.<br/>Days with character.</>,copy:'Five-foot ways, shophouses and neighbourhood kopitiams. In George Town, old and new share the same street — and everyday life is part of the charm.',foot:'Wander a little. Look a little closer.'},
@@ -12,7 +12,7 @@ const CHAPTERS=[
 ];
 const INTRO='Heritage in the streets. Possibility on the horizon. A life between the hills and the sea.';
 
-export default function PenangHome({featuredProjects=[],popularProjects=false,priorityProjectIds=[]}){
+export default function PenangHome({featuredProjects=[],popularProjects=false}){
  const root=useRef(null),filmTrack=useRef(null),tabs=useRef(null),playButton=useRef(null),closeFilm=useRef(null);
  const [chapter,setChapter]=useState(0),[playing,setPlaying]=useState(false);
  const current=CHAPTERS[chapter];
@@ -52,7 +52,7 @@ export default function PenangHome({featuredProjects=[],popularProjects=false,pr
    <div className="pg-hero-bottom"><a className="pg-scroll-link" href="#penang-story"><span className="pg-scroll-icon"><Icon name="arrowDown"/></span><span>SCROLL TO DISCOVER</span></a><span className="pg-hero-location">PENANG ISLAND & MAINLAND<br/><small>A local perspective by Hauszy</small></span><a className="pg-film-shortcut" href="#penang-film">See Penang in motion <span>↗</span></a></div>
   </section>
 
-  <FeaturedProjectCloud candidates={featuredProjects} popular={popularProjects} priorityIds={priorityProjectIds}/>
+  <HotProjectsShowcase candidates={featuredProjects} popular={popularProjects}/>
 
   <section id="penang-story" className="pg-intro pg-grid-bg">
    <div className="pg-section-meta"><span className="pg-label"><i/> 01 / THE FEELING OF PENANG</span><span className="pg-meta-note">MORE THAN AN ADDRESS</span></div>

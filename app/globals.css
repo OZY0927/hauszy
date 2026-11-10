@@ -674,33 +674,11 @@ body:has(.penang-home) .site-footer{background:var(--paper);max-width:none;paddi
 .pg-hero,.pg-film-window{--pg-text:var(--paper);--pg-accent:var(--secondary);--pg-bg:var(--ink);color:var(--paper)}
 .pg-chapter-photo figcaption,.pg-perspective-image>span{color:var(--paper)}
 
-/* Project spotlight: listing cards rise into a scattered, clickable gallery. */
-.project-cloud{position:relative;height:260svh;min-height:1700px;background:var(--paper);border-bottom:1px solid var(--line)}
-.project-cloud-stage{position:sticky;top:0;height:100svh;min-height:700px;perspective:1400px;isolation:isolate}
-.project-cloud-meta{position:absolute;left:6%;right:6%;top:32px;display:flex;justify-content:space-between;align-items:center;gap:20px;color:var(--muted);z-index:1;pointer-events:none}.project-cloud-meta>span:last-child{font-size:var(--text-label);letter-spacing:1.2px}
-.project-cloud-heading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:45%;text-align:center;z-index:1}
-.project-cloud-kicker{display:block;font-size:var(--text-label);letter-spacing:.7px;color:var(--muted);margin-bottom:20px}.project-cloud-heading h2{font:400 clamp(2.125rem,4.3vw,4.25rem)/1.13 Manrope,sans-serif;letter-spacing:-2.8px;margin:0;color:var(--ink)}.project-cloud-heading h2 em{font:inherit;color:var(--primary)}.project-cloud-heading p{font-size:var(--text-caption);line-height:1.8;margin:22px auto 12px;color:var(--muted)}.project-cloud-heading>a{display:inline-flex;align-items:center;gap:22px;font-size:clamp(1.25rem,2.4vw,2.125rem);border-bottom:1px solid var(--secondary);padding:10px 0;color:var(--primary)}.project-cloud-heading>a>.icon{width:1em;height:1em}
-.project-cloud-cards{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d}
-.project-cloud-item{position:absolute;width:clamp(155px,17vw,260px);pointer-events:auto;transform:rotate(-5deg);z-index:2;transform-origin:center;backface-visibility:hidden}
-.cloud-motion .project-cloud-item{opacity:var(--cloud-opacity,1);transform:var(--cloud-transform,none);will-change:transform,opacity}
-.cloud-place-0{left:3%;top:14%}.cloud-place-1{left:26%;top:8%;width:clamp(145px,15vw,220px)}.cloud-place-2{right:26%;top:7%;width:clamp(145px,15vw,220px)}.cloud-place-3{right:3%;top:15%}.cloud-place-4{left:4%;top:58%}.cloud-place-5{left:27%;top:68%;width:clamp(145px,14vw,210px)}.cloud-place-6{right:27%;top:67%;width:clamp(145px,14vw,210px)}.cloud-place-7{right:4%;top:58%}
-.project-cloud .property-tile{min-height:0;aspect-ratio:4/5;border-radius:8px;box-shadow:0 14px 35px #352a2526;transition:transform .25s ease,box-shadow .25s ease;color:var(--paper)}
-.project-cloud .property-tile-link{padding:17px}.project-cloud .property-tile-info{padding-right:0}.project-cloud .property-tile-type{font-size:var(--text-label);letter-spacing:1px;margin-bottom:7px}.project-cloud .property-tile-info h3{font-size:clamp(.8125rem,1.3vw,1.1875rem);line-height:1.3;letter-spacing:-.4px;font-weight:500;margin-bottom:6px}.project-cloud .property-tile-info p{font-size:var(--text-label);line-height:1.5;color:var(--paper)}.project-cloud .property-tile-facts{font-size:var(--text-label);gap:5px 8px;margin-top:5px}.project-cloud .property-tile-facts span+span:before{margin-right:8px}.project-cloud .property-tile-price>span{font-size:var(--text-label)}.project-cloud .property-tile-price strong{font-size:clamp(1rem,1.7vw,1.5rem);letter-spacing:-.5px}.project-cloud .property-tile-arrow{width:25px;height:25px}.project-cloud .property-tile-arrow>.icon{width:13px;height:13px}.project-cloud .property-tile-bottom{gap:6px}
-.project-cloud-item:hover,.project-cloud-item:focus-within{z-index:10}.project-cloud-item:hover .property-tile,.project-cloud-item:focus-within .property-tile{transform:scale(1.06);box-shadow:0 20px 45px #352a2540}.cloud-motion .project-cloud-item:focus-within{opacity:1;transform:rotate(0deg) scale(1.02)}
-.project-cloud-hint{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;font-size:var(--text-label);letter-spacing:1.3px;color:var(--muted)}.project-cloud-hint>.icon{width:13px;height:13px}
-@media(min-width:1700px){.project-cloud-stage{max-height:1100px}.cloud-place-5,.cloud-place-6{top:65%}}
-@media(max-width:1050px) and (min-width:801px){.project-cloud-heading{width:44%}.project-cloud-heading h2{font-size:2.1875rem;letter-spacing:-1.8px}.project-cloud-heading p{font-size:var(--text-label)}.project-cloud .property-tile-link{padding:12px}.project-cloud .property-tile-facts{font-size:var(--text-label)}.project-cloud .property-tile-price strong{font-size:var(--text-body)}.project-cloud .property-tile-arrow{display:none}}
-@media(max-width:800px){.project-cloud{height:auto;min-height:0;padding:38px 6% 50px}.project-cloud-stage{position:relative;top:auto;height:auto;min-height:0;perspective:none}.project-cloud-meta{position:static;margin-bottom:45px}.project-cloud-meta>span:last-child{display:none}.project-cloud-heading{position:static;transform:none;width:100%;text-align:left;margin-bottom:35px}.project-cloud-heading h2{font-size:2.6875rem;letter-spacing:-2px}.project-cloud-heading p{font-size:var(--text-control);margin:20px 0 8px}.project-cloud-cards{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px;transform-style:flat}.project-cloud-item{position:relative;left:auto;right:auto;top:auto;width:auto;min-width:0;transform:none}.project-cloud .property-tile-info h3{font-size:1.125rem}.project-cloud .property-tile-type{font-size:var(--text-label)}.project-cloud .property-tile-info p{font-size:var(--text-control)}.project-cloud .property-tile-price strong{font-size:1.375rem}.project-cloud .property-tile-facts{font-size:var(--text-label)}.project-cloud-hint{display:none}.project-cloud-item:hover .property-tile,.project-cloud-item:focus-within .property-tile{transform:none}}
-@media(max-width:480px){.project-cloud-cards{gap:14px 10px}.project-cloud .property-tile-link{padding:12px}.project-cloud .property-tile{aspect-ratio:3/5}.project-cloud .property-tile-info h3{font-size:var(--text-body)}.project-cloud .property-tile-type{font-size:var(--text-label)}.project-cloud .property-tile-info p{font-size:var(--text-label)}.project-cloud .property-tile-facts{font-size:var(--text-label)}.project-cloud .property-tile-price strong{font-size:1.125rem}.project-cloud .property-tile-arrow{display:none}.project-cloud-heading h2{font-size:2.3125rem}}
-@media(prefers-reduced-motion:reduce) and (min-width:801px){.project-cloud{height:auto;min-height:0;padding:55px 6%}.project-cloud-stage{position:relative;height:auto;min-height:0;perspective:none}.project-cloud-meta{position:static}.project-cloud-heading{position:static;transform:none;width:100%;margin:45px 0}.project-cloud-cards{position:static;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;transform-style:flat}.project-cloud-item{position:relative;left:auto;right:auto;top:auto;width:auto}.project-cloud-hint{display:none}}
-@media(prefers-reduced-motion:reduce){.cloud-motion .project-cloud-item{opacity:1;transform:none;will-change:auto}.project-cloud .property-tile{transition:none}.project-cloud-item:hover .property-tile,.project-cloud-item:focus-within .property-tile{transform:none}}
-
-.project-cloud .property-tile-price strong{font-size:clamp(.875rem,1.3vw,1.25rem);overflow-wrap:normal}
 
 .site-footer .site-sound-toggle{display:inline-flex;align-items:center;gap:7px;flex:none;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);font:400 .6875rem/1.4 Manrope,sans-serif;white-space:nowrap}
 .site-footer .site-sound-toggle>.icon{width:14px;height:14px;stroke-width:1.5}.site-footer .site-sound-toggle:hover{background:var(--paper);color:var(--primary)}
 
-.property-tile-facts .property-tile-room{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.property-tile-room>.icon{width:13px;height:13px;flex:none;stroke-width:1.5}.project-cloud .property-tile-room>.icon{width:10px;height:10px}
+.property-tile-facts .property-tile-room{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.property-tile-room>.icon{width:13px;height:13px;flex:none;stroke-width:1.5}
 
 /* Editorial project pages, in Hauszy's original cream / terracotta palette. */
 body:has(.project-story){padding-top:0;background:var(--paper)}
@@ -782,10 +760,11 @@ body:has(.project-story .floating-video) .project-section-nav{left:50%;max-width
 
 
 /* Shared typography, based on the current project information page. */
-/* Text is sized in rem so it follows one fluid root: the browser's own default up to 1280px wide, then up to +25% by 2560px.
-   Zoom changes the viewport width, so zooming out keeps text more readable and small zoom-ins are softened; from about 150%
-   zoom the viewport drops below 1280px and text scales in full. The floating header bar keeps px to fit its fixed columns. */
-html{font-size:clamp(100%,calc(100% + (100vw - 1280px) / 320),125%)}
+/* Text is sized in rem so it follows one root that is proportional to the screen: 16px at 1280px wide, growing with the
+   width up to 24px at 1920px. Browser zoom changes the width in CSS px, so zooming in lowers the root and zooming out raises
+   it, and text keeps the same visible size. Below 1280px (phones, tablets, or zoom far enough in) it rests at the browser
+   default, so the mobile design is unchanged. The floating header bar keeps px to fit its fixed columns. */
+html{font-size:clamp(100%,1.25vw,150%)}
 :root{
  --font-site:'Manrope',sans-serif;
  --text-label:.625rem;
@@ -815,7 +794,6 @@ h1,h2,h3,h4{font-family:var(--font-site);font-weight:500}
 .property-tile-info h3,.project-story-related-grid .property-tile-info h3,.card h3,.project-row h3{
  font-family:var(--font-site);font-size:var(--text-card);font-weight:500;line-height:1.3;letter-spacing:-.025em;
 }
-.project-cloud .property-tile-info h3{font-size:clamp(.875rem,1.3vw,1.1875rem)}
 .contact-form h2,.enquiry-confirmation h2,.dialog-content h2,.compare-head h2{
  font-size:clamp(1.5625rem,3vw,1.9375rem);font-weight:500;line-height:1.25;letter-spacing:-.025em;
 }
@@ -825,16 +803,10 @@ h1,h2,h3,h4{font-family:var(--font-site);font-weight:500}
 .eyebrow,.pg-label{font-family:var(--font-site);font-size:var(--text-label);font-weight:500;line-height:1.6;letter-spacing:.17em}
 @media(max-width:700px){
  :root{--text-title:clamp(2.625rem,10vw,4.375rem);--text-section:2.1875rem;--text-subheading:1.875rem;--text-card:1.5625rem}
- .project-cloud .property-tile-info h3{font-size:1.1875rem}
 }
 
 .projects-page .all-projects-heading h1,.all-projects-heading h1,.calculator-shell>h1,.policy-page>h1,.property-missing>h1{font-size:var(--text-section);line-height:1.15;letter-spacing:-.035em;font-weight:500}
 
-/* Homepage spotlight cards show only the project name. */
-.project-cloud .property-tile-title-only .property-tile-link{display:flex;align-items:center;justify-content:center;text-align:center;padding:22px}
-.project-cloud .property-tile-title-only .property-tile-link:before{background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--ink) 40%,transparent) 35%,color-mix(in srgb,var(--ink) 40%,transparent) 65%,transparent)}
-.project-cloud .property-tile-centered-name{position:relative;z-index:1;margin:0;font-family:var(--font-site);font-size:clamp(1rem,1.5vw,1.375rem);font-weight:500;line-height:1.25;letter-spacing:-.025em;color:var(--paper);text-wrap:balance;text-shadow:0 2px 18px #352a2570}
-@media(max-width:800px){.project-cloud .property-tile-centered-name{font-size:1.1875rem}}
 
 /* Compact cookie notice in the Hauszy palette. */
 .cookie-banner{left:24px;bottom:24px;right:auto;width:min(510px,calc(100vw - 48px));display:flex;flex-direction:column;align-items:stretch;gap:30px;padding:28px;border:1px solid color-mix(in srgb,var(--primary) 15%,var(--secondary));border-radius:6px;background:var(--secondary);color:var(--ink);box-shadow:0 8px 35px #352a2515;max-height:calc(100dvh - 48px);overflow-y:auto;animation:cookie-panel-enter .35s ease-out both}
@@ -935,57 +907,6 @@ h1,h2,h3,h4{font-family:var(--font-site);font-weight:500}
 @media(prefers-reduced-motion:reduce){.project-transition-overlay{display:none}}
 
 
-/* Bencho Tilt card — MIT: https://bencho.dev/licence */
-/* ══ Tilt ═══════════════════════════════════════════════════
-   A picture card that gives under the pointer. Almost nothing
-   is here: the rotation, both gradients and the shadow are
-   written per frame from the pointer's position, and a rule
-   in this file that also had an opinion about any of them
-   would be a second author. What is left is the things that
-   are true whatever the pointer is doing. */
-.tlt {
-  position: relative;
-  /* The frame is what the pointer is measured against and it
-     is deliberately the ONLY thing in here that never moves.
-     The perspective lives on it rather than on the card for
-     the usual reason: on the card itself, `perspective` is
-     applied per element and the vanishing point rides along
-     with the rotation instead of staying put in the room. */}
-
-.tlt-card {
-  position: absolute;
-  inset: 0;
-  background-color: var(--paper);
-  background-size: cover;
-  background-position: center;
-  /* `cover` and a fixed frame, so the crop is the one
-     scripts/butterfly.sh already made rather than a second
-     one on top of it */
-  overflow: hidden;
-  /* NO `will-change`. It would hold a composited layer for
-     every copy of this block on the wall, permanently, to
-     save one frame on a hover that may never come — the same
-     bookkeeping CLAUDE.md objects to for permanent rAF. The
-     browser promotes this on its own once the transform
-     starts moving. */}
-
-/* ── the dent and the rim ───────────────────────────────────
-   One element, two gradients, both placed from the pointer —
-   the dark one under it and the light one at its mirror. It
-   inherits the corner rather than being told one, so the knob
-   only has to reach the card. */
-.tlt-sheen {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;}
-
-/* Hauszy owns the responsive crop; the tilt only supplies depth and lighting. */
-.project-cloud .tlt{width:100%;aspect-ratio:4/5}
-.project-cloud .tlt-card>.property-tile{width:100%;height:100%;min-height:0;aspect-ratio:auto;border-radius:inherit;box-shadow:none;transform:none;transition:none}
-.project-cloud-item:hover .tlt-card>.property-tile,.project-cloud-item:focus-within .tlt-card>.property-tile{transform:none;box-shadow:none}
-.project-cloud .tlt-sheen{z-index:3}
-@media(max-width:480px){.project-cloud .tlt{aspect-ratio:3/5}}
 
 
 /* Bencho Time scrubber — MIT: https://bencho.dev/licence */
@@ -1328,3 +1249,75 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
 .tool-design-eligibility .dsr-final-result .uc-summary{color:var(--paper);border-color:#fcf8f240}
 .tool-design-eligibility .calculator-sources{margin:26px 0 0 298px}
 @media(max-width:800px){.tool-design-eligibility .tools-intro{display:block;padding-bottom:28px;margin-bottom:24px}.tool-design-eligibility .tools-intro>p{margin:20px 0 0;max-width:550px}.tool-design-eligibility .dsr-wizard{grid-template-columns:1fr;gap:18px}.tool-design-eligibility .dsr-progress{position:static;padding:20px;border-radius:14px}.tool-design-eligibility .dsr-progress-head{flex-direction:row;align-items:center;justify-content:space-between;margin-bottom:14px}.tool-design-eligibility .dsr-progress-head>strong{display:none}.tool-design-eligibility .dsr-stage-number{font-size:2rem;letter-spacing:-1.5px}.tool-design-eligibility .dsr-stage-number small{font-size:.875rem}.tool-design-eligibility .dsr-step-tabs{flex-direction:row;justify-content:space-between;gap:8px;margin:16px 0 0}.tool-design-eligibility .dsr-step-tabs button{flex-direction:column;font-size:.625rem;gap:7px;text-align:center}.tool-design-eligibility .dsr-plan-snapshot{display:none}.tool-design-eligibility .dsr-step-panel{padding:25px 22px;min-height:0;border-radius:14px}.tool-design-eligibility .calculator-sources{margin:24px 0 0}.tool-design-eligibility .dsr-step-fields .uc-number input{font-size:1.875rem}.tool-design-eligibility .dsr-privacy-note{display:block}.tool-design-eligibility .dsr-debt-row{gap:8px;grid-template-columns:minmax(0,1fr) minmax(0,.8fr) 26px}.tool-design-eligibility .dsr-debt-row input{padding:12px 8px}}
+
+/* Card showcase (homepage hot projects): a pinned 3D ring of photo cards unfolds into a tilted wall, which slides left
+   for the collection text. Scene timing and geometry live in lib/card-showcase/config.js; this is layout and the text reveal.
+   Before scripts run, without WebGL or with reduced motion, a still CSS wall stands in for the canvas. */
+.cs{position:relative;height:calc(var(--cs-scroll,4.6)*100svh);background:var(--paper)}
+.cs-stage{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;isolation:isolate}
+.cs-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;transition:opacity .8s cubic-bezier(.22,1,.36,1)}
+.cs-canvas[data-ready]{opacity:1}
+.cs:not(.is-live) .cs-canvas{display:none}
+.cs-wall{position:absolute;top:0;bottom:0;left:0;width:50%;overflow:hidden;perspective:1600px}
+.cs-wall-plane{position:absolute;left:50%;top:50%;width:150%;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;transform:translate(-50%,-50%) rotateZ(12deg) rotateY(14deg) rotateX(28deg)}
+.cs-wall-plane img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:6px;background:var(--line)}
+.cs-panel{position:absolute;top:0;bottom:0;left:50%;right:0;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:90px 7% 40px 6%;color:var(--ink)}
+.cs-label{display:flex;align-items:center;gap:12px;margin-bottom:28px;font-size:var(--text-label);font-weight:500;letter-spacing:.17em;color:var(--primary)}
+.cs-label:before{content:'';width:28px;height:1px;background:var(--secondary)}
+.cs-title{margin:0;font-size:clamp(3rem,5.6vw,6.5rem);font-weight:500;line-height:1;letter-spacing:-.05em}
+.cs-line{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
+.cs-line>span{display:block}
+.cs-copy{max-width:30rem;margin:30px 0 0;font-size:clamp(1rem,1.15vw,1.25rem);line-height:1.7;color:var(--muted)}
+.cs-cta{display:inline-flex;align-items:center;gap:18px;margin-top:36px;padding:18px 24px;border-radius:14px;background:var(--primary);color:var(--paper);font-size:var(--text-small);font-weight:600;transition:background-color .25s,gap .3s cubic-bezier(.22,1,.36,1)}
+.cs-cta>.icon{width:18px;height:18px}
+.cs-cta:hover{background:var(--ink);gap:24px}
+.cs-cta:focus-visible,.cs-hot a:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
+.cs-extra{width:min(100%,30rem)}
+.cs-hot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line)}
+.cs-hot-label{font-size:var(--text-label);letter-spacing:.17em;color:var(--muted)}
+.cs-hot ul{list-style:none;margin:8px 0 0;padding:0}
+.cs-hot a{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);color:var(--ink)}
+.cs-hot strong{display:block;font-size:var(--text-body);font-weight:500}
+.cs-hot small{display:block;margin-top:2px;font-size:var(--text-caption);color:var(--muted)}
+.cs-hot a>.icon{flex:none;width:16px;height:16px;color:var(--primary);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.cs-hot a:hover>.icon{transform:translate(2px,-2px)}
+/* The reveal is scroll-triggered and reverses on the way back up; it is only armed while the scene is live,
+   and focus always shows the text so keyboard users never land on something invisible. */
+.cs.is-live .cs-panel>*{opacity:0;transform:translateY(22px);transition:opacity .45s ease,transform .7s cubic-bezier(.22,1,.36,1)}
+.cs.is-live .cs-panel>.cs-title{opacity:1;transform:none}
+.cs.is-live .cs-line>span{transform:translateY(105%);transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.cs.is-live .cs-panel:not([data-revealed]){pointer-events:none}
+.cs.is-live .cs-panel[data-revealed]>*{opacity:1;transform:none;transition-delay:calc(var(--d,0)*.09s)}
+.cs.is-live .cs-panel[data-revealed] .cs-line>span{transform:none;transition-delay:calc(.08s + var(--l,0)*.08s)}
+.cs.is-live .cs-panel:focus-within>*,.cs.is-live .cs-panel:focus-within .cs-line>span{opacity:1;transform:none}
+.cs.is-still{height:auto}
+.cs.is-still .cs-stage{position:relative;height:auto;min-height:min(100svh,860px)}
+.cs.is-still .cs-panel{position:relative;inset:auto;min-height:inherit;margin-left:50%}
+@media(max-height:760px) and (min-width:801px){.cs-hot li:nth-child(n+3){display:none}.cs-hot{margin-top:28px}.cs-cta{margin-top:26px}}
+@media(max-width:800px){
+ .cs{height:calc(var(--cs-scroll-compact,3.4)*100svh)}
+ .cs-stage{min-height:520px}
+ .cs-wall{width:auto;right:0;bottom:56%}
+ .cs-wall-plane{width:130%;grid-template-columns:repeat(3,1fr);gap:10px}
+ .cs-panel{top:44%;left:0;padding:18px 6% 24px;justify-content:flex-start}
+ .cs-label{margin-bottom:12px}
+ .cs-title{font-size:clamp(2.25rem,10vw,3.25rem)}
+ .cs-copy{margin-top:12px;font-size:var(--text-body);line-height:1.6}
+ .cs-cta{margin-top:18px;padding:15px 20px}
+ .cs-hot{margin-top:18px;padding-top:6px}
+ .cs-hot li:nth-child(n+3){display:none}
+ .cs.is-still .cs-stage{min-height:0}
+ .cs.is-still .cs-wall{position:relative;height:56svh;bottom:auto}
+ .cs.is-still .cs-panel{margin-left:0;padding:28px 6% 44px}
+}
+@media(prefers-reduced-motion:reduce){
+ .cs{height:auto}
+ .cs-stage{position:relative;height:auto;min-height:min(100svh,860px)}
+ .cs-panel{position:relative;inset:auto;min-height:inherit;margin-left:50%}
+ .cs-cta,.cs-hot a>.icon{transition:none}
+}
+@media(prefers-reduced-motion:reduce) and (max-width:800px){
+ .cs-stage{min-height:0}
+ .cs-wall{position:relative;height:56svh;bottom:auto}
+ .cs-panel{margin-left:0;padding:28px 6% 44px}
+}
