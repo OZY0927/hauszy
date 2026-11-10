@@ -527,7 +527,8 @@ img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select
 .project-catalog .listing-toolbar{margin:0 0 18px;gap:14px;align-items:center;flex-wrap:wrap;min-height:42px}
 .project-catalog .listing-toolbar .chips{gap:6px;max-width:none}.project-catalog .chips button{font-size:var(--text-caption);padding:8px 11px}.project-catalog .listing-meta{gap:14px;flex-wrap:wrap;justify-content:space-between;flex:1;font-size:var(--text-caption)}.project-catalog .listing-meta>span{white-space:nowrap;color:var(--muted)}
 .project-catalog .sort-by{font-size:var(--text-caption);gap:6px}.project-catalog .sort-by select{font-size:var(--text-control);max-width:170px}
-.project-catalog .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.project-catalog .cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media(min-width:561px) and (max-width:1100px){.project-catalog .cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .property-tile{position:relative;min-width:0;aspect-ratio:4/5;min-height:380px;border-radius:10px;overflow:hidden;isolation:isolate;background:#655d52;color:white}
 .property-tile-photo{position:absolute;inset:0}.property-tile-photo img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.22,1,.36,1)}
 .property-tile-link{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:26px;outline-offset:-5px}
