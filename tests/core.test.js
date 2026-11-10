@@ -40,3 +40,5 @@ test('listing names prefer trimmed display names and fall back to the real proje
  assert.deepEqual(sortProjects(projects,'name-asc').map(p=>p.id),['b','a']);
  assert.deepEqual(sortProjects(projects,'name-desc').map(p=>p.id),['a','b']);
 });
+
+test('overview room ranges sum additional rooms without changing layout text',async()=>{const {unitCountRange,unitText}=await import('../lib/project.js');const units=['2+1','3','3+1','5+2'].map(bedrooms=>({bedrooms}));assert.equal(unitCountRange(units,'bedrooms'),'3 – 7');assert.equal(unitText(units,'bedrooms'),'2+1 / 3 / 3+1 / 5+2');assert.equal(unitCountRange([{bathrooms:'2'},{bathrooms:'3+1'}],'bathrooms'),'2 – 4');assert.equal(unitCountRange([{bedrooms:'3+1'},{bedrooms:4}],'bedrooms'),'4');assert.equal(unitCountRange([{bedrooms:'Studio'}],'bedrooms'),'Studio');assert.equal(unitCountRange([],'bedrooms'),null)});

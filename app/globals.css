@@ -1307,3 +1307,79 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
  .cs-wall{position:relative;height:56svh;bottom:auto}
  .cs-panel{margin-left:0;padding:28px 6% 44px}
 }
+
+/* Project overview: balanced editorial copy and a contained fact sheet. */
+.project-story .project-story-intro{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,90px);align-items:center;padding-top:72px;padding-bottom:72px}
+.project-story .project-story-intro-main{min-width:0}
+.project-story .project-story-intro-main>h2{margin:20px 0;max-width:650px;overflow-wrap:anywhere;text-wrap:balance}
+.project-overview-location{display:flex;align-items:flex-start;gap:9px;color:var(--primary);font-size:var(--text-small);line-height:1.6;margin:0 0 18px}
+.project-overview-location>.icon{width:17px;height:17px;flex:none;margin-top:3px}
+.project-story .project-story-intro-main>p{max-width:460px;color:var(--muted);margin:0 0 28px}
+.project-overview-panel{min-width:0;background:#f3eadd;border:1px solid var(--line);border-radius:16px;padding:28px 30px}
+.project-overview-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid #ddcbb5;padding-bottom:20px}
+.project-overview-panel-heading>.icon{width:20px;height:20px;color:var(--primary);stroke-width:1.5}
+.project-story .project-story-at-a-glance{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 24px;padding:26px 0 8px;margin:0}
+.project-story .project-story-at-a-glance>div{min-width:0}
+.project-story .project-story-at-a-glance dt{display:flex;align-items:center;gap:7px;font-size:var(--text-caption);color:var(--muted);margin:0 0 9px;line-height:1.5}
+.project-story-at-a-glance dt>.icon{width:14px;height:14px;flex:none;stroke-width:1.5}
+.project-story .project-story-at-a-glance dd{margin:0;font-size:var(--text-body);font-weight:500;line-height:1.6;overflow-wrap:anywhere;color:var(--ink)}
+.project-overview-details{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid #ddcbb5;margin-top:22px;padding-top:18px;font-size:var(--text-control);color:var(--primary)}
+.project-overview-details>.icon{width:16px;height:16px;transition:transform .2s}.project-overview-details:hover>.icon{transform:translateY(3px)}
+@media(max-width:800px){.project-story .project-story-intro{grid-template-columns:1fr;gap:30px;padding-top:45px;padding-bottom:45px}.project-overview-panel{padding:24px}.project-story .project-story-at-a-glance{gap:24px 18px}.project-story .project-story-intro-main>h2{max-width:100%;text-wrap:pretty}}
+
+/* Neighbourhood atlas: a generous map paired with a category-based local directory. */
+.neighbourhood-editorial{background:#f2e8da}
+.neighbourhood-heading{display:grid;grid-template-columns:1.2fr 1fr;align-items:end;gap:50px;margin-bottom:38px}
+.neighbourhood-heading h2{font-size:var(--text-section);font-weight:500;letter-spacing:-.035em;line-height:1.15;margin:18px 0 0}
+.neighbourhood-heading h2 em{font-style:normal;color:var(--primary)}
+.neighbourhood-address{display:flex;gap:16px;align-items:start;max-width:390px;justify-self:end;padding-bottom:6px}
+.neighbourhood-address>.icon{width:22px;height:22px;color:var(--primary);flex:none}
+.neighbourhood-address>div>span{font-size:var(--text-label);letter-spacing:1.3px;color:var(--muted)}
+.neighbourhood-address p{font-size:var(--text-body);line-height:1.6;margin:10px 0 14px}
+.neighbourhood-address a{display:inline-flex;gap:16px;align-items:center;font-size:var(--text-control);color:var(--primary);border-bottom:1px solid #96351e40;padding-bottom:6px}
+.neighbourhood-address a>.icon{width:16px;height:16px;transition:transform .25s}.neighbourhood-address a:hover>.icon{transform:translate(2px,-2px)}
+.neighbourhood-workspace{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;align-items:start}
+.neighbourhood-workspace.without-places{grid-template-columns:1fr}
+.neighbourhood-map-card{overflow:hidden;min-width:0;border:1px solid var(--line);border-radius:18px;background:var(--paper);position:sticky;top:110px}
+.neighbourhood-map-title{padding:22px 24px;display:flex;flex-direction:column;gap:10px}
+.neighbourhood-map-title>span{font-size:var(--text-label);letter-spacing:1.2px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.neighbourhood-map-title i{width:7px;height:7px;background:var(--primary);border-radius:50%;display:inline-block}
+.neighbourhood-map-title strong{font-size:var(--text-card);font-weight:500;line-height:1.4;letter-spacing:-.02em}
+.project-story .neighbourhood-map-card .project-map-shell{border:0;border-radius:0;margin:0}
+.neighbourhood-map-card .map-heading{display:none}
+.project-story .neighbourhood-map-card #projectMap{height:470px}
+.project-story .neighbourhood-map-card .map-footer{padding:16px 20px;gap:14px;border-top:1px solid var(--line);align-items:center}
+.neighbourhood-map-card .map-footer>span{font-size:var(--text-caption);line-height:1.6}
+.neighbourhood-map-card #recenterMap{border-radius:30px;padding:10px 14px;display:flex;align-items:center;gap:7px}
+.neighbourhood-map-card #recenterMap>.icon{width:14px;height:14px}
+.neighbourhood-directory{background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-width:0}
+.neighbourhood-directory-heading{padding:26px 26px 20px}
+.neighbourhood-directory-heading h3{font-size:var(--text-subheading);font-weight:500;letter-spacing:-.025em;margin:13px 0 0;line-height:1.3}
+.neighbourhood-directory-heading h3>span{color:var(--primary)}
+.neighbourhood-categories{display:flex;flex-wrap:wrap;gap:8px;padding:0 26px 24px;border-bottom:1px solid var(--line)}
+.neighbourhood-categories button{display:flex;align-items:center;gap:7px;padding:10px 12px;font-size:var(--text-caption);border:1px solid var(--line);border-radius:30px;color:var(--muted);background:transparent;transition:background .25s,color .25s,border-color .25s}
+.neighbourhood-categories button>.icon{width:14px;height:14px;flex:none}
+.neighbourhood-categories button small{font-size:10px;opacity:.7}
+.neighbourhood-categories button[aria-pressed=true]{background:var(--primary);border-color:var(--primary);color:var(--paper)}
+.neighbourhood-categories button:hover{border-color:var(--primary);filter:none}
+.neighbourhood-place-panel{padding:0 26px 12px}
+.neighbourhood-list-label{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:21px 0 10px;font-size:var(--text-small);color:var(--primary)}
+.neighbourhood-list-label small{color:var(--muted);font-size:var(--text-caption)}
+.neighbourhood-place-panel ul{padding:0;margin:0;list-style:none;max-height:370px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--secondary) var(--paper)}
+.neighbourhood-place-panel li{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.neighbourhood-place-panel li:last-child{border:0}
+.neighbourhood-place-number{font-size:var(--text-label);color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums;flex:none}
+.neighbourhood-place-panel li>div{min-width:0}
+.neighbourhood-place-panel li strong{font-size:var(--text-body);font-weight:500;line-height:1.6;overflow-wrap:anywhere}
+.neighbourhood-place-meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:9px}
+.neighbourhood-place-meta>span{display:flex;gap:5px;align-items:center;font-size:var(--text-caption);color:var(--muted);background:#f2e8da;padding:5px 8px;border-radius:5px}
+.neighbourhood-place-meta .icon{width:12px;height:12px;flex:none}
+.neighbourhood-note{text-align:right}
+.neighbourhood-location-fallback{padding:50px 28px;min-height:320px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;background:#e9dcc9}
+.neighbourhood-location-fallback>.icon{width:36px;height:36px;color:var(--primary);stroke-width:1.2}
+.neighbourhood-location-fallback h3{font-size:var(--text-subheading);font-weight:500;max-width:450px;line-height:1.4}
+.neighbourhood-location-fallback p{font-size:var(--text-small);color:var(--muted)}
+.neighbourhood-editorial :is(a,button):focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+@media(prefers-reduced-motion:no-preference){.neighbourhood-place-panel{animation:neighbourhood-places-enter .35s ease both}@keyframes neighbourhood-places-enter{from{opacity:0;translate:0 7px}to{opacity:1;translate:0 0}}}
+@media(max-width:950px){.neighbourhood-workspace{grid-template-columns:1fr}.neighbourhood-map-card{position:static}.project-story .neighbourhood-map-card #projectMap{height:390px}.neighbourhood-heading{gap:25px}.neighbourhood-address{max-width:320px}.neighbourhood-place-panel ul{max-height:350px}}
+@media(max-width:600px){.neighbourhood-heading{grid-template-columns:1fr;gap:26px;margin-bottom:26px}.neighbourhood-address{justify-self:start;max-width:none}.neighbourhood-map-title{padding:20px}.project-story .neighbourhood-map-card #projectMap{height:330px}.neighbourhood-directory-heading{padding:24px 20px 18px}.neighbourhood-categories{padding:0 20px 22px;gap:7px}.neighbourhood-place-panel{padding:0 20px 8px}.neighbourhood-note{text-align:left}.neighbourhood-workspace{gap:18px}.neighbourhood-map-card,.neighbourhood-directory{border-radius:14px}}
