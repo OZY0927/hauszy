@@ -1,12 +1,9 @@
 'use client';
 import {useMemo} from 'react';
-import Link from 'next/link';
 import CardShowcase from './CardShowcase';
-import Icon from './Icon';
 import {listingName} from '../lib/project';
 import {isMediaPath,isOptimizedImage,previewUrl} from '../lib/media';
 
-const HOT_LIST_LIMIT=4;
 // Penang photography fills the wall when there are few project photos.
 const PLACES=[
  ['streets','A traditional Penang shophouse framed by greenery'],
@@ -29,12 +26,7 @@ export function showcaseCards(projects){
  return [...fromProjects,...fromPlaces];
 }
 
-export default function HotProjectsShowcase({candidates=[],popular=false}){
- const cards=useMemo(()=>showcaseCards(candidates),[candidates]),hot=candidates.slice(0,HOT_LIST_LIMIT);
- return <CardShowcase cards={cards} label="THE PROPERTY COLLECTION" heading={['Find your','next chapter.']} copy="Explore homes and commercial spaces across Penang Island and Batu Kawan." cta={{href:'/projects',label:'Explore properties'}}>
-  {hot.length>0&&<nav className="cs-hot" aria-label={popular?'Popular projects':'Hot projects'}>
-   <span className="cs-hot-label">{popular?'POPULAR RIGHT NOW':'HOT PROJECTS'}</span>
-   <ul>{hot.map(p=><li key={p.id}><Link href={'/projects/'+encodeURIComponent(p.id)}><span><strong>{listingName(p)}</strong><small>{[p.type,p.location].filter(Boolean).join(' · ')}</small></span><Icon name="arrowUpRight"/></Link></li>)}</ul>
-  </nav>}
- </CardShowcase>;
+export default function HotProjectsShowcase({candidates=[]}){
+ const cards=useMemo(()=>showcaseCards(candidates),[candidates]);
+ return <CardShowcase cards={cards} label="THE PROPERTY COLLECTION" heading={['Every corner','of Penang.']} copy="Apartments, landed homes and commercial spaces from George Town to Batu Kawan, across the island and the mainland." cta={{href:'/projects',label:'Explore properties'}}/>;
 }

@@ -1271,16 +1271,8 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
 .cs-cta{display:inline-flex;align-items:center;gap:18px;margin-top:36px;padding:18px 24px;border-radius:14px;background:var(--primary);color:var(--paper);font-size:var(--text-small);font-weight:600;transition:background-color .25s,gap .3s cubic-bezier(.22,1,.36,1)}
 .cs-cta>.icon{width:18px;height:18px}
 .cs-cta:hover{background:var(--ink);gap:24px}
-.cs-cta:focus-visible,.cs-hot a:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
+.cs-cta:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
 .cs-extra{width:min(100%,30rem)}
-.cs-hot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line)}
-.cs-hot-label{font-size:var(--text-label);letter-spacing:.17em;color:var(--muted)}
-.cs-hot ul{list-style:none;margin:8px 0 0;padding:0}
-.cs-hot a{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);color:var(--ink)}
-.cs-hot strong{display:block;font-size:var(--text-body);font-weight:500}
-.cs-hot small{display:block;margin-top:2px;font-size:var(--text-caption);color:var(--muted)}
-.cs-hot a>.icon{flex:none;width:16px;height:16px;color:var(--primary);transition:transform .3s cubic-bezier(.22,1,.36,1)}
-.cs-hot a:hover>.icon{transform:translate(2px,-2px)}
 /* The reveal is scroll-triggered and reverses on the way back up; it is only armed while the scene is live,
    and focus always shows the text so keyboard users never land on something invisible. */
 .cs.is-live .cs-panel>*{opacity:0;transform:translateY(22px);transition:opacity .45s ease,transform .7s cubic-bezier(.22,1,.36,1)}
@@ -1293,7 +1285,7 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
 .cs.is-still{height:auto}
 .cs.is-still .cs-stage{position:relative;height:auto;min-height:min(100svh,860px)}
 .cs.is-still .cs-panel{position:relative;inset:auto;min-height:inherit;margin-left:50%}
-@media(max-height:760px) and (min-width:801px){.cs-hot li:nth-child(n+3){display:none}.cs-hot{margin-top:28px}.cs-cta{margin-top:26px}}
+@media(max-height:760px) and (min-width:801px){.cs-cta{margin-top:26px}}
 @media(max-width:800px){
  .cs{height:calc(var(--cs-scroll-compact,3.4)*100svh)}
  .cs-stage{min-height:520px}
@@ -1304,8 +1296,6 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
  .cs-title{font-size:clamp(2.25rem,10vw,3.25rem)}
  .cs-copy{margin-top:12px;font-size:var(--text-body);line-height:1.6}
  .cs-cta{margin-top:18px;padding:15px 20px}
- .cs-hot{margin-top:18px;padding-top:6px}
- .cs-hot li:nth-child(n+3){display:none}
  .cs.is-still .cs-stage{min-height:0}
  .cs.is-still .cs-wall{position:relative;height:56svh;bottom:auto}
  .cs.is-still .cs-panel{margin-left:0;padding:28px 6% 44px}
@@ -1314,7 +1304,7 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
  .cs{height:auto}
  .cs-stage{position:relative;height:auto;min-height:min(100svh,860px)}
  .cs-panel{position:relative;inset:auto;min-height:inherit;margin-left:50%}
- .cs-cta,.cs-hot a>.icon{transition:none}
+ .cs-cta{transition:none}
 }
 @media(prefers-reduced-motion:reduce) and (max-width:800px){
  .cs-stage{min-height:0}
