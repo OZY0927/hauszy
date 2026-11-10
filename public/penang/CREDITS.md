@@ -1,5 +1,20 @@
 # Penang homepage media
 
+## Owner-supplied photography
+
+Added on 2026-11-10. These assets were supplied by the site owner; photographer
+and license details were not provided. Existing stock-photo credits below do
+not apply to these files. WebP copies preserve the source resolution without
+upscaling and are bundled locally with the site.
+
+| Local asset | Supplied file | Homepage placement |
+| --- | --- | --- |
+| `bridge-sunrise.webp` | `images.jpg` | Island and mainland: bridge |
+| `george-town-lanterns.webp` | `daefa2f0-228c-430a-9529-cbba8bf5ef65.png` | Heritage and culture |
+| `kek-lok-si.webp` | `istockphoto-517803440-612x612.jpg` | Island perspective |
+| `hill-canopy.webp` | `ya4foliliexa1iuu8w76.jpg` | Hills and horizons |
+| `national-park.webp` | `Penang_National_Park_1_u3yevc.jpg` | Coast and calm |
+
 ## State outline
 
 `boundary.geojson` contains the Pulau Pinang feature from
