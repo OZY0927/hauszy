@@ -1,6 +1,7 @@
 import './globals.css';
 import 'leaflet/dist/leaflet.css';
 import './typography.css';
+import './home-motion.css';
 import Header from '../components/Header';
 import SiteIntro from '../components/SiteIntro';
 import Motion from '../components/Motion';

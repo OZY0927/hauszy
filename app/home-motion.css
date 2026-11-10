@@ -1,0 +1,41 @@
+/* Animate content inside sections; sticky project and film ancestors stay still. */
+@media(prefers-reduced-motion:no-preference){
+ .pg-motion [data-pg-reveal]{transition-duration:.9s;transition-timing-function:cubic-bezier(.22,1,.36,1)}
+ .pg-motion [data-pg-reveal]:not(.is-visible){transform:translateY(36px)}
+ .pg-motion .pg-section-meta{position:relative;padding-bottom:18px}
+ .pg-motion .pg-section-meta:after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:var(--pg-line);transform:scaleX(0);transform-origin:left;transition:transform 1.2s cubic-bezier(.22,1,.36,1)}
+ .pg-motion [data-pg-section].is-visible .pg-section-meta:after{transform:scaleX(1)}
+
+ .pg-motion :is(.pg-chapter-heading,.pg-perspectives-heading,.pg-next-layout)>*{transition:opacity .85s ease,transform .95s cubic-bezier(.22,1,.36,1)}
+ .pg-motion :is(.pg-chapter-heading,.pg-perspectives-heading,.pg-next-layout):not(.is-visible)>*{opacity:0;transform:translateY(18px)}
+ .pg-motion :is(.pg-chapter-heading,.pg-perspectives-heading,.pg-next-layout).is-visible>:nth-child(2){transition-delay:.14s}
+
+ .pg-motion .pg-place-strip>span{transition:opacity .65s ease,transform .8s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--place-order,0)*70ms)}
+ .pg-motion .pg-place-strip:not(.is-visible)>span{opacity:0;transform:translateY(12px)}
+ .pg-place-strip>span:nth-child(2){--place-order:1}.pg-place-strip>span:nth-child(3){--place-order:2}.pg-place-strip>span:nth-child(4){--place-order:3}.pg-place-strip>span:nth-child(5){--place-order:4}
+
+ .pg-motion .pg-chapter-tabs{transition-delay:.1s}
+ .pg-motion .pg-perspectives-grid>article:nth-child(2){transition-delay:.16s}
+ .pg-motion .pg-perspective-image{clip-path:inset(0 0 0 0 round 4px);transition:clip-path 1.2s cubic-bezier(.22,1,.36,1)}
+ .pg-motion .pg-perspectives-grid>[data-pg-reveal]:not(.is-visible) .pg-perspective-image{clip-path:inset(10% 0 0 0 round 24px)}
+ .pg-motion :is(.pg-chapter-photo,.pg-perspective-image)>img{transform:translateY(var(--pg-photo-shift,0px)) scale(1.08);transition:scale .8s cubic-bezier(.22,1,.36,1)}
+ .pg-motion :is(.pg-chapter-photo,.pg-perspectives-grid article):hover img{scale:1.025}
+
+ .pg-motion .pg-chapter-panel{animation:none}
+ .pg-motion .pg-chapter-photo{animation:pg-photo-open 1s cubic-bezier(.22,1,.36,1) both}
+ .pg-motion .pg-chapter-copy>*{animation:pg-copy-arrive .75s cubic-bezier(.22,1,.36,1) both}
+ .pg-motion .pg-chapter-copy>:nth-child(2){animation-delay:.08s}.pg-motion .pg-chapter-copy>:nth-child(3){animation-delay:.16s}.pg-motion .pg-chapter-copy>:nth-child(4){animation-delay:.22s}.pg-motion .pg-chapter-copy>:nth-child(5){animation-delay:.28s}
+ @keyframes pg-photo-open{from{clip-path:inset(6% 0 0 0 round 18px);opacity:.3}to{clip-path:inset(0 round 0);opacity:1}}
+ @keyframes pg-copy-arrive{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+ .pg-motion .pg-next{position:relative;isolation:isolate}
+ .pg-motion .pg-next:before{content:'';position:absolute;inset:0;z-index:-1;background:var(--paper);transform-origin:top;transform:scaleY(1);transition:transform 1.2s cubic-bezier(.76,0,.24,1);pointer-events:none}
+ .pg-motion .pg-next.is-visible:before{transform:scaleY(0)}
+ .pg-motion .pg-next-bottom{transition-delay:.2s}
+ .pg-motion .pg-hero-bottom{animation:pg-copy-arrive 1s ease .45s both}
+}
+
+@media(prefers-reduced-motion:no-preference) and (max-width:700px){
+ .pg-motion [data-pg-reveal]:not(.is-visible){transform:translateY(20px)}
+ .pg-motion .pg-perspectives-grid>article:nth-child(2){transition-delay:0s}
+}
