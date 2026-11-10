@@ -105,7 +105,7 @@
  .catalog-list-photo{height:110px}
  .catalog-list-summary{padding:0}
  .catalog-list-summary dl{gap:10px 16px}
- .catalog-list-summary h2{font-size:1.125rem}
+ .catalog-list-summary h2{font-size:1.1875rem}
  .catalog-list-summary .eyebrow{font-size:var(--text-caption);letter-spacing:.06em}
 }
 
@@ -135,10 +135,10 @@
  .catalog-list-row{grid-template-columns:96px minmax(0,1fr);gap:14px;padding:14px}
  .catalog-list-photo{align-self:start;height:128px;min-height:0;border-radius:9px}
  .catalog-list-summary{padding:0;gap:14px}
- .catalog-list-summary h2{font-size:1.125rem}
+ .catalog-list-summary h2{font-size:1.1875rem}
  .catalog-list-title-row{gap:6px}
  .catalog-list-title-row .catalog-list-save{width:30px;height:30px;min-height:30px}
  .catalog-list-specifications{gap:8px 12px;font-size:var(--text-caption)}
  .catalog-list-summary .catalog-list-actions{flex-wrap:wrap;padding-top:12px;gap:10px}
- .catalog-list-price>strong{font-size:1.125rem}
+ .catalog-list-price>strong{font-size:1.1875rem}
 }
