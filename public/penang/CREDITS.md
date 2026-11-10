@@ -1,5 +1,13 @@
 # Penang homepage media
 
+## State outline
+
+`boundary.geojson` contains the Pulau Pinang feature from
+[Atif Mustaffa's Malaysia GeoJSON state boundaries](https://github.com/atifmustaffa/malaysia-geojson/blob/master/malaysia.state.min.geojson),
+retrieved on 2026-11-10 under the MIT license (see `BOUNDARY-LICENSE.txt`).
+`lib/penang-outline.js` projects and simplifies the exterior rings for the decorative
+Hot Projects background, retaining the island, mainland and smaller islands.
+
 Downloaded on 2026-11-09 for the Hauszy Penang editorial homepage.
 
 - `skyline.jpg`: Richard L, Pexels — https://www.pexels.com/photo/aerial-view-of-penang-cityscape-at-sunrise-33985412/ — Pexels License: https://www.pexels.com/license/

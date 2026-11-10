@@ -87,3 +87,18 @@
 @keyframes collageDrift{from{transform:translate3d(calc(var(--drift-x) * var(--grid,0) * -.5),calc(var(--drift-y) * var(--grid,0) * -.5),0) rotate(calc(var(--drift-angle) * var(--grid,0) * -.5))}to{transform:translate3d(calc(var(--drift-x) * var(--grid,0) * .5),calc(var(--drift-y) * var(--grid,0) * .5),0) rotate(calc(var(--drift-angle) * var(--grid,0) * .5))}}
 @media(max-width:800px){.track .orbit{clip-path:inset(0 0 calc(var(--ending,0) * 55%) 0)}}
 @media(prefers-reduced-motion:reduce){.track .orbit{clip-path:none}.cardDrift{animation:none;transform:none}}
+
+/* Center the closing message in the right column of the desktop collage. */
+.track .finale{align-items:center;text-align:center}
+.finale .finaleTitle{font-family:var(--font-site);font-size:var(--text-section);font-weight:700;line-height:1.2;letter-spacing:-.035em;margin:0;max-width:100%;overflow-wrap:break-word}
+.track .finale .finaleCopy{font-family:var(--font-site);font-size:var(--text-body);font-weight:400;line-height:1.75;letter-spacing:normal;max-width:38ch;margin:0;color:var(--muted)}
+
+/* A local SVG boundary keeps the island and mainland sharp at every screen size. */
+.penangOutline{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(78%,780px);height:88%;z-index:0;pointer-events:none;overflow:visible;color:var(--accent)}
+.penangBase{stroke:currentColor;stroke-width:1;opacity:.16}
+.penangGlow{stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:130 870;opacity:.55;filter:drop-shadow(0 0 4px #a7573670) drop-shadow(0 0 10px #a7573640)}
+.penangGlow path{animation:penangTrace 12s linear infinite;animation-play-state:paused}
+.track[data-in-view="true"] .penangGlow path{animation-play-state:running}
+@keyframes penangTrace{from{stroke-dashoffset:0}to{stroke-dashoffset:-1000}}
+@media(max-width:800px){.penangOutline{width:94%;height:78%}.penangBase{opacity:.12}.penangGlow{opacity:.4}}
+@media(prefers-reduced-motion:reduce){.penangGlow path{animation:none;stroke-dasharray:none}.penangGlow{opacity:.14;filter:none}}

@@ -5,6 +5,7 @@ import Icon from './Icon';
 import CardPhoto from './ProjectCardPhoto';
 import {listingName} from '../lib/project';
 import {HOT_PROJECT_LIMIT} from '../lib/featured-projects';
+import {penangOutline,penangViewBox} from '../lib/penang-outline';
 import styles from './HotProjectsShowcase.module.css';
 
 const number=value=>String(value).padStart(2,'0');
@@ -77,6 +78,10 @@ export default function HotProjectsShowcase({candidates=[],popular=false}){
   for(const property of ['--pointer-x','--pointer-y','--shine-x','--shine-y'])card.style.removeProperty(property);
  } return <section id="hot-projects" ref={track} className={styles.track} data-finale={finished} style={{'--steps':projects.length}} aria-labelledby="hot-projects-title">
   <div className={styles.section}>
+   <svg className={styles.penangOutline} viewBox={penangViewBox} fill="none" aria-hidden="true" focusable="false">
+    <g className={styles.penangBase}>{penangOutline.map((d,i)=><path key={i} d={d}/>)}</g>
+    <g className={styles.penangGlow}>{penangOutline.map((d,i)=><path key={i} d={d} pathLength="1000"/>)}</g>
+   </svg>
    <h2 id="hot-projects-title" className={styles.srOnly}>Hot projects</h2>
    {project?<>
     <div className={styles.scene} data-project-scene>
@@ -91,7 +96,7 @@ export default function HotProjectsShowcase({candidates=[],popular=false}){
       </div>
      </div>)}</div>
 
-     <div className={styles.finale} aria-hidden={!finished&&!reduced}><span className={styles.eyebrow}>YOUR NEXT CHAPTER STARTS HERE</span><p>Find a place<br/>that feels like you.</p><Link href="/projects" className={styles.bigExplore} tabIndex={finished||reduced?0:-1}>Explore more projects <span><Icon name="arrowUpRight"/></span></Link></div>
+     <div className={styles.finale} aria-hidden={!finished&&!reduced}><h3 className={styles.finaleTitle}>Every corner of Penang.</h3><p className={styles.finaleCopy}>Apartments, landed homes and commercial spaces from George Town to Batu Kawan, across the island and the mainland.</p><Link href="/projects" className={styles.bigExplore} tabIndex={finished||reduced?0:-1}>Explore more projects <span><Icon name="arrowUpRight"/></span></Link></div>
     </div>
     <div className={styles.bottom}><p className={styles.note}>{popular?'The most-viewed projects.':'A selection of places to discover.'}<span>{popular?'Based on the last 30 days.':'Across Penang island & mainland.'}</span></p><span className={styles.counter}>{number(active+1)} <small>/ {number(projects.length)}</small></span><span className={styles.scrollLabel}>{finished?'KEEP EXPLORING':'KEEP SCROLLING'} <Icon name="arrowDown"/></span></div>
     <div className={styles.scrollProgress} aria-hidden="true"><span/></div>
