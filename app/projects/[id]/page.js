@@ -57,7 +57,7 @@ export default async function Project({params}){
 
   {visibility.facilities.length>0&&<section className="project-story-section project-story-facilities" id="amenities"><SectionHeading label="A LITTLE MORE TO EVERY DAY" title={<>More room<br/>to enjoy life.</>}><p>Explore the facilities and shared spaces within the project.</p></SectionHeading><ProjectFacilities facilities={visibility.facilities}/></section>}
 
-  {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates}/>}
+  {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates} amenities={visibility.nearby}/>}
 
   {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<>A clearer view<br/>of ongoing costs.</>}/><Facts rows={[["Maintenance fee per sqft",hasProjectInfo(p.maintenance)?money(p.maintenance)+' / month':null],["Sinking fund",p.sinkingFund]]}/></section>}
 
