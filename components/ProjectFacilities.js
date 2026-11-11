@@ -93,7 +93,7 @@ export default function ProjectFacilities({facilities}){
         <div className="facility-vision-bottom">
           <div className="facility-vision-controls" aria-label="Explore facilities"><button type="button" disabled={preview.length<2} onClick={()=>change(-1)} aria-label="Previous facility"><Icon name="arrowLeft"/></button><span aria-live="polite">{String(current+1).padStart(2,'0')} / {String(preview.length).padStart(2,'0')}</span><button type="button" disabled={preview.length<2} onClick={()=>change(1)} aria-label="Next facility"><Icon name="arrowRight"/></button></div>
           <span className="facility-vision-hint">Scroll to explore <Icon name="arrowDown"/></span>
-          {hasMore&&<div className="facility-vision-more"><button type="button" className="facilities-see-all" onClick={show} aria-haspopup="dialog"><span className="facility-vision-more-label">See all facilities</span><Icon name="arrowUpRight"/></button><p className="facility-vision-more-note">{moreCount} more {moreCount===1?'facility':'facilities'} to discover.</p></div>}
+          {hasMore&&<div className="facility-vision-more"><div className="facility-vision-more-anchor"><button type="button" className="facilities-see-all" onClick={show} aria-haspopup="dialog"><span className="facility-vision-more-label">See all facilities</span><Icon name="arrowUpRight"/></button></div><p className="facility-vision-more-note">{moreCount} more {moreCount===1?'facility':'facilities'} to discover.</p></div>}
         </div>
         <div className="facility-vision-progress" aria-hidden="true"><span style={{transform:`scaleX(${(current+1)/preview.length})`}}/></div>
       </div>

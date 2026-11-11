@@ -42,7 +42,7 @@
 
 /* Keep the facilities action anchored; only its label grows on hover. */
 .project-story .facility-vision .facility-vision-more .facilities-see-all{overflow:visible}
-.project-story .facility-vision .facility-vision-more .facilities-see-all:is(:hover,:focus-visible,:active){translate:-50% -50%;transform:none;scale:1;box-shadow:none;filter:none}
+.project-story .facility-vision .facility-vision-more .facilities-see-all:is(:hover,:focus-visible,:active){translate:none;transform:none;scale:1;box-shadow:none;filter:none}
 .project-story .facility-vision .facility-vision-more .facilities-see-all:after{display:none}
 .facility-vision-more-label{display:block;min-width:0;transform-origin:center}
 @media(prefers-reduced-motion:no-preference){
