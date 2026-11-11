@@ -26,6 +26,19 @@ export default function useProjectScrollEffects(root,ready){
     if(list.getBoundingClientRect().top<innerHeight*.94)return;
     gsap.from(list.children,{y:24,opacity:0,stagger:.065,duration:.65,ease:'power2.out',clearProps:'transform,opacity',scrollTrigger:{trigger:list,start:'top 88%',once:true}});
    });
+   const detailsGrid=page.querySelector('.project-details-content');
+   if(detailsGrid){
+    const columns=getComputedStyle(detailsGrid).gridTemplateColumns.split(' ').length;
+    detailsGrid.querySelectorAll('.project-detail-card').forEach((card,index)=>{
+     if(card.getBoundingClientRect().top<innerHeight*.94)return;
+     const enter=gsap.timeline({delay:(index%columns)*.045,scrollTrigger:{trigger:card,start:'top 94%',once:true}});
+     enter.from(card,{y:28,opacity:0,scale:.97,duration:.7,ease:'power3.out',clearProps:'transform,opacity'},0);
+     enter.from(card.querySelector('dd>.icon'),{y:10,scale:.8,rotation:-6,opacity:0,duration:.65,ease:'back.out(1.4)',clearProps:'transform,opacity'},.1);
+     enter.from(card.querySelector('dd>span'),{y:8,opacity:0,duration:.45,ease:'power2.out',clearProps:'transform,opacity'},.18);
+    });
+    const note=page.querySelector('.project-details-intro-note');
+    if(note)reveal(note,{y:16,duration:.7});
+   }
    page.querySelectorAll('.project-editorial-photo:not(.project-filmstrip-focus)').forEach(photo=>{
     reveal(photo,{clipPath:'inset(12% 5% 12% 5%)',y:0,duration:1.15});
     const image=photo.querySelector('img');
