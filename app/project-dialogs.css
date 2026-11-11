@@ -1,0 +1,25 @@
+/* Shared visual contract for project specifications, photos, plans, facilities and enquiries. */
+dialog.project-dialog{--dialog-surface:#fcf8f2f5;--dialog-border:#ffffffb3;position:fixed;inset:0;margin:auto;padding:clamp(20px,3vw,36px);max-height:85svh;border:1px solid var(--dialog-border);border-radius:26px;background:var(--dialog-surface);color:var(--ink);box-shadow:inset 0 1px 0 #fff,0 32px 100px #21191440;font-family:var(--font-site);overflow:hidden}
+dialog.project-dialog::backdrop{background:#21191466;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+dialog.project-dialog[open]{display:flex;flex-direction:column}
+dialog.project-dialog .project-dialog-close{display:grid;place-items:center;flex:none;min-width:36px;min-height:36px;width:36px;height:36px;padding:0;border:1px solid var(--line);border-radius:50%;background:#ffffff80;color:var(--ink);cursor:pointer;translate:none;scale:1;box-shadow:none}
+dialog.project-dialog .project-dialog-close:is(:hover,:active){background:#ead9c6;translate:none;scale:1;box-shadow:none}
+dialog.project-dialog .project-dialog-close svg{width:18px;height:18px}
+dialog.project-dialog button:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+dialog.project-dialog .close{position:absolute;top:16px;right:16px;z-index:5}
+dialog.project-dialog :is(.facilities-dialog-heading,.floorplan-dialog-heading){padding:0 0 20px;background:transparent;color:var(--ink)}
+dialog.project-dialog .facilities-dialog-heading h2{font-size:clamp(22px,3vw,30px);font-weight:500;letter-spacing:-.035em}
+dialog.project-dialog :is(.facilities-dialog-body,.project-dialog-body){min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:4px 12px 4px 0}
+dialog.project-dialog :is(.facilities-dialog-body,.project-dialog-body){scrollbar-width:thin;scrollbar-color:#bba18a transparent}
+dialog.project-dialog.photo-lightbox{width:min(1100px,calc(100vw - 32px));padding-top:64px}
+dialog.project-dialog.photo-lightbox>img{flex:1;min-height:0;height:62svh;max-height:62svh;object-fit:contain;border-radius:14px}
+dialog.project-dialog .gallery-controls{color:var(--ink);flex:none;margin-top:18px}
+dialog.project-dialog .gallery-controls button{border:1px solid var(--line);border-radius:50%;background:#ffffff80;color:var(--ink);box-shadow:none}
+dialog.project-dialog.floorplan-dialog{height:85svh;padding-top:70px}
+dialog.project-dialog .floorplan-dialog-heading{top:16px;right:16px;padding:0}
+dialog.project-dialog .floorplan-viewport{border-radius:14px;background:#f0e8dd}
+dialog#contactDialog.project-dialog{padding-top:64px;overflow:hidden}
+dialog#contactDialog.project-dialog .contact-form{padding:0 4px}
+@media(max-width:600px){dialog.project-dialog{border-radius:20px;padding:20px;max-height:85svh}dialog.project-dialog.photo-lightbox,dialog#contactDialog.project-dialog{padding-top:64px}dialog.project-dialog.floorplan-dialog{padding-top:70px}}
+@media(prefers-reduced-transparency:reduce){dialog.project-dialog{background:#fcf8f2}dialog.project-dialog::backdrop{backdrop-filter:none;-webkit-backdrop-filter:none}}
+@media(forced-colors:active){dialog.project-dialog{background:Canvas;color:CanvasText;border-color:CanvasText;box-shadow:none}}

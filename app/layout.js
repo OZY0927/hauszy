@@ -10,6 +10,7 @@ import './project-interactions.css';
 import './project-glass.css';
 import './project-gallery.css';
 import './project-details.css';
+import './project-dialogs.css';
 import Header from '../components/Header';
 import Script from 'next/script';
 import SiteIntro from '../components/SiteIntro';

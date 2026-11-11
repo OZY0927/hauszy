@@ -11,7 +11,7 @@ export default function useProjectScrollEffects(root,ready){
   gsap.registerPlugin(ScrollTrigger);
   const page=root.current,media=gsap.matchMedia();
   let disposed=false,refreshFrame=0;
-  media.add({motion:'(prefers-reduced-motion: no-preference)',desktop:'(min-width: 801px)',wideGrid:'(min-width: 1200px)',tabletGrid:'(min-width: 701px) and (max-width: 1199px)',phoneGrid:'(max-width: 700px)',narrowGrid:'(max-width: 350px)'},context=>{
+  media.add({motion:'(prefers-reduced-motion: no-preference)',desktop:'(min-width: 801px)'},context=>{
    if(!context.conditions.motion)return;
    const desktop=context.conditions.desktop;
    const cleanChapters=sectionTransitions(page,{titles:'.project-story-section-heading h2,.layout-studio-heading h2,.project-story-contact-copy h2',sections:'#project-photos,#details,#maintenance,#showroom,.project-story-contact',desktop});
@@ -26,33 +26,8 @@ export default function useProjectScrollEffects(root,ready){
     if(list.getBoundingClientRect().top<innerHeight*.94)return;
     gsap.from(list.children,{y:24,opacity:0,stagger:.065,duration:.65,ease:'power2.out',clearProps:'transform,opacity',scrollTrigger:{trigger:list,start:'top 88%',once:true}});
    });
-   const detailsGrid=page.querySelector('.project-details-content');
-   if(detailsGrid){
-    const columns=getComputedStyle(detailsGrid).gridTemplateColumns.split(' ').length;
-    const detailCards=[...detailsGrid.querySelectorAll('.project-detail-card')];
-    detailCards.forEach((card,index)=>{
-     if(card.getBoundingClientRect().top<innerHeight*.94)return;
-     const enter=gsap.timeline({delay:(index%columns)*.045,scrollTrigger:{trigger:card,start:'top 94%',once:true}});
-     enter.from(card,{y:28,opacity:0,scale:.97,duration:.7,ease:'power3.out',clearProps:'transform,opacity'},0);
-     enter.from(card.querySelector('dd>.icon'),{y:10,scale:.8,rotation:-6,opacity:0,duration:.65,ease:'back.out(1.4)',clearProps:'transform,opacity'},.1);
-     enter.from(card.querySelector('dd>span'),{y:8,opacity:0,duration:.45,ease:'power2.out',clearProps:'transform,opacity'},.18);
-    });
-    // Each row leaves in reading order, without competing with the entrance and flip transforms.
-    for(let index=0;index<detailCards.length;index+=columns){
-     const row=detailCards.slice(index,index+columns);
-     gsap.fromTo(row,{'--detail-exit-y':'0px'},{
-      '--detail-exit-y':()=>-Math.min(260,innerHeight*.32)+'px',duration:1,stagger:.1,ease:'none',
-      scrollTrigger:{trigger:detailsGrid,start:()=>`top+=${row[0].offsetTop-(parseFloat(getComputedStyle(row[0]).top)||0)} 28%`,end:()=>'+='+Math.round(innerHeight*.65),scrub:.5,invalidateOnRefresh:true},
-     });
-    }
-    const note=page.querySelector('.project-details-intro-note');
-    if(note)reveal(note,{y:16,duration:.7});
-   }
-   page.querySelectorAll('.project-editorial-photo:not(.project-filmstrip-focus)').forEach(photo=>{
-    reveal(photo,{clipPath:'inset(12% 5% 12% 5%)',y:0,duration:1.15});
-    const image=photo.querySelector('img');
-    if(desktop&&image)gsap.fromTo(image,{scale:1.16,yPercent:-3},{scale:1.02,yPercent:3,ease:'none',scrollTrigger:{trigger:photo,start:'top bottom',end:'bottom top',scrub:.8}});
-   });
+   const note=page.querySelector('.project-details-intro-note');
+   if(note)reveal(note,{y:16,duration:.7});
    page.querySelectorAll('.project-story-highlights-inner>div').forEach((el,index)=>reveal(el,{y:35,scale:.92,delay:index*.07}));
    page.querySelectorAll('.layout-studio-detail-heading,.layout-studio-price,.project-story-contact-copy>p,.project-story-contact-copy>.eyebrow,.enquiry-card').forEach(el=>reveal(el));
    page.querySelectorAll('.layout-studio-drawing').forEach(el=>reveal(el,{y:24,clipPath:'inset(8% 0 8% 0)',duration:1}));

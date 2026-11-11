@@ -1,0 +1,6 @@
+.container{position:relative;width:100%;padding-block:36px 60px}
+.perspective{position:relative;width:100%;perspective:1000px}
+.header{max-width:1320px;margin:0 auto 48px;position:relative;z-index:1}
+.card{position:relative;width:100%;max-width:1320px;margin-inline:auto;padding:12px;border:2px solid #806b5e;border-radius:30px;background:#30251f;transform-origin:center center;box-shadow:0 9px 20px #00000035,0 37px 37px #00000025,0 64px 50px #00000018}
+.content{width:100%;min-width:0;border-radius:20px;background:#211914;padding:16px;overflow:hidden}
+@media(max-width:768px){.container{padding-block:12px 30px}.header{margin-bottom:32px}.card{padding:6px;border-radius:20px}.content{padding:8px;border-radius:14px}}

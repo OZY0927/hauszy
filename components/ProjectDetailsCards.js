@@ -1,54 +1,63 @@
 'use client';
-import {useEffect,useId,useLayoutEffect,useRef,useState} from 'react';
-import {createPortal} from 'react-dom';
+import {useEffect,useRef,useState} from 'react';
+import {motion,useReducedMotion,useScroll,useSpring,useTransform,useMotionValueEvent} from 'motion/react';
 import Icon from './Icon';
+import styles from './ui/split-detail-roll.module.css';
 
-function DetailPreview({detail,onDismiss}){
- const card=useRef(null),animation=useRef(null);
- const [label,value,icon]=detail.fact;
- useLayoutEffect(()=>{
-  const element=card.current;
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches||!element.animate)return;
-  const target=element.getBoundingClientRect(),source=detail.rect;
-  const x=source.left+source.width/2-target.left-target.width/2,y=source.top+source.height/2-target.top-target.height/2;
-  const start=`translate(${x}px,${y}px) scale(${source.width/target.width},${source.height/target.height}) rotateY(-180deg)`;
-  animation.current=element.animate([{transform:start,opacity:0},{transform:'translate(0,0) scale(1) rotateY(0deg)',opacity:1}],{duration:600,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
-  return()=>animation.current?.cancel();
- },[detail.id]);
- useEffect(()=>{
-  if(!detail.closing)return;
-  const motion=animation.current;
-  if(!motion){onDismiss(detail.id);return}
-  motion.reverse();
-  motion.finished.then(()=>onDismiss(detail.id)).catch(()=>{});
- },[detail.closing,detail.id,onDismiss]);
- return createPortal(<div className={'project-detail-preview'+(detail.pinned?' is-pinned':'')} onClick={onDismiss.bind(null,detail.id)}>
-  <div ref={card} id={detail.previewId} className="project-detail-preview-card" role={detail.pinned?'dialog':'tooltip'} aria-label={label} onClick={event=>event.stopPropagation()}>
-   {detail.pinned&&<button type="button" className="project-detail-preview-close" onClick={()=>onDismiss(detail.id)} aria-label="Close detail"><Icon name="x"/></button>}
-   <span className="project-detail-preview-label">{label}</span><Icon name={icon}/><strong>{value}</strong>
+const wrap=(value,count)=>(value%count+count)%count;
+export default function ProjectDetailsCards({facts}){
+ const [position,setPosition]=useState(0);
+ const scrollRef=useRef(null);
+ const dialogRef=useRef(null);
+ const [dialogOpen,setDialogOpen]=useState(false);
+ useEffect(()=>{if(!dialogOpen)return;const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=previous}},[dialogOpen]);
+ const reduced=useReducedMotion();
+ const {scrollYProgress}=useScroll({target:scrollRef,offset:['start 80px','end end']});
+ const target=useTransform(scrollYProgress,value=>Math.min(Math.max(0,facts.length-1),Math.max(0,value*facts.length)));
+ // Small resting zones at each matching pair make both columns lock together.
+ const magnetic=useTransform(target,value=>{
+  const start=Math.floor(value),fraction=value-start;
+  const t=Math.min(1,Math.max(0,(fraction-.12)/.76));
+  return start+t*t*(3-2*t);
+ });
+ const smooth=useSpring(magnetic,{stiffness:210,damping:30,mass:.45});
+ const progress=reduced?target:smooth;
+ useMotionValueEvent(progress,'change',value=>{
+  const next=Math.round(value);
+  setPosition(previous=>previous===next?previous:next);
+ });
+ if(!facts.length)return null;
+ const current=wrap(position,facts.length);
+ const go=direction=>window.scrollBy({top:direction*360,behavior:reduced?'instant':'smooth'});
+ const slots=Array.from({length:Math.min(5,facts.length)},(_,index)=>index-Math.floor(Math.min(5,facts.length)/2));
+ return <div ref={scrollRef} className={styles.journey} style={{height:`calc(100svh + ${facts.length*360}px)`}}><div className={styles.root}>
+  <div className={styles.scrollViewport} role="region" aria-roledescription="carousel" aria-label="Project specifications" tabIndex={0} onKeyDown={event=>{if(event.key==='ArrowDown'||event.key==='ArrowRight'){event.preventDefault();go(1)}if(event.key==='ArrowUp'||event.key==='ArrowLeft'){event.preventDefault();go(-1)}}}>
+   <div className={styles.stage}>
+   <div className={styles.labelWheel}>
+    <small className={styles.labelCounter}>PROJECT DETAIL {String(current+1).padStart(2,'0')} / {String(facts.length).padStart(2,'0')}</small>
+    {slots.map(offset=>{const absolute=position+offset,index=wrap(absolute,facts.length);return <RollItem key={absolute} absolute={absolute} progress={progress} side="label" active={offset===0} reduced={reduced}><h3>{facts[index][0]}</h3>{offset!==0&&<small>{offset<0?'Previous detail':'Next detail'}</small>}</RollItem>})}
+   </div>
+   <div className={styles.wheel}>
+    {slots.map(offset=>{const absolute=position+offset,index=wrap(absolute,facts.length);return <RollItem key={absolute} absolute={absolute} progress={progress} side="value" active={offset===0} reduced={reduced}><strong>{facts[index][1]}</strong></RollItem>})}
+   </div>
+   </div>
   </div>
- </div>,document.body);
+  <p className={styles.scrollHint}><span aria-live="polite" aria-atomic="true">{current+1} / {facts.length}</span><span>Scroll to explore details <Icon name="arrowDown"/></span></p>
+  <div className={styles.all}><button type="button" className={styles.viewAll} onClick={()=>{dialogRef.current.showModal();setDialogOpen(true)}}>View all</button></div>
+  <dialog ref={dialogRef} className={styles.dialog+' project-dialog'} aria-labelledby="all-project-specifications-title" onClose={()=>setDialogOpen(false)} onClick={event=>{if(event.target===dialogRef.current)dialogRef.current.close()}}>
+   <header><div><span className="eyebrow">THE FINER DETAILS</span><h3 id="all-project-specifications-title">All project specifications</h3></div><button type="button" className="project-dialog-close" aria-label="Close specifications" onClick={()=>dialogRef.current.close()}><Icon name="x"/></button></header>
+   <div className={styles.dialogBody}><dl>{facts.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></div>
+  </dialog>
+ </div></div>;
 }
 
-export default function ProjectDetailsCards({facts}){
- const [detail,setDetail]=useState(null),sequence=useRef(0),previewId=useId();
- const dismiss=useRef(id=>setDetail(current=>current?.id===id?null:current)).current;
- function show(index,element){
-  if(detail?.index===index&&!detail.closing)return;
-  const rect=element.closest('.project-detail-card').getBoundingClientRect();
-  setDetail({index,fact:facts[index],rect,id:++sequence.current,pinned:true,closing:false,previewId});
- }
- useEffect(()=>{
-  if(!detail)return;
-  const close=()=>setDetail(null),key=event=>{if(event.key==='Escape')close()};
-  window.addEventListener('keydown',key);window.addEventListener('scroll',close,{passive:true});window.addEventListener('resize',close);
-  return()=>{window.removeEventListener('keydown',key);window.removeEventListener('scroll',close);window.removeEventListener('resize',close)};
- },[!!detail]);
- return <>
-  <dl className="project-details-content" aria-label="Project specifications">{facts.map(([label,value,icon],index)=><div className="project-detail-card" key={label}>
-   <dt><span>{label}</span><span className="project-detail-number" aria-hidden="true">{String(index+1).padStart(2,'0')} / {String(facts.length).padStart(2,'0')}</span></dt>
-   <dd><Icon name={icon}/><span>{value}</span><button type="button" className="project-detail-expand" aria-label={`View ${label}: ${value}`} aria-haspopup="dialog" aria-expanded={detail?.index===index&&!detail.closing} aria-controls={detail?.index===index?previewId:undefined} onClick={event=>show(index,event.currentTarget)}/></dd>
-  </div>)}</dl>
-  {detail&&<DetailPreview key={detail.id} detail={detail} onDismiss={dismiss}/>}
- </>;
+// Both sides derive their position from the same scroll clock, avoiding competing springs.
+function RollItem({absolute,progress,side,active,reduced,children}){
+ const distance=useTransform(progress,value=>absolute-(reduced?Math.round(value):value));
+ const y=useTransform(distance,value=>value*(side==='label'?-210:230));
+ const x=useTransform(distance,value=>Math.abs(value)*(side==='label'?-20:36));
+ const rotateX=useTransform(distance,value=>reduced?0:value*(side==='label'?12:-14));
+ const scale=useTransform(distance,value=>{const away=Math.min(2,Math.abs(value));return 1-away*.18+(reduced?0:.025*Math.max(0,1-away/.18))});
+ const opacity=useTransform(distance,value=>Math.max(0,1-Math.abs(value)*.65));
+ return <motion.div className={side==='label'?styles.labelItem:styles.item} aria-hidden={!active} style={{y,x,rotateX,scale,opacity,zIndex:active?3:1}}>{children}</motion.div>;
 }

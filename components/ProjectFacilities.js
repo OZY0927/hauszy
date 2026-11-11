@@ -98,8 +98,8 @@ export default function ProjectFacilities({facilities}){
         <div className="facility-vision-progress" aria-hidden="true"><span style={{transform:`scaleX(${(current+1)/preview.length})`}}/></div>
       </div>
     </div>
-    <dialog ref={dialog} className="facilities-dialog" aria-labelledby={titleId} onClose={()=>setOpen(false)} onClick={event=>{if(event.target===dialog.current)close()}}>
-      <div className="facilities-dialog-heading"><h2 id={titleId}>Project Facilities</h2><button type="button" onClick={close} aria-label="Close facilities" autoFocus><Icon name="x"/></button></div>
+    <dialog ref={dialog} className="facilities-dialog project-dialog" aria-labelledby={titleId} onClose={()=>setOpen(false)} onClick={event=>{if(event.target===dialog.current)close()}}>
+      <div className="facilities-dialog-heading"><h2 id={titleId}>Project Facilities</h2><button type="button" className="project-dialog-close" onClick={close} aria-label="Close facilities" autoFocus><Icon name="x"/></button></div>
       <div className="facilities-dialog-body"><FacilityList items={facilities}/></div>
     </dialog>
   </>;

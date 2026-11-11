@@ -1,3 +1,4 @@
+import {ContainerScroll} from '../../../components/ui/container-scroll-animation';
 import HighlightNumber from '../../../components/HighlightNumber';
 import ProjectFacilities from '../../../components/ProjectFacilities';
 import {pageMetadata,projectStructuredData} from '../../../lib/seo';
@@ -46,7 +47,7 @@ export default async function Project({params}){
    </>}
   </ProjectScrollIntroduction>}
 
-  {visibility.photos&&p.images.length>0&&<section className="project-story-section project-story-photography" id="project-photos"><SectionHeading label="TAKE A LOOK AROUND" title={<>A first look at<br/>{p.name}.</>}><p>Explore the project, one photo at a time.</p></SectionHeading><ProjectGallery photos={p.images} name={p.name}/><p className="project-story-fine-print">Contact us to confirm current availability and project specifications.</p></section>}
+  {visibility.photos&&p.images.length>0&&<section className="project-story-section project-story-photography" id="project-photos"><ContainerScroll titleComponent={<SectionHeading label="TAKE A LOOK AROUND" title={<>A first look at<br/>{p.name}.</>}><p>Explore the project, one photo at a time.</p></SectionHeading>}><ProjectGallery photos={p.images} name={p.name}/></ContainerScroll></section>}
 
   {visibility.overview&&[p.beds,p.baths,p.size,p.tag].some(hasProjectInfo)&&<section className="project-story-highlights" aria-label="Project highlights"><div className="project-story-highlights-inner">{[[unitCountRange(p.units,'bedrooms'),'Bedrooms','bed'],[unitCountRange(p.units,'bathrooms'),'Bathrooms','bath'],[p.size,'Built-up · sqft','ruler'],[p.tag,'Tenure','key']].filter(([v])=>hasProjectInfo(v)).map(([value,label,icon])=><div key={label} data-reveal><Icon name={icon}/><HighlightNumber value={value}/><span>{label}</span></div>)}</div></section>}
 

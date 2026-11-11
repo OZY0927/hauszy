@@ -8,27 +8,6 @@ export function ProjectStory({children}){
  const [ready,setReady]=useState(false);
  const story=useRef(null);
  useEffect(()=>setReady(true),[]);
- // Use the tightest column to size every highlight together.
- useEffect(()=>{
-  if(!ready)return;
-  const group=story.current?.querySelector('.project-story-highlights-inner');
-  if(!group)return;
-  let disposed=false,frame=0,lastWidth=-1;
-  const fit=()=>{
-   frame=0;if(disposed)return;
-   group.style.removeProperty('--highlight-size');
-   const numbers=[...group.querySelectorAll('.highlight-number')];
-   let sharedSize=Infinity;
-   for(const el of numbers){const available=el.clientWidth,content=el.firstElementChild?.getBoundingClientRect().width||0,size=parseFloat(getComputedStyle(el).fontSize);if(available>0&&content>0)sharedSize=Math.min(sharedSize,size*Math.min(1,available/content))}
-   if(Number.isFinite(sharedSize))group.style.setProperty('--highlight-size',sharedSize+'px');
-  };
-  const schedule=()=>{if(!frame)frame=requestAnimationFrame(fit)};
-  fit();
-  const observer='ResizeObserver' in window?new ResizeObserver(entries=>{const width=entries[0].contentRect.width;if(width!==lastWidth){lastWidth=width;schedule()}}):null;
-  observer?.observe(group);window.addEventListener('resize',schedule);
-  document.fonts?.ready.then(()=>{if(!disposed)schedule()});
-  return()=>{disposed=true;observer?.disconnect();cancelAnimationFrame(frame);window.removeEventListener('resize',schedule);group.style.removeProperty('--highlight-size')};
- },[ready]);
  useProjectScrollEffects(story,ready);
  return <main ref={story} className="project-story" data-motion-pending={ready?undefined:''}>{children}</main>;
 }
