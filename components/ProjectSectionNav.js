@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import Icon from './Icon';
+import useProjectScrollEffects from './useProjectScrollEffects';
 
 // Hold imperative reveal mutations until React has hydrated the project content.
 export function ProjectStory({children}){
@@ -28,13 +29,7 @@ export function ProjectStory({children}){
   document.fonts?.ready.then(()=>{if(!disposed)schedule()});
   return()=>{disposed=true;observer?.disconnect();cancelAnimationFrame(frame);window.removeEventListener('resize',schedule);group.style.removeProperty('--highlight-size')};
  },[ready]);
- useEffect(()=>{
-  if(!ready||!story.current||!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  const targets=story.current.querySelectorAll('.project-story-section-heading,.project-overview-panel,.project-story-at-a-glance>div,#details .property-facts>div,.project-editorial-gallery,.project-story-unit-copy,.project-story-unit .floorplan-open,.project-story-location-grid,.project-story-charges .property-facts>div,.project-story-showroom .showroom-grid>button');
-  const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){entry.target.classList.add('project-motion-visible');observer.unobserve(entry.target)}}},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
-  for(const el of targets){if(el.closest('.project-journey-intro')||el.getBoundingClientRect().top<innerHeight-30)continue;const siblings=[...el.parentElement.children];el.style.setProperty('--project-stagger',Math.min(siblings.indexOf(el),5)*60+'ms');el.classList.add('project-motion-item');observer.observe(el)}
-  return()=>{observer.disconnect();for(const el of targets){el.classList.remove('project-motion-item','project-motion-visible');el.style.removeProperty('--project-stagger')}};
- },[ready]);
+ useProjectScrollEffects(story,ready);
  return <main ref={story} className="project-story" data-motion-pending={ready?undefined:''}>{children}</main>;
 }
 

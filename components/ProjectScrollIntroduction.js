@@ -1,31 +1,22 @@
 'use client';
 import {useEffect,useRef} from 'react';
+import {gsap} from 'gsap';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
 
-// Native sticky scene: paper opening, painted color wipe and floating photos.
+// ScrollTrigger scrubs the native sticky scene and its painted color wipe.
 export default function ProjectScrollIntroduction({photos=[],children}){
  const root=useRef(null),images=photos.filter(Boolean).slice(0,6);
  useEffect(()=>{
-  const el=root.current,preference=matchMedia('(min-width: 801px) and (min-height: 650px) and (prefers-reduced-motion: no-preference)');
-  const stage=el.querySelector('.project-journey-stage');
-  let frame=0,observer;
-  const update=()=>{
-   frame=0;
-   if(!preference.matches)return;
-   const rect=el.getBoundingClientRect();
-   el.classList.toggle('is-journey-visible',rect.bottom>0&&rect.top<innerHeight);
-   if(rect.bottom<0||rect.top>innerHeight)return;
-   const progress=Math.max(0,Math.min(1,-rect.top/Math.max(1,el.offsetHeight-stage.offsetHeight)));
-   el.style.setProperty('--journey-progress',progress.toFixed(4));
-   const phase=(start,end)=>Math.max(0,Math.min(1,(progress-start)/(end-start)));
-   el.style.setProperty('--journey-wipe',phase(.06,.5).toFixed(4));
-  };
-  const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
-  const configure=()=>{el.classList.toggle('journey-motion',preference.matches);for(const key of ['progress','wipe'])el.style.removeProperty('--journey-'+key);schedule()};
-  configure();
-  window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);
-  preference.addEventListener('change',configure);
-  if('ResizeObserver' in window){observer=new ResizeObserver(schedule);observer.observe(el)}
-  return()=>{cancelAnimationFrame(frame);observer?.disconnect();window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);preference.removeEventListener('change',configure)};
+  gsap.registerPlugin(ScrollTrigger);
+  const el=root.current,media=gsap.matchMedia();
+  media.add('(min-width: 801px) and (min-height: 650px) and (prefers-reduced-motion: no-preference)',()=>{
+   el.classList.add('journey-motion');
+   const timeline=gsap.timeline({scrollTrigger:{trigger:el,start:'top top',end:'bottom bottom',scrub:.7,invalidateOnRefresh:true,onToggle:self=>el.classList.toggle('is-journey-visible',self.isActive)}});
+   timeline.fromTo(el,{'--journey-progress':0},{'--journey-progress':1,duration:1,ease:'none'},0);
+   timeline.fromTo(el,{'--journey-wipe':0},{'--journey-wipe':1,duration:.44,ease:'none'},.06);
+   return()=>el.classList.remove('journey-motion','is-journey-visible');
+  },el);
+  return()=>media.revert();
  },[]);
  return <section ref={root} id="overview" className={'project-journey-intro project-story-intro project-story-section'+(images.length?' has-journey-photos':'')} aria-label="Project introduction">
   <div className="project-journey-stage">
