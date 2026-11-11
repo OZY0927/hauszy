@@ -7,7 +7,7 @@ import {notFound} from 'next/navigation';
 import {getProfile,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
 import {whatsappNumber,whatsappLink,projectMessage} from '../../../lib/whatsapp';
 import {hasProjectInfo,visibleFacts,projectSections} from '../../../lib/project-visibility';
-import {money,unitCountRange,safeUrl,formatRange,pricePerSqft,vpQuarter,startingPrice,cardProject,listingName} from '../../../lib/project';
+import {money,unitCountRange,safeUrl,startingPrice,cardProject,listingName} from '../../../lib/project';
 import ProjectGallery from '../../../components/ProjectGallery';
 import ProjectSectionNav,{ProjectStory} from '../../../components/ProjectSectionNav';
 import ShowroomGallery from '../../../components/ShowroomGallery';
@@ -19,6 +19,7 @@ import {videoSource} from '../../../lib/video';
 import RelatedProjectGrid from '../../../components/RelatedProjectGrid';
 import Icon from '../../../components/Icon';
 import ProjectScrollIntroduction from '../../../components/ProjectScrollIntroduction';
+import ProjectDetails from '../../../components/ProjectDetails';
 
 export async function generateStaticParams(){return []}
 export async function generateMetadata({params}){const {id}=await params;const p=await getPublishedProject(id);if(!p)return {title:'Project unavailable',robots:{index:false,follow:false}};return pageMetadata(listingName(p),`${listingName(p)} in ${p.location}. Explore layouts, facilities and project details.`,`/projects/${encodeURIComponent(id)}/`,p.images.slice(0,1))}
@@ -49,7 +50,7 @@ export default async function Project({params}){
 
   {visibility.overview&&[p.beds,p.baths,p.size,p.tag].some(hasProjectInfo)&&<section className="project-story-highlights" aria-label="Project highlights"><div className="project-story-highlights-inner">{[[unitCountRange(p.units,'bedrooms'),'Bedrooms','bed'],[unitCountRange(p.units,'bathrooms'),'Bathrooms','bath'],[p.size,'Built-up · sqft','ruler'],[p.tag,'Tenure','key']].filter(([v])=>hasProjectInfo(v)).map(([value,label,icon])=><div key={label} data-reveal><Icon name={icon}/><HighlightNumber value={value}/><span>{label}</span></div>)}</div></section>}
 
-  {visibility.details&&<section className="project-story-section" id="details"><SectionHeading label="THE FINER DETAILS" title={<>Get to know<br/>your next address.</>}><p>The key facts, all in one place.</p></SectionHeading><Facts rows={[["Project name",p.name],["Developer",p.developer||null],["Project location",p.location],["Property type",p.type],["Price per sqft",pricePerSqft(p)?money(pricePerSqft(p))+' / sqft':null],["Tenure (freehold / leasehold)",p.tag],["Title (residential / commercial)",p.titleType||null],["Total units",p.totalUnits],["Towers / blocks",p.towers],["Total floors",formatRange([p.floors,p.floorsMax])],["Units per floor",formatRange([p.unitsPerFloor,p.unitsPerFloorMax])],["Total lifts",p.totalLifts],["Construction status",p.construction||null],["Estimated VP",vpQuarter(p.vp)]]}/></section>}
+  {visibility.details&&<ProjectDetails project={p}/>}
 
   {visibility.units.length>0&&<ProjectLayouts units={visibility.units.map(unit=>({...unit,enquiryHref:whatsappNumber(profile)?whatsappLink(whatsappNumber(profile),projectMessage({kind:'enquiry',agent:profile?.name,project:p.name,layout:unit.name||'Unit layout'})):'#enquiry'}))} enquiry={visibility.enquiry}/>}
 

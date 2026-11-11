@@ -7,7 +7,7 @@
 .project-story #project-photos>.project-story-section-heading{flex:none;margin-bottom:20px}
 .project-story #project-photos .project-story-section-heading h2{font-size:clamp(26px,3.1vw,48px);line-height:1.1}
 .project-story #project-photos>.project-story-fine-print{color:var(--muted);margin-top:18px;flex:none}
-.project-story #project-photos .project-layered-gallery{width:100%;min-width:0;display:flex;flex-direction:column}
+.project-story #project-photos .project-layered-gallery{width:88%;max-width:1200px;margin-inline:auto;min-width:0;display:flex;flex-direction:column}
 .project-photo-stack{position:relative;isolation:isolate;flex:none;height:clamp(280px,56svh,680px);margin:16px clamp(24px,4vw,65px) 0}
 .project-story #project-photos .project-editorial-photo{position:absolute;inset:0;width:100%;height:100%;border-radius:12px;overflow:hidden;box-shadow:0 20px 48px #352a2538;z-index:2;background:var(--secondary)}
 .project-photo-incoming,.project-photo-outgoing{position:absolute;inset:0}
@@ -33,6 +33,7 @@
 }
 @media(prefers-reduced-motion:reduce){.project-photo-outgoing{display:none}}
 @media(max-width:700px){
+ .project-story #project-photos .project-layered-gallery{width:100%}
  .project-photo-stack{height:clamp(240px,46svh,440px);margin-inline:20px}
  .project-story #project-photos .project-gallery-caption{padding-inline:20px;gap:16px}
  .project-story #project-photos .project-story-section-note{display:none}
