@@ -43,7 +43,7 @@
  .project-detail-card:hover:before{opacity:1}
 }
 @media(prefers-reduced-motion:no-preference){
- .project-detail-card{transition:translate .35s cubic-bezier(.22,1,.36,1),border-color .3s ease,background-color .3s ease,box-shadow .3s ease}
+ .project-detail-card{top:var(--detail-exit-y,0px);transition:border-color .3s ease,background-color .3s ease,box-shadow .3s ease}
  .project-detail-card dd>.icon{transition:transform .4s cubic-bezier(.22,1,.36,1),color .3s ease}
  @media(hover:hover){
   .project-detail-card:hover dd>.icon{color:var(--primary)}
