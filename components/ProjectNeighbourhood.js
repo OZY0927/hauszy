@@ -21,13 +21,13 @@ export default function ProjectNeighbourhood({project,hasCoordinates,amenities=[
   el.classList.add('location-reveal-ready');observer.observe(el);
   return()=>{observer.disconnect();el.classList.remove('location-reveal-ready','location-in-view')};
  },[]);
- return <section ref={section} className="project-story-neighbourhood location-atlas" id="location" aria-labelledby="location-title">
+ return <section ref={section} className="project-story-neighbourhood location-atlas" id="location" aria-labelledby="location-title" onKeyDown={event=>{if(event.key==='Escape')setSelected(null)}}>
   <div className="location-atlas-stage">
    <aside className="location-atlas-sidebar">
     <div className="location-atlas-heading"><span className="eyebrow">THE NEIGHBOURHOOD</span><h2 id="location-title">Location<span>.</span></h2><p>Around your next address.</p></div>
     <nav className="location-atlas-categories" aria-label="Nearby place categories">
      <button type="button" aria-pressed={!active} aria-controls={hasCoordinates?'projectMap':undefined} onClick={()=>{setSelected(null);map.current?.recenter()}}><span className="location-category-arrow"><Icon name="home"/></span><span>Project location</span></button>
-     {groups.map((group,index)=><button type="button" key={group.label} aria-pressed={active?.label===group.label} aria-controls={active?.label===group.label?'location-places':undefined} onClick={()=>setSelected(group.label)} style={{'--location-order':index+1}}><span className="location-category-arrow"><Icon name={nearbyIcon(group.label)}/></span><span>{group.label}</span><small>{String(group.rows.length).padStart(2,'0')}</small></button>)}
+     {groups.map((group,index)=><button type="button" key={group.label} aria-pressed={active?.label===group.label} aria-controls={active?.label===group.label?'location-places':undefined} onPointerEnter={event=>{if(event.pointerType!=='touch')setSelected(group.label)}} onFocus={()=>setSelected(group.label)} onClick={()=>setSelected(group.label)} style={{'--location-order':index+1}}><span className="location-category-arrow"><Icon name={nearbyIcon(group.label)}/></span><span>{group.label}</span><small>{String(group.rows.length).padStart(2,'0')}</small></button>)}
     </nav>
     <div className="location-atlas-address"><Icon name="mapPin"/><strong>{project.name}</strong>{location&&<p>{location}</p>}{mapsUrl&&<a href={mapsUrl} target="_blank" rel="noopener noreferrer">Google Maps <Icon name="arrowUpRight"/></a>}</div>
    </aside>
