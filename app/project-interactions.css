@@ -23,7 +23,7 @@
  .project-story .project-story-cover:active{scale:1}
 }
 
-/* A single sweep emphasizes controls that expand content, on hover or keyboard focus. */
+/* An automatic sweep calls attention to controls that expand content. */
 .project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.floorplan-open small,.showroom-grid>button){position:relative;isolation:isolate;overflow:hidden}
 .project-story .project-editorial-photo>span{isolation:isolate;overflow:hidden}
 .project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.floorplan-open small,.showroom-grid>button,.project-editorial-photo>span):after{
@@ -32,14 +32,10 @@
  opacity:0;transform:translateX(-130%) skewX(-12deg);
 }
 @media(prefers-reduced-motion:no-preference){
- .project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.showroom-grid>button):focus-visible:after,
- .project-story .floorplan-open:focus-visible small:after,
- .project-story .project-editorial-photo:focus-visible>span:after{animation:project-control-shine .85s ease both}
- @media(hover:hover){
-  .project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.showroom-grid>button):hover:after,
-  .project-story .floorplan-open:hover small:after,
-  .project-story .project-editorial-photo:hover>span:after{animation:project-control-shine .85s ease both}
- }
- @keyframes project-control-shine{0%{opacity:0;transform:translateX(-130%) skewX(-12deg)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateX(130%) skewX(-12deg)}}
+ .project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.floorplan-open small,.showroom-grid>button,.project-editorial-photo>span):not(:disabled):after{animation:project-control-shine 6s ease-in-out infinite both}
+ .project-story .facilities-see-all:after{animation-delay:1s}
+ .project-story .floorplan-open small:after{animation-delay:1.8s}
+ .project-story .enquiry-secondary:after{animation-delay:2.6s}
+ @keyframes project-control-shine{0%,3%{opacity:0;transform:translateX(-130%) skewX(-12deg)}5%{opacity:1}16%{opacity:1}20%,100%{opacity:0;transform:translateX(130%) skewX(-12deg)}}
 }
 @media(prefers-reduced-motion:reduce){.project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta){transition:none}}
