@@ -353,6 +353,18 @@
 .project-section-nav:before{content:'';position:absolute;left:22px;right:22px;bottom:3px;height:2px;background:var(--primary);transform:scaleX(var(--project-progress,0));transform-origin:left;pointer-events:none}
 .project-story-photography>.project-story-section-heading{border-top:1px solid var(--line);padding-top:45px}
 .project-story-section-heading h2{text-wrap:balance}
+.project-journey-after{position:relative;z-index:1;padding:70px 6% 90px;scroll-margin-top:100px}
+.project-journey-after>.project-story-fine-print{max-width:1100px;margin:18px auto 0}
+@media(min-width:801px) and (min-height:650px) and (prefers-reduced-motion:no-preference){
+ .journey-motion .project-journey-after{background:var(--primary);color:var(--paper)}
+ .journey-motion .project-journey-after .project-gallery-caption>p,
+ .journey-motion .project-journey-after .project-gallery-caption>p>span,
+ .journey-motion .project-journey-after .gallery-controls,
+ .journey-motion .project-journey-after>.project-story-fine-print{color:inherit}
+ .journey-motion .project-journey-after .project-gallery-caption>p>span,
+ .journey-motion .project-journey-after>.project-story-fine-print{opacity:.75}
+}
+@media(max-width:800px){.project-journey-after{padding:45px 0 0}}
 @media(prefers-reduced-motion:no-preference){
  .is-scroll-hero>.project-story-hero{transform:translateY(calc(var(--hero-scroll,0) * -18px)) scale(calc(1 - var(--hero-scroll,0) * .2)) rotate(calc(var(--hero-scroll,0) * -6deg))}
  .project-story .journey-motion{background:color-mix(in srgb,var(--primary) calc(var(--journey-progress,0) * 7%),var(--paper))}
@@ -383,7 +395,8 @@
 .project-journey-photos figure:nth-child(5){left:34%;top:4%;--photo-angle:-3deg;--photo-direction:1;--float-delay:-4s}
 .project-journey-photos figure:nth-child(6){right:32%;bottom:3%;--photo-angle:4deg;--photo-direction:-1;--float-delay:-1s}
 @media(min-width:801px) and (min-height:650px) and (prefers-reduced-motion:no-preference){
- .project-story .project-journey-intro.journey-motion{height:340svh;min-height:0;padding:0;overflow:visible;background:var(--paper);animation:none}
+ .project-story .project-journey-intro.journey-motion{height:auto;min-height:0;padding:0;overflow:visible;background:var(--paper);animation:none}
+ .journey-motion .project-journey-track{height:340svh}
  .journey-motion .project-journey-stage{position:sticky;top:0;height:100svh;min-height:650px;overflow:clip;display:grid;place-items:center;background:var(--paper)}
  .journey-motion .project-journey-stage:before{content:'';position:absolute;inset:0;z-index:1;opacity:.07;background:repeating-radial-gradient(ellipse at 55% 45%,transparent 0 28px,var(--ink) 29px,transparent 30px 55px);pointer-events:none}
  .journey-motion .project-journey-stage:after{content:'';position:absolute;inset:0;z-index:5;opacity:.055;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' filter='url(%23n)' opacity='.5' d='M0 0h180v180H0z'/%3E%3C/svg%3E")}
@@ -424,6 +437,13 @@
 .manual-amenity-meta{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:5px;color:var(--muted);font-size:11px}
 .manual-amenity-meta>span{display:flex;align-items:center;gap:5px}
 .manual-amenity-meta .icon{width:12px;height:12px}
+@media(prefers-reduced-motion:no-preference){
+ .manual-amenity-results{transform-origin:top left;animation:amenity-panel-reveal .4s cubic-bezier(.22,1,.36,1) both}
+ .manual-amenity-results li{animation:amenity-row-reveal .35s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(90ms + var(--amenity-delay,0ms))}
+ .manual-amenity-results .nearby-map-note{animation:amenity-row-reveal .4s .16s both}
+ @keyframes amenity-panel-reveal{from{opacity:0;transform:translate(-14px,8px) scale(.97)}to{opacity:1;transform:translate(0,0) scale(1)}}
+ @keyframes amenity-row-reveal{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+}
 .location-atlas-map>.nearby-map-stage>.location-atlas-fallback{min-height:600px}
 @media(max-width:650px){.manual-amenity-results li{padding:10px 14px}.manual-amenity-results{width:245px}.location-atlas-map>.nearby-map-stage>.location-atlas-fallback{min-height:520px}}
 
