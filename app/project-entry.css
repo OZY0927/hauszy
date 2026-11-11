@@ -430,3 +430,26 @@
 /* Give the location atlas a near-full-screen stage beneath the site header. */
 @media(min-width:651px){.location-atlas-map>.nearby-map-stage{height:100%}.location-atlas-map>.nearby-map-stage>.location-atlas-fallback{height:100%}}
 @media(max-width:650px){.location-atlas-map .nearby-map-stage,.location-atlas-map>.nearby-map-stage>.location-atlas-fallback{min-height:max(520px,70svh)}}
+
+/* A perspective camera advances through the facilities, settling into a readable grid. */
+.facility-spatial-scroll{position:relative}
+.facility-spatial-stage{position:relative;isolation:isolate;padding:36px;background:color-mix(in srgb,var(--secondary) 12%,var(--paper));border:1px solid var(--line);border-radius:24px}
+.facility-spatial-label{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:32px}
+.facility-spatial-cue{display:none;font-size:var(--text-caption);color:var(--muted);align-items:center;gap:12px}
+.facility-spatial-cue .icon{width:15px;height:15px}
+.project-story-facilities .facility-spatial-camera .facility-preview{gap:18px;margin:0}
+.project-story-facilities .facility-spatial-camera .facility-preview li{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:20px;min-height:165px;padding:25px;border:1px solid var(--line);border-radius:18px;background:var(--paper);box-shadow:0 12px 30px #352a2508}
+.project-story-facilities .facility-spatial-camera .facility-preview .icon{width:32px;height:32px;margin:0;color:var(--primary)}
+.facility-spatial-stage>.facilities-see-all{position:relative;z-index:1;margin-top:28px}
+.facility-spatial-grid{position:absolute;z-index:-1;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;background-image:linear-gradient(#96351e09 1px,transparent 1px),linear-gradient(90deg,#96351e09 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse,#000,transparent 75%)}
+@media(min-width:801px) and (min-height:700px) and (prefers-reduced-motion:no-preference){
+ .facility-spatial-scroll.is-spatial{height:230svh}
+ .is-spatial .facility-spatial-stage{position:sticky;top:100px;min-height:calc(100svh - 140px);display:flex;flex-direction:column;justify-content:center;padding:clamp(24px,4vw,55px);overflow:clip}
+ .is-spatial .facility-spatial-label{flex:none;margin-bottom:30px}
+ .is-spatial .facility-spatial-cue{display:flex;opacity:calc(1 - var(--facility-progress,0))}
+ .is-spatial .facility-spatial-camera{perspective:1000px;perspective-origin:50% 45%;padding:18px 0}
+ .project-story-facilities .is-spatial .facility-preview{transform-style:preserve-3d;transform:translateZ(calc(-100px + var(--facility-progress,0) * 100px)) rotateX(calc((1 - var(--facility-progress,0)) * 9deg));transform-origin:50% 50%}
+ .project-story-facilities .is-spatial .facility-preview li{min-height:clamp(145px,19svh,210px);opacity:var(--facility-opacity,.35);transform:translateZ(var(--facility-depth,-480px)) rotateY(var(--facility-tilt,0deg));will-change:transform;backface-visibility:hidden;box-shadow:0 25px 50px #352a2515}
+ .is-spatial .facility-spatial-grid{transform:scale(calc(.85 + var(--facility-progress,0) * .15));transform-origin:center}
+}
+@media(max-width:800px){.facility-spatial-stage{padding:24px 20px;border-radius:18px}.facility-spatial-label{margin-bottom:24px}.project-story-facilities .facility-spatial-camera .facility-preview{gap:12px}.project-story-facilities .facility-spatial-camera .facility-preview li{padding:20px;min-height:145px;gap:16px}.project-story-facilities .facility-spatial-camera .facility-preview .icon{width:27px;height:27px}}
