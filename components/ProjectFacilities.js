@@ -1,6 +1,8 @@
 'use client';
 import {useEffect,useId,useRef,useState} from 'react';
 import Icon from './Icon';
+import {gsap} from 'gsap';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import {facilityIcon} from '../lib/icon-match';
 
 function FacilityList({items,className=''}){
@@ -11,29 +13,26 @@ export default function ProjectFacilities({facilities}){
   const dialog=useRef(null),titleId=useId(),[open,setOpen]=useState(false);
   const spatial=useRef(null);
   useEffect(()=>{
+    gsap.registerPlugin(ScrollTrigger);
     const root=spatial.current,stage=root.querySelector('.facility-spatial-stage');
-    const preference=matchMedia('(min-width: 801px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)');
     const cards=[...root.querySelectorAll('.facility-preview>li')];
-    let frame=0,observer;
-    const update=()=>{
-      frame=0;if(!preference.matches)return;
-      const rect=root.getBoundingClientRect();
-      if(rect.bottom<0||rect.top>innerHeight)return;
-      const progress=Math.max(0,Math.min(1,-rect.top/Math.max(1,root.offsetHeight-stage.offsetHeight-100)));
-      root.style.setProperty('--facility-progress',progress.toFixed(4));
-      cards.forEach((card,index)=>{
-        const arrival=Math.max(0,Math.min(1,(progress-index*.035)/.65));
-        const eased=1-Math.pow(1-arrival,3);
-        card.style.setProperty('--facility-depth',(-480*(1-eased)).toFixed(2)+'px');
-        card.style.setProperty('--facility-tilt',((index%2?1:-1)*14*(1-eased)).toFixed(2)+'deg');
-        card.style.setProperty('--facility-opacity',(.35+eased*.65).toFixed(3));
-      });
-    };
-    const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
-    const configure=()=>{root.classList.toggle('is-spatial',preference.matches);root.style.removeProperty('--facility-progress');for(const card of cards)for(const key of ['depth','tilt','opacity'])card.style.removeProperty('--facility-'+key);schedule()};
-    configure();window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);preference.addEventListener('change',configure);
-    if('ResizeObserver' in window){observer=new ResizeObserver(schedule);observer.observe(root);observer.observe(stage)}
-    return()=>{cancelAnimationFrame(frame);observer?.disconnect();window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);preference.removeEventListener('change',configure)};
+    const media=gsap.matchMedia();
+    let disposed=false;
+    media.add('(min-width: 801px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)',()=>{
+      root.classList.add('is-spatial');
+      const timeline=gsap.timeline({scrollTrigger:{
+        trigger:stage,start:'top 100px',end:()=>'+='+Math.round(innerHeight*1.3),
+        pin:true,pinSpacing:true,scrub:.7,anticipatePin:1,invalidateOnRefresh:true
+      }});
+      timeline.fromTo(root.querySelector('.facility-preview'),{z:-100,rotationX:9},{z:0,rotationX:0,duration:1,ease:'none'},0);
+      timeline.fromTo(cards,{z:-480,rotationY:index=>(index%2?1:-1)*14,opacity:.35},{z:0,rotationY:0,opacity:1,duration:.72,stagger:.045,ease:'power2.out'},0);
+      timeline.fromTo(root.querySelector('.facility-spatial-grid'),{scale:.85},{scale:1,duration:1,ease:'none'},0);
+      timeline.fromTo(root.querySelector('.facility-spatial-cue'),{opacity:1},{opacity:0,duration:.35,ease:'none'},0);
+      return()=>root.classList.remove('is-spatial');
+    },root);
+    // Font metrics can settle after the trigger's initial measurements.
+    document.fonts?.ready.then(()=>{if(!disposed)ScrollTrigger.refresh()});
+    return()=>{disposed=true;media.revert()};
   },[facilities]);
   useEffect(()=>{
     if(!open)return;
