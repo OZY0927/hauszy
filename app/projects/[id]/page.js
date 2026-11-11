@@ -32,7 +32,6 @@ export default async function Project({params}){
  const p={...project,name:listingName(project)};
  const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
  const sections=[...(visibility.overview||visibility.photos?[['overview','The project']]:[]),...(visibility.photos&&p.images.length?[['project-photos','Gallery']]:[]),...(visibility.details?[['details','Details']]:[]),...(visibility.units.length?[['units','Layouts']]:[]),...(visibility.facilities.length?[['amenities','Facilities']]:[]),...(visibility.location?[['location','Neighbourhood']]:[]),...(visibility.maintenance?[['maintenance','Charges']]:[]),...(visibility.showroom.length?[['showroom','Showroom']]:[])];
- const introFacts=[['Property type',p.type,'building'],['Tenure',p.tag,'key'],['Construction',p.construction,'industry'],['Estimated VP',vpQuarter(p.vp),'calendar']].filter(([,value])=>hasProjectInfo(value));
  return <ProjectStory key={id}>
   <JsonLd data={projectStructuredData(p)}/>
   <ProjectGallery photos={visibility.photos?p.images:[]} name={p.name} hero={{id:p.id,location:hasProjectInfo(p.location)?p.location:null,type:p.type,mode:p.mode,price:startingPrice(p),target:sections[0]?.[0]||(visibility.enquiry?'enquiry':null)}}/>
@@ -42,7 +41,6 @@ export default async function Project({params}){
   {(visibility.overview||visibility.photos)&&<ProjectScrollIntroduction photos={visibility.photos?p.images:[]}>
    {visibility.overview&&<>
    <div className="project-story-intro-main"><div className="eyebrow">THE PROJECT</div><h2>{hasProjectInfo(p.title)&&p.title.trim().toLowerCase()!==p.name.trim().toLowerCase()?p.title:<>A closer look.<br/>A place to call yours.</>}</h2>{hasProjectInfo(p.location)&&<span className="project-overview-location"><Icon name="mapPin"/>{p.location}</span>}<p>Explore the layouts, spaces and details. Picture the possibilities for your next chapter.</p>{visibility.enquiry&&<a className="project-story-pill" href="#enquiry">Enquire about this project <Icon name="arrowUpRight"/></a>}</div>
-   {introFacts.length>0&&<aside className="project-overview-panel" aria-label="Project at a glance"><div className="project-overview-panel-heading"><span className="eyebrow">AT A GLANCE</span><Icon name="building"/></div><dl className="project-story-at-a-glance">{introFacts.map(([label,value,icon])=><div key={label}><dt><Icon name={icon}/>{label}</dt><dd>{value}</dd></div>)}</dl>{visibility.details&&<a className="project-overview-details" href="#details">All project details <Icon name="arrowDown"/></a>}</aside>}
 
    </>}
   </ProjectScrollIntroduction>}

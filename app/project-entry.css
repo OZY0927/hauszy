@@ -202,7 +202,7 @@
 
 /* A quiet location atlas: a narrow editorial rail beside an expansive map. */
 .location-atlas{background:var(--paper);overflow:clip}
-.location-atlas-stage{display:grid;grid-template-columns:minmax(240px,22%) minmax(0,1fr);min-height:650px;border-block:1px solid var(--line)}
+.location-atlas-stage{display:grid;grid-template-columns:minmax(240px,22%) minmax(0,1fr);min-height:max(650px,calc(100svh - 100px));border-block:1px solid var(--line)}
 .location-atlas-sidebar{padding:48px clamp(24px,3vw,48px);background:linear-gradient(125deg,#f3ebdf,#e9ddcd);display:flex;flex-direction:column;position:relative;z-index:1}
 .location-atlas-heading .eyebrow{font-size:10px;letter-spacing:1.8px}
 .location-atlas-heading h2{font-size:clamp(38px,4.5vw,66px);font-weight:400;letter-spacing:-.055em;line-height:1.1;margin:18px 0 14px}
@@ -342,7 +342,6 @@
 .project-journey-content{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,90px);align-items:center;max-width:1120px;margin:auto}
 .project-journey-content:not(:has(.project-overview-panel)){grid-template-columns:1fr}
 .project-story .project-journey-content .project-story-intro-main>h2{font-size:clamp(32px,4.2vw,60px);line-height:1.12;letter-spacing:-.045em;margin:22px 0;text-wrap:balance}
-.project-journey-content .project-overview-panel{background:color-mix(in srgb,var(--paper) 92%,var(--secondary));box-shadow:0 20px 55px #352a250a}
 .project-journey-photos{position:absolute;inset:0;pointer-events:none}
 .project-journey-photos figure{position:absolute;width:clamp(190px,25vw,350px);margin:0;--photo-angle:-7deg;--photo-direction:1;--float-delay:0s;--float-duration:7s;transform:rotate(var(--photo-angle))}
 .project-journey-photos figure:nth-child(1){left:6%;top:45px}
@@ -395,8 +394,6 @@
  .project-story .journey-motion .project-story-intro-main>p{max-width:540px;margin:18px auto;color:inherit;font-size:var(--text-body);line-height:1.65}
  .journey-motion .project-overview-location{justify-content:center;color:inherit;margin:0 auto 14px}
  .journey-motion .project-story-pill{border-color:currentColor;color:inherit;margin-top:12px}
- .journey-motion .project-overview-panel{position:absolute;top:50%;left:50%;width:min(680px,80%);padding:38px 45px;max-height:calc(100svh - 160px);overflow:auto;transform:translate(-50%,calc(-50% + (1 - var(--journey-facts,0)) * 90px)) scale(calc(.94 + var(--journey-facts,0) * .06));opacity:var(--journey-facts,0);pointer-events:auto;background:var(--paper);box-shadow:0 35px 100px #352a2538;transition:none}
- .journey-motion .project-overview-panel[inert]{pointer-events:none}
  .journey-motion .project-story-intro-main[inert]{pointer-events:none}
  .journey-motion .project-journey-photos{z-index:3;opacity:calc(1 - var(--journey-exit,0));transform:translateY(calc(var(--journey-progress,0) * -20svh));pointer-events:none}
  .journey-motion .project-journey-photos figure{width:clamp(160px,18vw,290px);translate:calc((var(--journey-progress,0) - .4) * 60px * var(--photo-direction)) calc((.55 - var(--journey-progress,0)) * var(--photo-travel,100svh));transform:rotate(calc(var(--photo-angle) + var(--journey-progress,0) * 7deg * var(--photo-direction)));will-change:translate,transform}
@@ -408,7 +405,6 @@
  .journey-motion .project-journey-photos figure:nth-child(6){right:23%;bottom:-30%;--photo-travel:165svh}
  .journey-motion .project-journey-photo-float{padding:0;border:0;border-radius:12px;overflow:hidden;box-shadow:0 20px 50px #352a2530}
  .journey-motion .project-journey-photos img{height:clamp(150px,18vw,270px)}
- .journey-motion:not(.has-journey-facts) .project-story-intro-main,.journey-motion:not(.has-journey-facts) .project-journey-photos{opacity:1}
 }
 /* Keep the complete section in document flow for compact screens and reduced motion. */
 @media(min-width:801px) and (max-height:649px),(min-width:801px) and (prefers-reduced-motion:reduce){
@@ -430,3 +426,7 @@
 .manual-amenity-meta .icon{width:12px;height:12px}
 .location-atlas-map>.nearby-map-stage>.location-atlas-fallback{min-height:600px}
 @media(max-width:650px){.manual-amenity-results li{padding:10px 14px}.manual-amenity-results{width:245px}.location-atlas-map>.nearby-map-stage>.location-atlas-fallback{min-height:520px}}
+
+/* Give the location atlas a near-full-screen stage beneath the site header. */
+@media(min-width:651px){.location-atlas-map>.nearby-map-stage{height:100%}.location-atlas-map>.nearby-map-stage>.location-atlas-fallback{height:100%}}
+@media(max-width:650px){.location-atlas-map .nearby-map-stage,.location-atlas-map>.nearby-map-stage>.location-atlas-fallback{min-height:max(520px,70svh)}}
