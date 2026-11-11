@@ -1,6 +1,6 @@
 import {visibleFacts} from '../lib/project-visibility';
 import {money,formatRange,pricePerSqft,vpQuarter} from '../lib/project';
-import Icon from './Icon';
+import ProjectDetailsCards from './ProjectDetailsCards';
 
 export default function ProjectDetails({project:p}){
  const price=pricePerSqft(p);
@@ -20,10 +20,7 @@ export default function ProjectDetails({project:p}){
     </div>
    </div>
    <div className="project-details-aura" aria-hidden="true"/>
-   <dl className="project-details-content" aria-label="Project specifications">{facts.map(([label,value],index)=><div className="project-detail-card" key={label}>
-    <dt><span>{label}</span><span className="project-detail-number" aria-hidden="true">{String(index+1).padStart(2,'0')} / {String(facts.length).padStart(2,'0')}</span></dt>
-    <dd><Icon name={icons[label]}/><span>{value}</span></dd>
-   </div>)}</dl>
+   <ProjectDetailsCards facts={facts.map(([label,value])=>[label,value,icons[label]])}/>
   </div>
  </section>;
 }
