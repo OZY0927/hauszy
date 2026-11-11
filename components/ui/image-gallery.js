@@ -1,6 +1,7 @@
 'use client';
 import {useRef} from 'react';
 import PreviewImage from '../PreviewImage';
+import Icon from '../Icon';
 import styles from './image-gallery.module.css';
 
 // Expanding photo panels adapted from the supplied gallery example.
@@ -12,6 +13,16 @@ export default function ImageGallery({photos=[],name,activeIndex=0,onActiveChang
   if(event.key==='ArrowRight'){event.preventDefault();onNext()}
   if(event.key==='ArrowLeft'){event.preventDefault();onPrevious()}
  }}>
+  <div className={styles.mobileGallery}>
+   <button type="button" className={styles.mobilePhoto} onClick={onOpen} aria-label={`Open ${name} photo ${activeIndex+1} of ${photos.length}`}>
+    <PreviewImage key={photos[activeIndex]} src={photos[activeIndex]} alt={`${name} — project photo ${activeIndex+1}`} loading="lazy" onError={event=>{event.currentTarget.src='/project-placeholder.svg'}}/>
+   </button>
+   <div className={styles.mobileControls}>
+    <button type="button" onClick={onPrevious} disabled={photos.length<2} aria-label="Previous project photo"><Icon name="arrowLeft"/><span>Previous</span></button>
+    <span aria-live="polite" aria-atomic="true">{activeIndex+1} / {photos.length}</span>
+    <button type="button" onClick={onNext} disabled={photos.length<2} aria-label="Next project photo"><span>Next</span><Icon name="arrowRight"/></button>
+   </div>
+  </div>
   <div className={styles.panels}>
    {visible.map((src,index)=>{
     const photoIndex=index,active=photoIndex===activeIndex;

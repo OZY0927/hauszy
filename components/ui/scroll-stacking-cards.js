@@ -18,16 +18,19 @@ export function ProjectDeck({children}){
  useMotionValueEvent(progress,'change',value=>{let next=0;for(let index=1;index<count;index++)if(arrived(index,value,count)>=.5)next=index;setFront(previous=>previous===next?previous:next)});
  useEffect(()=>{
   const media=matchMedia('(min-width:851px) and (min-height:500px) and (prefers-reduced-motion:no-preference)');
+  let frame=0;
   const measure=()=>{
+   frame=0;
    const contents=[...deck.current.querySelectorAll('[data-deck-content]')];
    const tallest=Math.max(1,...contents.map(element=>element.offsetHeight));
    setFit(Math.min(1,(innerHeight-150)/tallest));
    setEnabled(count>1&&media.matches);
   };
-  const observer=new ResizeObserver(measure);
+  const schedule=()=>{if(!frame)frame=requestAnimationFrame(measure)};
+  const observer=new ResizeObserver(schedule);
   deck.current.querySelectorAll('[data-deck-content]').forEach(element=>observer.observe(element));
-  media.addEventListener('change',measure);window.addEventListener('resize',measure);measure();
-  return()=>{observer.disconnect();media.removeEventListener('change',measure);window.removeEventListener('resize',measure)};
+  media.addEventListener('change',schedule);window.addEventListener('resize',schedule);measure();
+  return()=>{cancelAnimationFrame(frame);observer.disconnect();media.removeEventListener('change',schedule);window.removeEventListener('resize',schedule)};
  },[count]);
  return <div ref={deck} className={styles.deck} data-enabled={enabled} style={{height:enabled?`${count*100}svh`:undefined}}>
   <div className={styles.stage}>{cards.map((card,index)=><DeckCard key={card.key??index} index={index} count={count} progress={progress} enabled={enabled} fit={fit} active={front===index}>{card}</DeckCard>)}</div>
@@ -45,7 +48,7 @@ function DeckCard({children,index,count,progress,enabled,fit,active}){
  const scale=useTransform(pose,({entered,above})=>(.9+.1*entered-above*.05)*fit);
  const filter=useTransform(pose,({entered,above})=>`blur(${((1-entered)**2*6+above*.5).toFixed(2)}px)`);
  const dim=useTransform(pose,({above})=>above*.15);
- return <motion.div className={styles.card} style={{zIndex:index+1,...(enabled?{y,rotateX,scale,filter}:{})}} inert={enabled&&!active?true:undefined} aria-hidden={enabled&&!active?true:undefined}>
+ return <motion.div className={styles.card} style={{zIndex:index+1,...(enabled?{y,rotateX,scale,filter}:{y:0,rotateX:0,scale:1,filter:'none'})}} inert={enabled&&!active?true:undefined} aria-hidden={enabled&&!active?true:undefined}>
   <div className={styles.content} data-deck-content>{children}<motion.div className={styles.shade} aria-hidden="true" style={{opacity:enabled?dim:0}}/></div>
  </motion.div>;
 }

@@ -45,3 +45,19 @@
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.root{background:#f8f3eb}}
 @media(prefers-reduced-transparency:reduce){.root{background:#f8f3eb;backdrop-filter:none;-webkit-backdrop-filter:none}.root:before{display:none}.dialog::backdrop{backdrop-filter:none}}
 @media(forced-colors:active){.root,.dialog{background:Canvas;color:CanvasText;border-color:CanvasText;box-shadow:none;backdrop-filter:none}.root:before{display:none}.item{color:CanvasText}}
+
+/* Mobile presents every fact directly, without a pinned scroll sequence. */
+.mobileDetails{display:none}
+@media(max-width:850px){
+ .journey{display:none}
+ .mobileDetails{display:block;margin:0;padding:8px 20px;border:1px solid #ffffffb3;border-radius:22px;background:#ffffff85;box-shadow:0 12px 32px -24px #583a2e40}
+ .mobileDetails>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);align-items:start;gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}
+ .mobileDetails>div:last-child{border-bottom:0}
+ .mobileDetails dt{color:var(--primary);font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+ .mobileDetails dd{margin:0;color:var(--ink);font-size:14px;line-height:1.5;text-align:right;overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:no-preference){
+ .root{transition:padding .25s ease,border-radius .25s ease}
+ .mobileDetails{animation:detail-view-enter .2s ease-out}
+ @keyframes detail-view-enter{from{opacity:0}to{opacity:1}}
+}

@@ -30,7 +30,7 @@ export default function ProjectDetailsCards({facts}){
  const current=wrap(position,facts.length);
  const go=direction=>window.scrollBy({top:direction*360,behavior:reduced?'instant':'smooth'});
  const slots=Array.from({length:Math.min(5,facts.length)},(_,index)=>index-Math.floor(Math.min(5,facts.length)/2));
- return <div ref={scrollRef} className={styles.journey} style={{height:`calc(100svh + ${facts.length*360}px)`}}><div className={styles.root}>
+ return <><dl className={styles.mobileDetails} aria-label="Project specifications">{facts.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl><div ref={scrollRef} className={styles.journey} style={{height:`calc(100svh + ${facts.length*360}px)`}}><div className={styles.root}>
   <div className={styles.scrollViewport} role="region" aria-roledescription="carousel" aria-label="Project specifications" tabIndex={0} onKeyDown={event=>{if(event.key==='ArrowDown'||event.key==='ArrowRight'){event.preventDefault();go(1)}if(event.key==='ArrowUp'||event.key==='ArrowLeft'){event.preventDefault();go(-1)}}}>
    <div className={styles.stage}>
    <div className={styles.labelWheel}>
@@ -48,7 +48,7 @@ export default function ProjectDetailsCards({facts}){
    <header><div><span className="eyebrow">THE FINER DETAILS</span><h3 id="all-project-specifications-title">All project specifications</h3></div><button type="button" className="project-dialog-close" aria-label="Close specifications" onClick={()=>dialogRef.current.close()}><Icon name="x"/></button></header>
    <div className={styles.dialogBody}><dl>{facts.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></div>
   </dialog>
- </div></div>;
+ </div></div></>;
 }
 
 // Both sides derive their position from the same scroll clock, avoiding competing springs.

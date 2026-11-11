@@ -10,7 +10,7 @@ export default function ProjectHeroScroll({enabled,children}){
   const el=root.current;if(!enabled||!el)return;
   gsap.registerPlugin(ScrollTrigger);
   const media=gsap.matchMedia();
-  media.add('(prefers-reduced-motion: no-preference)',()=>{
+  media.add('(min-width: 851px) and (prefers-reduced-motion: no-preference)',()=>{
    el.classList.add('is-scroll-hero');
    gsap.fromTo(el,{'--hero-scroll':0},{'--hero-scroll':1,ease:'none',scrollTrigger:{trigger:el,start:'top top',end:'bottom bottom',scrub:.65,invalidateOnRefresh:true}});
    return()=>el.classList.remove('is-scroll-hero');

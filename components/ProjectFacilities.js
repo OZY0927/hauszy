@@ -32,7 +32,7 @@ export default function ProjectFacilities({facilities}){
     gsap.registerPlugin(ScrollTrigger);
     const root=vision.current,stage=root.querySelector('.facility-vision-stage'),media=gsap.matchMedia();
     let disposed=false;
-    media.add('(min-width: 801px) and (min-height: 650px) and (prefers-reduced-motion: no-preference)',()=>{
+    media.add('(min-width: 851px) and (min-height: 650px) and (prefers-reduced-motion: no-preference)',()=>{
       root.classList.add('is-vision-scroll');
       const playhead={progress:0},steps=preview.length+(hasMore?1:0),finalBeat=preview.length/steps;
       const tween=gsap.timeline({scrollTrigger:{
@@ -54,13 +54,13 @@ export default function ProjectFacilities({facilities}){
     document.fonts?.ready.then(()=>{if(!disposed)ScrollTrigger.refresh()});
     return()=>{disposed=true;media.revert()};
   },[facilities,preview.length,hasMore]);
-  // Compact screens use the existing arrow controls; their last preview gets the same invitation.
+  // Only compact-height desktop screens get the final centered invitation.
   useEffect(()=>{
     if(!hasMore)return;
     const stage=vision.current.querySelector('.facility-vision-stage'),more=stage.querySelector('.facility-vision-more');
     const end=current===preview.length-1;
     const media=gsap.matchMedia();
-    media.add('(max-width: 800px), (max-height: 649px), (prefers-reduced-motion: reduce)',()=>{
+    media.add('(min-width: 851px) and (max-height: 649px), (min-width: 851px) and (prefers-reduced-motion: reduce)',()=>{
       const duration=matchMedia('(prefers-reduced-motion: reduce)').matches?0:.5;
       gsap.to(more,{...(end?{...centerButton(stage),...largeButton(stage)}:{x:0,y:0,'--facility-cta-size':'15px','--facility-cta-width':'230px','--facility-cta-note-offset':'27px'}),duration});
       if(end)gsap.to(more.querySelector('button'),{borderColor:'transparent',color:'var(--secondary)',fontWeight:800,duration});

@@ -16,3 +16,22 @@
 .gallery .panels button.panel{transition:flex-grow 1s cubic-bezier(.25,.1,.25,1)}
 .gallery .panels button.panel:is(:hover,:active,:focus-visible){translate:none;scale:1;box-shadow:none}
 @media(prefers-reduced-motion:reduce){.gallery .panels button.panel{transition:none}}
+
+.mobileGallery{display:none}
+@media(max-width:850px){
+ .panels,.footer{display:none}
+ .mobileGallery{display:block}
+ .gallery .mobileGallery button.mobilePhoto{display:block;width:100%;height:320px;padding:0;overflow:hidden;border:0;border-radius:12px;background:#352a25;translate:none;scale:1;box-shadow:none}
+ .mobilePhoto img{display:block;width:100%;height:100%;object-fit:cover}
+ .mobileControls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;font-size:12px;font-variant-numeric:tabular-nums}
+ .gallery .mobileControls button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 12px;border:1px solid #fcf8f24d;border-radius:999px;background:transparent;color:var(--paper);translate:none;scale:1;box-shadow:none}
+ .mobileControls svg{width:16px;height:16px}
+ .mobileControls button:disabled{opacity:.35}
+ .mobileGallery button:focus-visible{outline:2px solid var(--secondary);outline-offset:3px}
+}
+@media(max-width:850px) and (prefers-reduced-motion:no-preference){.mobilePhoto img{animation:mobile-photo-fade .22s ease-out}@keyframes mobile-photo-fade{from{opacity:.45}to{opacity:1}}}
+@media(prefers-reduced-motion:no-preference){
+ .panels,.gallery .mobileGallery button.mobilePhoto{transition:height .25s ease,gap .25s ease,border-radius .25s ease}
+ .mobileGallery{animation:gallery-view-enter .2s ease-out}
+ @keyframes gallery-view-enter{from{opacity:0}to{opacity:1}}
+}

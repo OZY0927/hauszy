@@ -10,18 +10,19 @@ export function ContainerScroll({titleComponent,children}){
  const reducedMotion=useReducedMotion();
  const {scrollYProgress}=useScroll({target:containerRef,offset:['start end','center center']});
  useEffect(()=>{
-  const media=matchMedia('(max-width:768px)');
+  const media=matchMedia('(max-width:850px)');
   const update=()=>setIsMobile(media.matches);
   update();media.addEventListener('change',update);
   return()=>media.removeEventListener('change',update);
  },[]);
+ const still=reducedMotion||isMobile;
  const rotate=useTransform(scrollYProgress,[0,1],[20,0]);
- const scale=useTransform(scrollYProgress,[0,1],isMobile?[.9,1]:[1.05,1]);
+ const scale=useTransform(scrollYProgress,[0,1],[1.05,1]);
  const translate=useTransform(scrollYProgress,[0,1],[35,0]);
  return <div ref={containerRef} className={styles.container}>
   <div className={styles.perspective}>
-   <motion.div className={styles.header} style={{y:reducedMotion?0:translate}}>{titleComponent}</motion.div>
-   <motion.div className={styles.card} style={{rotateX:reducedMotion?0:rotate,scale:reducedMotion?1:scale}}>
+   <motion.div className={styles.header} style={{y:still?0:translate}}>{titleComponent}</motion.div>
+   <motion.div className={styles.card} style={{rotateX:still?0:rotate,scale:still?1:scale}}>
     <div className={styles.content}>{children}</div>
    </motion.div>
   </div>
