@@ -457,3 +457,8 @@
  .is-spatial .facility-spatial-grid{transform-origin:center}
 }
 @media(max-width:800px){.facility-spatial-stage{padding:24px 20px;border-radius:18px}.facility-spatial-label{margin-bottom:24px}.project-story-facilities .facility-spatial-camera .facility-preview{gap:12px}.project-story-facilities .facility-spatial-camera .facility-preview li{padding:20px;min-height:145px;gap:16px}.project-story-facilities .facility-spatial-camera .facility-preview .icon{width:27px;height:27px}}
+
+/* Section handoffs belong exclusively to project info pages. */
+.project-story .hz-chapter-handoff{position:relative}
+.project-story .hz-chapter-handoff:after{content:'';position:absolute;top:0;left:6%;right:6%;height:70px;pointer-events:none;border-top:1px solid var(--line);border-radius:50% 50% 0 0;transform:scaleX(var(--chapter-arrival,1));transform-origin:50% 0;opacity:calc(.12 + var(--chapter-arrival,1) * .35);background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 6%,transparent),transparent)}
+@media(prefers-reduced-motion:reduce){.project-story .hz-chapter-handoff:after{display:none}}
