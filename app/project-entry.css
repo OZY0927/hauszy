@@ -298,3 +298,42 @@
  .is-scroll-hero>.project-story-hero{height:100svh;min-height:580px;transform:translateY(calc(var(--hero-scroll,0) * -10px)) scale(calc(1 - var(--hero-scroll,0) * .12)) rotate(calc(var(--hero-scroll,0) * -2deg));box-shadow:0 0 0 calc(var(--hero-scroll,0) * 10px) var(--paper),0 16px 40px #352a2515}
 }
 @media(prefers-reduced-motion:reduce){.project-hero-scroll .project-story-cover img{animation:none}}
+
+/* Route 66's photographic travel journal, adapted to the Hauszy palette. */
+.project-journey-intro{position:relative;isolation:isolate;min-height:850px;height:115svh;max-height:1250px;display:grid;place-items:center;overflow:clip;background:var(--primary);color:var(--paper)}
+.project-journey-intro:before{content:'';position:absolute;inset:0;z-index:-1;opacity:.13;background:repeating-radial-gradient(ellipse at 60% 45%,transparent 0 35px,currentColor 36px,transparent 37px 63px);mask-image:linear-gradient(transparent,#000,transparent);pointer-events:none}
+.project-journey-copy{position:relative;z-index:2;width:min(84%,1050px);text-align:center;padding:100px 0;pointer-events:none}
+.project-journey-copy>.eyebrow{display:block;letter-spacing:.2em}
+.project-story .project-journey-copy h2{font-size:clamp(64px,10vw,150px);font-weight:600;line-height:.98;letter-spacing:-.065em;text-transform:uppercase;margin:30px 0;overflow-wrap:anywhere;text-wrap:balance}
+.project-journey-copy>p{font-size:clamp(17px,2vw,25px);margin:24px 0}
+.project-journey-footnote{display:block;font-size:10px;letter-spacing:.19em;margin-top:38px}
+.project-journey-photos{position:absolute;inset:0;pointer-events:none}
+.project-journey-photos figure{position:absolute;width:clamp(170px,26vw,380px);margin:0;padding:9px 9px 0;background:var(--paper);box-shadow:0 18px 50px #0003;color:var(--ink);transform:rotate(var(--photo-angle));--photo-angle:-7deg;--photo-direction:1}
+.project-journey-photos figure:nth-child(1){left:-3%;top:7%}
+.project-journey-photos figure:nth-child(2){right:-2%;top:3%;--photo-angle:8deg;--photo-direction:-1}
+.project-journey-photos figure:nth-child(3){left:3%;bottom:6%;--photo-angle:5deg}
+.project-journey-photos figure:nth-child(4){right:1%;bottom:3%;--photo-angle:-6deg;--photo-direction:-1}
+.project-journey-photos img{display:block;width:100%;height:clamp(130px,19vw,270px);object-fit:cover}
+.project-journey-photos figcaption{font-size:9px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:12px 4px}
+.project-section-nav:before{content:'';position:absolute;left:22px;right:22px;bottom:3px;height:2px;background:var(--primary);transform:scaleX(var(--project-progress,0));transform-origin:left;pointer-events:none}
+.project-story-photography>.project-story-section-heading{border-top:1px solid var(--line);padding-top:45px}
+.project-story-section-heading h2{text-wrap:balance}
+@media(prefers-reduced-motion:no-preference){
+ .is-scroll-hero>.project-story-hero{transform:translateY(calc(var(--hero-scroll,0) * -18px)) scale(calc(1 - var(--hero-scroll,0) * .2)) rotate(calc(var(--hero-scroll,0) * -6deg))}
+ .journey-motion .project-journey-photos figure{translate:0 calc((.5 - var(--journey-progress,.5)) * 200px * var(--photo-direction));will-change:translate}
+ .journey-motion .project-journey-copy{translate:0 calc((.5 - var(--journey-progress,.5)) * -60px)}
+}
+@media(max-width:700px){
+ .project-journey-intro{height:95svh;min-height:720px}
+ .project-story .project-journey-copy h2{font-size:clamp(46px,12vw,80px);letter-spacing:-.05em}
+ .project-journey-copy{width:88%;padding:170px 0}
+ .project-journey-photos figure{width:40%;padding:6px 6px 0}
+ .project-journey-photos img{height:125px}
+ .project-journey-photos figcaption{font-size:8px;padding:9px 2px}
+ .project-journey-photos figure:nth-child(1){top:5%;left:-4%}
+ .project-journey-photos figure:nth-child(2){top:2%;right:-4%}
+ .project-journey-photos figure:nth-child(3){bottom:5%;left:-3%}
+ .project-journey-photos figure:nth-child(4){bottom:3%;right:-3%}
+ .project-journey-footnote{font-size:8px;letter-spacing:.12em}
+}
+@media(max-width:700px) and (prefers-reduced-motion:no-preference){.is-scroll-hero>.project-story-hero{transform:scale(calc(1 - var(--hero-scroll,0) * .12)) rotate(calc(var(--hero-scroll,0) * -3deg))}.journey-motion .project-journey-photos figure{translate:0 calc((.5 - var(--journey-progress,.5)) * 90px * var(--photo-direction))}}

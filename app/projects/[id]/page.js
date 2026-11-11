@@ -18,6 +18,7 @@ import FloatingVideo from '../../../components/FloatingVideo';
 import {videoSource} from '../../../lib/video';
 import RelatedProjectGrid from '../../../components/RelatedProjectGrid';
 import Icon from '../../../components/Icon';
+import ProjectScrollIntroduction from '../../../components/ProjectScrollIntroduction';
 
 export async function generateStaticParams(){return []}
 export async function generateMetadata({params}){const {id}=await params;const p=await getPublishedProject(id);if(!p)return {title:'Project unavailable',robots:{index:false,follow:false}};return pageMetadata(listingName(p),`${listingName(p)} in ${p.location}. Explore layouts, facilities and project details.`,`/projects/${encodeURIComponent(id)}/`,p.images.slice(0,1))}
@@ -36,6 +37,7 @@ export default async function Project({params}){
   <JsonLd data={projectStructuredData(p)}/>
   <ProjectGallery photos={visibility.photos?p.images:[]} name={p.name} hero={{id:p.id,location:hasProjectInfo(p.location)?p.location:null,type:p.type,mode:p.mode,price:startingPrice(p),target:sections[0]?.[0]||(visibility.enquiry?'enquiry':null)}}/>
   <ProjectSectionNav sections={sections} enquiry={visibility.enquiry}/>
+  {visibility.photos&&<ProjectScrollIntroduction name={p.name} location={hasProjectInfo(p.location)?p.location:null} photos={p.images}/>}
 
   {visibility.overview&&<section className="project-story-intro project-story-section" id="overview">
    <div className="project-story-intro-main" data-reveal><div className="eyebrow">THE PROJECT</div><h2>{hasProjectInfo(p.title)?p.title:p.name}</h2>{hasProjectInfo(p.location)&&<span className="project-overview-location"><Icon name="mapPin"/>{p.location}</span>}<p>Explore the layouts, spaces and details of {p.name}.</p>{visibility.enquiry&&<a className="project-story-pill" href="#enquiry">Enquire about this project <Icon name="arrowUpRight"/></a>}</div>
