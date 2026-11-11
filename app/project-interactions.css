@@ -1,0 +1,45 @@
+/* Project controls share feedback without competing with GSAP's transforms. */
+.project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta){
+ -webkit-tap-highlight-color:transparent;
+ transition:background-color .22s ease,color .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta):focus-visible{
+ outline:2px solid currentColor;outline-offset:4px;
+}
+.project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta):disabled{cursor:not-allowed}
+@media(hover:hover){
+ .project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta):not(:disabled):hover{box-shadow:0 6px 18px #352a2518}
+ .project-story :is(.project-story-cover,.floorplan-open,.project-editorial-photo):hover{box-shadow:none}
+ .project-story .project-section-links>a:hover{background:color-mix(in srgb,var(--primary) 8%,transparent);border-radius:999px}
+ .project-story .location-atlas-categories button:hover{background:color-mix(in srgb,var(--primary) 5%,transparent)}
+}
+@media(prefers-reduced-motion:no-preference){
+ .project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta){transition:translate .22s cubic-bezier(.22,1,.36,1),scale .18s ease,background-color .22s ease,color .22s ease,border-color .22s ease,box-shadow .22s ease}
+ @media(hover:hover){
+  .project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta):not(:disabled):hover{translate:0 -2px}
+  .project-story :is(.project-story-cover,.floorplan-open,.project-editorial-photo,.showroom-grid>button):hover{translate:none}
+ }
+ .project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta):not(:disabled):active{translate:0 0;scale:.98}
+ .project-story .project-story-cover:active{scale:1}
+}
+
+/* A single sweep emphasizes controls that expand content, on hover or keyboard focus. */
+.project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.floorplan-open small,.showroom-grid>button){position:relative;isolation:isolate;overflow:hidden}
+.project-story .project-editorial-photo>span{isolation:isolate;overflow:hidden}
+.project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.floorplan-open small,.showroom-grid>button,.project-editorial-photo>span):after{
+ content:'';position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;
+ background:linear-gradient(110deg,transparent 20%,#ffffff70 48%,transparent 76%);
+ opacity:0;transform:translateX(-130%) skewX(-12deg);
+}
+@media(prefers-reduced-motion:no-preference){
+ .project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.showroom-grid>button):focus-visible:after,
+ .project-story .floorplan-open:focus-visible small:after,
+ .project-story .project-editorial-photo:focus-visible>span:after{animation:project-control-shine .85s ease both}
+ @media(hover:hover){
+  .project-story :is(.project-photo-open,.facilities-see-all,.enquiry-secondary,.floorplan-thumbs>button,.showroom-grid>button):hover:after,
+  .project-story .floorplan-open:hover small:after,
+  .project-story .project-editorial-photo:hover>span:after{animation:project-control-shine .85s ease both}
+ }
+ @keyframes project-control-shine{0%{opacity:0;transform:translateX(-130%) skewX(-12deg)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateX(130%) skewX(-12deg)}}
+}
+@media(prefers-reduced-motion:reduce){.project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta){transition:none}}
