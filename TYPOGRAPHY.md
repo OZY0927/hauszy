@@ -1,5 +1,13 @@
 # Hauszy typography
 
+Project info pages use the final scoped scale in `app/project-typography.css`,
+loaded after section styles. All project text uses the existing Manrope family.
+Hero titles range from 44–104px, animated overview statements 40–92px,
+section headings 32–56px, and subheadings 24–44px. Body text is 17px,
+supporting text 15px, and captions 13px. Headings use weight 500, overview
+statements 600, and changing facility names 800; facility side phrases remain 400.
+These overrides apply only inside `.project-story`.
+
 Sizes assume the browser's default 16px root. The root respects user preferences;
 headings grow smoothly with viewport width using `clamp()`, rather than scaling
 the entire interface on wide screens.

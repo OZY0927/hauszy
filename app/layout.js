@@ -5,6 +5,7 @@ import './home-motion.css';
 import './project-listing.css';
 import './catalog-controls.css';
 import './project-entry.css';
+import './project-typography.css';
 import Header from '../components/Header';
 import Script from 'next/script';
 import SiteIntro from '../components/SiteIntro';

@@ -1,0 +1,43 @@
+/* Final project-info type scale. Loaded after the section styles to avoid drift. */
+.project-story{
+ --project-type-hero:clamp(2.75rem,1.6rem + 5vw,6.5rem);
+ --project-type-statement:clamp(2.5rem,1.5rem + 4.5vw,5.75rem);
+ --project-type-heading:clamp(2rem,1.5rem + 2vw,3.5rem);
+ --project-type-subheading:clamp(1.5rem,1.15rem + 1.5vw,2.75rem);
+ --project-type-facility:clamp(2.5rem,1.8rem + 3.5vw,5rem);
+ --project-type-side:clamp(1.5rem,1.15rem + 1.5vw,2.5rem);
+ --project-type-body:1.0625rem;
+ --project-type-small:.9375rem;
+ --project-type-caption:.8125rem;
+ font-family:var(--font-site);font-size:var(--project-type-body);font-synthesis:none;
+}
+.project-story :where(h1,h2,h3,h4,p,strong,small,span,dt,dd,button,input,select,textarea,a){font-family:var(--font-site)}
+.project-story .project-story-hero-copy>h1{font-size:var(--project-type-hero);font-weight:500;line-height:1.08;letter-spacing:-.045em}
+.project-story :is(.project-story-section-heading,.layout-studio-heading,.project-story-contact-copy) h2,
+.project-story .location-atlas-heading h2{font-size:var(--project-type-heading);font-weight:500;line-height:1.16;letter-spacing:-.035em}
+.project-story .project-journey-content .project-story-intro-main>h2{font-size:var(--project-type-heading);font-weight:500;line-height:1.16;letter-spacing:-.035em}
+.project-story .journey-motion .project-story-intro-main>h2{font-size:var(--project-type-statement);font-weight:600;line-height:1.04;letter-spacing:-.045em}
+.project-story .layout-scroll-studio .layout-studio-detail-heading h3,
+.project-story .location-atlas-fallback h3{font-size:var(--project-type-subheading);font-weight:500;line-height:1.2;letter-spacing:-.025em}
+.project-story .facility-vision-heading{font-size:var(--project-type-side);font-weight:400;line-height:1.2;letter-spacing:-.035em}
+.project-story .facility-vision-word strong{font-size:var(--project-type-facility);font-weight:800;line-height:1.08;letter-spacing:-.04em}
+.project-story :is(.project-story-intro-main,.project-story-contact-copy)>p,
+.project-story .journey-motion .project-story-intro-main>p{font-size:var(--project-type-body);font-weight:400;line-height:1.75;letter-spacing:normal}
+.project-story .property-facts dd,.project-story .layout-studio-facts dd,
+.project-story .facility-list li{font-size:var(--project-type-body);font-weight:500;line-height:1.6;letter-spacing:normal}
+.project-story :is(.project-story-section-note,.layout-studio-heading)>p,
+.project-story .location-atlas-heading>p,.project-story .location-atlas-address strong,
+.project-story .project-story-pill,.project-story .facilities-see-all,
+.project-story .location-atlas-categories button{font-size:var(--project-type-small);line-height:1.6;letter-spacing:normal}
+.project-story .eyebrow{font-size:var(--project-type-caption);font-weight:600;line-height:1.5;letter-spacing:.12em}
+.project-story .property-facts dt,.project-story .layout-studio-facts dt,
+.project-story .project-story-fine-print,.project-story .project-section-links>a,
+.project-story .project-section-enquire,.project-story .project-gallery-caption>p>span,
+.project-story .location-atlas-address p,.project-story .location-atlas-address a,
+.project-story .facility-vision-top>span:last-child,.project-story .facility-vision-controls,
+.project-story .facility-vision-hint{font-size:var(--project-type-caption);font-weight:400;line-height:1.6;letter-spacing:normal}
+.project-story .manual-amenity-results li strong,.project-story .nearby-map-results-heading strong{font-size:var(--project-type-small);font-weight:500;line-height:1.5}
+.project-story .manual-amenity-meta,.project-story .nearby-map-note,
+.project-story .manual-amenity-results li>span{font-size:.75rem;line-height:1.5;letter-spacing:normal}
+.project-story .facilities-dialog-heading h2{font-size:var(--project-type-subheading);font-weight:500;line-height:1.2;letter-spacing:-.025em}
+@media(max-width:800px){.project-story{--project-type-side:clamp(1.5rem,5vw,2rem);--project-type-facility:clamp(2.25rem,8vw,4rem)}}
