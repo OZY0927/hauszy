@@ -16,7 +16,7 @@ export default function ProjectGallery({photos=[],name,hero=null}){
  const controls=count>1?<div className="project-gallery-controls gallery-controls"><button type="button" onClick={()=>go(-1)} aria-label="Previous project photo"><Icon name="arrowLeft"/></button><span>{String(current+1).padStart(2,'0')} <i>/</i> {String(count).padStart(2,'0')}</span><button type="button" onClick={()=>go(1)} aria-label="Next project photo"><Icon name="arrowRight"/></button></div>:null;
  return <>
   {hero?<ProjectHeroScroll enabled={count>0}><section className={'project-story-hero'+(count?' has-photo':'')} data-project-id={hero.id} aria-labelledby="project-story-title">
-   {count>0&&<button type="button" className="project-story-cover gallery-tile" onClick={show} aria-label={`Open project photo ${current+1}`}><img key={current} src={failed?'/project-placeholder.svg':items[current]} alt={`${name} — project photo ${current+1}`} fetchPriority="high" onError={()=>setFailed(true)}/></button>}
+   {count>0&&<button type="button" className="project-story-cover gallery-tile" onClick={show} aria-label={`Open project photo ${current+1}`}><PreviewImage key={current} src={failed?'/project-placeholder.svg':items[current]} alt={`${name} — project photo ${current+1}`} loading="eager" fetchPriority="high" onError={()=>setFailed(true)}/></button>}
    <div className="project-story-hero-shade"/>
    <Link className="project-story-back" href="/projects"><Icon name="arrowLeft"/> All projects</Link>
    <div className="project-story-hero-copy">{hero.location&&<p>{hero.location}</p>}<h1 id="project-story-title">{name}</h1><span>{hero.type}{hero.mode&&` · ${hero.mode}`}</span></div>
