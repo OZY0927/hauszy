@@ -2,7 +2,7 @@
 import {useEffect,useRef} from 'react';
 
 // A native-scroll photo collage: the project stays readable without animation or JS.
-export default function ProjectScrollIntroduction({name,location,photos=[]}){
+export default function ProjectScrollIntroduction({photos=[],children}){
  const root=useRef(null),images=photos.filter(Boolean).slice(0,4);
  useEffect(()=>{
   const el=root.current,preference=matchMedia('(prefers-reduced-motion: reduce)');
@@ -11,6 +11,7 @@ export default function ProjectScrollIntroduction({name,location,photos=[]}){
    frame=0;
    if(preference.matches)return;
    const rect=el.getBoundingClientRect();
+   el.classList.toggle('is-journey-visible',rect.bottom>0&&rect.top<innerHeight);
    if(rect.bottom<0||rect.top>innerHeight)return;
    const progress=Math.max(0,Math.min(1,(innerHeight-rect.top)/(innerHeight+rect.height)));
    el.style.setProperty('--journey-progress',progress.toFixed(4));
@@ -23,9 +24,8 @@ export default function ProjectScrollIntroduction({name,location,photos=[]}){
   if('ResizeObserver' in window){observer=new ResizeObserver(schedule);observer.observe(el)}
   return()=>{cancelAnimationFrame(frame);observer?.disconnect();window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);preference.removeEventListener('change',configure)};
  },[]);
- if(!images.length)return null;
- return <section ref={root} className="project-journey-intro" aria-labelledby="project-journey-title">
-  <div className="project-journey-copy"><span className="eyebrow">A CLOSER LOOK AT</span><h2 id="project-journey-title">{name}</h2>{location&&<p>{location}</p>}<span className="project-journey-footnote">THE SPACES. THE DETAILS. THE POSSIBILITIES.</span></div>
-  <div className="project-journey-photos" aria-hidden="true">{images.map((src,index)=><figure key={index}><img src={src} alt="" loading="lazy" onError={event=>{event.currentTarget.src='/project-placeholder.svg'}}/><figcaption>{String(index+1).padStart(2,'0')} / {name}</figcaption></figure>)}</div>
+ return <section ref={root} id="overview" className={'project-journey-intro project-story-intro project-story-section'+(images.length?' has-journey-photos':'')} aria-label="Project introduction">
+  <div className="project-journey-content">{children}</div>
+  {images.length>0&&<div className="project-journey-photos" aria-hidden="true">{images.map((src,index)=><figure key={index}><div className="project-journey-photo-float"><img src={src} alt="" loading="lazy" onError={event=>{event.currentTarget.onerror=null;if(!event.currentTarget.src.endsWith('/project-placeholder.svg'))event.currentTarget.src='/project-placeholder.svg'}}/></div></figure>)}</div>}
  </section>;
 }
