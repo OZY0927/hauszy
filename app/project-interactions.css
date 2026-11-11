@@ -39,3 +39,15 @@
  @keyframes project-control-shine{0%,3%{opacity:0;transform:translateX(-130%) skewX(-12deg)}5%{opacity:1}16%{opacity:1}20%,100%{opacity:0;transform:translateX(130%) skewX(-12deg)}}
 }
 @media(prefers-reduced-motion:reduce){.project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta){transition:none}}
+
+/* Keep the facilities action anchored; only its label grows on hover. */
+.project-story .facility-vision .facility-vision-more .facilities-see-all{overflow:visible}
+.project-story .facility-vision .facility-vision-more .facilities-see-all:is(:hover,:focus-visible,:active){translate:-50% -50%;transform:none;scale:1;box-shadow:none;filter:none}
+.project-story .facility-vision .facility-vision-more .facilities-see-all:after{display:none}
+.facility-vision-more-label{display:block;min-width:0;transform-origin:center}
+@media(prefers-reduced-motion:no-preference){
+ .facility-vision-more-label{transition:transform .22s ease}
+}
+@media(hover:hover){
+ .facility-vision-more .facilities-see-all:hover .facility-vision-more-label{transform:scale(1.04)}
+}
