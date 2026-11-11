@@ -33,13 +33,11 @@ function DetailPreview({detail,onDismiss}){
 export default function ProjectDetailsCards({facts}){
  const [detail,setDetail]=useState(null),sequence=useRef(0),previewId=useId();
  const dismiss=useRef(id=>setDetail(current=>current?.id===id?null:current)).current;
- function show(index,element,pinned=false){
-  if(detail?.pinned&&!pinned)return;
-  if(detail?.index===index&&!detail.closing){if(pinned)setDetail(current=>({...current,pinned:true}));return}
+ function show(index,element){
+  if(detail?.index===index&&!detail.closing)return;
   const rect=element.closest('.project-detail-card').getBoundingClientRect();
-  setDetail({index,fact:facts[index],rect,id:++sequence.current,pinned,closing:false,previewId});
+  setDetail({index,fact:facts[index],rect,id:++sequence.current,pinned:true,closing:false,previewId});
  }
- function leave(index){setDetail(current=>current?.index===index&&!current.pinned?{...current,closing:true}:current)}
  useEffect(()=>{
   if(!detail)return;
   const close=()=>setDetail(null),key=event=>{if(event.key==='Escape')close()};
@@ -47,9 +45,9 @@ export default function ProjectDetailsCards({facts}){
   return()=>{window.removeEventListener('keydown',key);window.removeEventListener('scroll',close);window.removeEventListener('resize',close)};
  },[!!detail]);
  return <>
-  <dl className="project-details-content" aria-label="Project specifications">{facts.map(([label,value,icon],index)=><div className="project-detail-card" key={label} onPointerEnter={event=>{if(event.pointerType==='mouse')show(index,event.currentTarget)}} onPointerLeave={()=>leave(index)}>
+  <dl className="project-details-content" aria-label="Project specifications">{facts.map(([label,value,icon],index)=><div className="project-detail-card" key={label}>
    <dt><span>{label}</span><span className="project-detail-number" aria-hidden="true">{String(index+1).padStart(2,'0')} / {String(facts.length).padStart(2,'0')}</span></dt>
-   <dd><Icon name={icon}/><span>{value}</span><button type="button" className="project-detail-expand" aria-label={`View ${label}: ${value}`} aria-expanded={detail?.index===index&&!detail.closing} aria-describedby={detail?.index===index?previewId:undefined} onFocus={event=>show(index,event.currentTarget)} onBlur={()=>leave(index)} onClick={event=>show(index,event.currentTarget,true)}/></dd>
+   <dd><Icon name={icon}/><span>{value}</span><button type="button" className="project-detail-expand" aria-label={`View ${label}: ${value}`} aria-haspopup="dialog" aria-expanded={detail?.index===index&&!detail.closing} aria-controls={detail?.index===index?previewId:undefined} onClick={event=>show(index,event.currentTarget)}/></dd>
   </div>)}</dl>
   {detail&&<DetailPreview key={detail.id} detail={detail} onDismiss={dismiss}/>}
  </>;
