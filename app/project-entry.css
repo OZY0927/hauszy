@@ -477,6 +477,10 @@
 .facility-vision-controls button:disabled{opacity:.3;cursor:default}
 .project-story .facility-vision .facilities-see-all{display:flex;align-items:center;gap:12px;color:var(--paper);border-color:color-mix(in srgb,var(--paper) 40%,transparent);margin:0}
 .facility-vision .facilities-see-all .icon{width:17px;height:17px}
+.facility-vision-more{position:relative;flex:none;z-index:3}
+.facility-vision-more-note{position:absolute;top:100%;left:50%;translate:-50% 0;width:max-content;max-width:min(280px,80vw);text-align:center;font-size:var(--project-type-small);color:var(--secondary);margin:18px 0 0;opacity:0;visibility:hidden;pointer-events:none}
+.facility-vision:not(.is-vision-scroll).is-at-end .facility-vision-more-note{opacity:1;visibility:visible}
+.facility-vision:not(.is-vision-scroll).is-at-end .facility-vision-word{opacity:0;visibility:hidden}
 .facility-vision-hint{display:none;align-items:center;gap:12px;font-size:var(--text-caption);opacity:.6}
 .facility-vision-hint .icon{width:14px;height:14px}
 .is-vision-scroll .facility-vision-hint{display:flex}
