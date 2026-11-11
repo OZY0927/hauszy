@@ -8,26 +8,57 @@ import {hasProjectInfo} from '../lib/project-visibility';
 export default function ProjectLayouts({units,enquiry}){
  const root=useRef(null);
  useEffect(()=>{
-  const cards=[...root.current.querySelectorAll('.layout-scroll-card')];
-  let frame=0;
-  const update=()=>{
-   frame=0;
-   const stack=matchMedia('(min-width: 851px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)').matches;
-   root.current.classList.toggle('stack-enabled',stack);
-   cards.forEach((card,index)=>{
-    // Tall cards scroll far enough to expose their controls before pinning.
-    card.style.setProperty('--stack-top',Math.min(100,innerHeight-card.offsetHeight-90)+'px');
-    const rect=card.getBoundingClientRect();
-    const next=cards[index+1];
-    const progress=stack&&next?Math.max(0,Math.min(1,(rect.bottom-next.getBoundingClientRect().top)/Math.max(1,rect.height))):0;
-    card.style.setProperty('--stack-progress',progress);
-   });
+  const section=root.current,cards=[...section.querySelectorAll('.layout-scroll-card')];
+  const media=matchMedia('(min-width: 851px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)');
+  let teardown=()=>{};
+  const configure=()=>{
+   teardown();
+   if(!media.matches||cards.length<2)return;
+   section.classList.add('stack-enabled');
+   let frame=0,dirty=true,inView=true,heights=[],previous=cards.map(()=>-1);
+   const schedule=()=>{if(inView&&!document.hidden&&!frame)frame=requestAnimationFrame(update)};
+   const update=()=>{
+    frame=0;
+    if(!inView||document.hidden)return;
+    // Complete geometry reads before changing any styles. Heights only change on resize/load.
+    const measuring=dirty;
+    if(measuring){heights=cards.map(card=>card.offsetHeight);dirty=false}
+    const rects=cards.map(card=>card.getBoundingClientRect());
+    const progress=rects.map((rect,index)=>{
+     const next=rects[index+1];
+     const amount=next?Math.max(0,Math.min(1,(rect.bottom-next.top)/Math.max(1,heights[index]))):0;
+     return amount*amount*(3-2*amount);
+    });
+    cards.forEach((card,index)=>{
+     // Keep the bottom controls reachable even when a card is taller than the viewport.
+     if(measuring)card.style.setProperty('--stack-top',Math.min(100,innerHeight-heights[index]-90)+'px');
+     if(Math.abs(progress[index]-previous[index])>.001){card.style.setProperty('--stack-progress',progress[index].toFixed(4));previous[index]=progress[index]}
+    });
+    if(measuring)schedule();
+   };
+   const measure=()=>{dirty=true;schedule()};
+   const resize='ResizeObserver' in window?new ResizeObserver(measure):null;
+   resize?.observe(section);cards.forEach(card=>resize?.observe(card));
+   const visibility='IntersectionObserver' in window?new IntersectionObserver(entries=>{
+    for(const entry of entries){
+     if(entry.target===section){inView=entry.isIntersecting;if(inView)schedule();else{cancelAnimationFrame(frame);frame=0}}
+     else entry.target.classList.toggle('is-stack-visible',entry.isIntersecting);
+    }
+   },{rootMargin:'200px 0px'}):null;
+   visibility?.observe(section);cards.forEach(card=>{visibility?.observe(card);if(!visibility)card.classList.add('is-stack-visible')});
+   window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',measure);
+   document.addEventListener('visibilitychange',measure);section.addEventListener('load',measure,true);
+   schedule();
+   teardown=()=>{
+    cancelAnimationFrame(frame);resize?.disconnect();visibility?.disconnect();
+    window.removeEventListener('scroll',schedule);window.removeEventListener('resize',measure);
+    document.removeEventListener('visibilitychange',measure);section.removeEventListener('load',measure,true);
+    section.classList.remove('stack-enabled');
+    cards.forEach(card=>{card.classList.remove('is-stack-visible');card.style.removeProperty('--stack-top');card.style.removeProperty('--stack-progress')});
+   };
   };
-  const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
-  const observer='ResizeObserver' in window?new ResizeObserver(schedule):null;
-  cards.forEach(card=>observer?.observe(card));
-  update();window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);
-  return()=>{observer?.disconnect();cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule)};
+  configure();media.addEventListener('change',configure);
+  return()=>{media.removeEventListener('change',configure);teardown()};
  },[units]);
  return <section ref={root} className="project-story-layouts layout-studio layout-scroll-studio" id="units"><div className="project-story-section">
   <div className="layout-studio-heading" data-reveal><div><span className="eyebrow">EXPLORE THE LAYOUTS</span><h2>A space for<br/><em>every chapter.</em></h2></div><p>{units.length} {units.length===1?'layout':'layouts'} to explore.</p></div>
