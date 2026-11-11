@@ -1,14 +1,14 @@
-/* Layered photography chapter, sized to the available screen. */
+/* The carousel owns its height independently of the surrounding chapter. */
 .project-story #project-photos{
  display:flex;flex-direction:column;gap:0;
- background:linear-gradient(180deg,#f5dfc5 0%,#f5dfc5 78%,var(--primary) 78%);
- padding-bottom:82px;
+ background:color-mix(in srgb,var(--secondary) 22%,var(--paper));
+ padding-bottom:var(--project-section-space);
 }
 .project-story #project-photos>.project-story-section-heading{flex:none;margin-bottom:20px}
 .project-story #project-photos .project-story-section-heading h2{font-size:clamp(26px,3.1vw,48px);line-height:1.1}
-.project-story #project-photos>.project-story-fine-print{color:var(--paper);margin-top:10px;flex:none}
-.project-story #project-photos .project-layered-gallery{width:100%;flex:1;min-height:180px;display:flex;flex-direction:column}
-.project-photo-stack{position:relative;isolation:isolate;flex:1;min-height:140px;margin-inline:clamp(18px,4vw,65px)}
+.project-story #project-photos>.project-story-fine-print{color:var(--muted);margin-top:18px;flex:none}
+.project-story #project-photos .project-layered-gallery{width:100%;min-width:0;display:flex;flex-direction:column}
+.project-photo-stack{position:relative;isolation:isolate;flex:none;height:clamp(280px,56svh,680px);margin:16px clamp(24px,4vw,65px) 0}
 .project-story #project-photos .project-editorial-photo{position:absolute;inset:0;width:100%;height:100%;border-radius:12px;overflow:hidden;box-shadow:0 20px 48px #352a2538;z-index:2;background:var(--secondary)}
 .project-photo-incoming,.project-photo-outgoing{position:absolute;inset:0}
 .project-photo-incoming img,.project-photo-outgoing img,.project-photo-peek img{display:block;width:100%;height:100%;object-fit:cover}
@@ -20,8 +20,9 @@
 .project-stack-arrow.is-previous{left:-26px}
 .project-stack-arrow.is-next{right:-26px}
 .project-stack-arrow .icon{width:25px;height:25px}
-.project-story #project-photos .project-gallery-caption{padding:16px clamp(18px,4vw,65px) 0;color:var(--paper);flex:none}
-.project-story #project-photos .project-gallery-caption p,.project-story #project-photos .project-gallery-caption p>span{color:inherit}
+.project-story #project-photos .project-gallery-caption{padding:24px clamp(24px,4vw,65px) 0;color:var(--ink);flex:none;align-items:center}
+.project-story #project-photos .project-gallery-caption p{color:inherit;min-width:0;overflow-wrap:anywhere}
+.project-story #project-photos .project-gallery-caption p>span{color:var(--muted)}
 .project-photo-count{font-size:var(--text-caption);font-variant-numeric:tabular-nums;white-space:nowrap}
 @media(prefers-reduced-motion:no-preference){
  .project-photo-incoming.is-changing{animation:project-stack-in .65s cubic-bezier(.22,1,.36,1) both}
@@ -32,6 +33,8 @@
 }
 @media(prefers-reduced-motion:reduce){.project-photo-outgoing{display:none}}
 @media(max-width:700px){
+ .project-photo-stack{height:clamp(240px,46svh,440px);margin-inline:20px}
+ .project-story #project-photos .project-gallery-caption{padding-inline:20px;gap:16px}
  .project-story #project-photos .project-story-section-note{display:none}
  .project-story #project-photos .project-story-section-heading h2{font-size:28px}
  .project-story .project-stack-arrow{width:40px;height:40px;margin-top:-20px}
