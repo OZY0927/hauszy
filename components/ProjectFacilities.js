@@ -11,30 +11,31 @@ function FacilityList({items,className=''}){
 
 export default function ProjectFacilities({facilities}){
   const dialog=useRef(null),titleId=useId(),[open,setOpen]=useState(false);
-  const spatial=useRef(null);
+  const vision=useRef(null),trigger=useRef(null),[active,setActive]=useState(0);
+  const current=Math.min(active,facilities.length-1);
   useEffect(()=>{
     gsap.registerPlugin(ScrollTrigger);
-    const root=spatial.current,stage=root.querySelector('.facility-spatial-stage');
-    const cards=[...root.querySelectorAll('.facility-preview>li')];
-    const media=gsap.matchMedia();
+    const root=vision.current,stage=root.querySelector('.facility-vision-stage'),media=gsap.matchMedia();
     let disposed=false;
-    media.add('(min-width: 801px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)',()=>{
-      root.classList.add('is-spatial');
-      const timeline=gsap.timeline({scrollTrigger:{
-        trigger:stage,start:'top 100px',end:()=>'+='+Math.round(innerHeight*1.3),
-        pin:true,pinSpacing:true,scrub:.7,anticipatePin:1,invalidateOnRefresh:true
+    media.add('(min-width: 801px) and (min-height: 650px) and (prefers-reduced-motion: no-preference)',()=>{
+      root.classList.add('is-vision-scroll');
+      const playhead={progress:0};
+      const tween=gsap.to(playhead,{progress:1,ease:'none',onUpdate:()=>setActive(Math.min(facilities.length-1,Math.floor(playhead.progress*facilities.length))),scrollTrigger:{
+        trigger:stage,start:'top 100px',end:()=>'+='+Math.round(innerHeight*Math.min(3,Math.max(1,facilities.length*.18))),
+        pin:true,pinSpacing:true,scrub:.35,anticipatePin:1,invalidateOnRefresh:true,
       }});
-      timeline.fromTo(root.querySelector('.facility-preview'),{z:-100,rotationX:9},{z:0,rotationX:0,duration:1,ease:'none'},0);
-      timeline.fromTo(cards,{z:-480,rotationY:index=>(index%2?1:-1)*14,opacity:.35},{z:0,rotationY:0,opacity:1,duration:.72,stagger:.045,ease:'power2.out'},0);
-      timeline.fromTo(root.querySelector('.facility-spatial-grid'),{scale:.85},{scale:1,duration:1,ease:'none'},0);
-      timeline.fromTo(root.querySelector('.facility-spatial-cue'),{opacity:1},{opacity:0,duration:.35,ease:'none'},0);
-      return()=>root.classList.remove('is-spatial');
+      trigger.current=tween.scrollTrigger;
+      return()=>{trigger.current=null;root.classList.remove('is-vision-scroll')};
     },root);
-    // Font metrics can settle after the trigger's initial measurements.
     document.fonts?.ready.then(()=>{if(!disposed)ScrollTrigger.refresh()});
     return()=>{disposed=true;media.revert()};
   },[facilities]);
-  useEffect(()=>{
+  function change(direction){
+    const next=(current+direction+facilities.length)%facilities.length;
+    const scroll=trigger.current;
+    if(scroll)scroll.scroll(scroll.start+(scroll.end-scroll.start)*(next+.5)/facilities.length);
+    setActive(next);
+  }  useEffect(()=>{
     if(!open)return;
     const previous=document.body.style.overflow;
     document.body.style.overflow='hidden';
@@ -43,15 +44,19 @@ export default function ProjectFacilities({facilities}){
   function show(){dialog.current.showModal();setOpen(true)}
   function close(){dialog.current.close()}
   return <>
-    <div ref={spatial} className="facility-spatial-scroll">
-      <div className="facility-spatial-stage">
-        <div className="facility-spatial-grid" aria-hidden="true"/>
-        <div className="facility-spatial-label"><span className="eyebrow">EXPLORE THE FACILITIES</span><span className="facility-spatial-cue">Scroll to take a closer look <Icon name="arrowDown"/></span></div>
-        <div className="facility-spatial-camera"><FacilityList items={facilities.slice(0,8)} className="facility-preview"/></div>
-        {facilities.length>8&&<button type="button" className="facilities-see-all" onClick={show} aria-haspopup="dialog">See all {facilities.length} facilities</button>}
+    <div ref={vision} className="facility-vision">
+      <div className="facility-vision-stage">
+        <div className="facility-vision-top"><span className="eyebrow">A LITTLE MORE TO EVERY DAY</span><span>{facilities.length} facilities to explore</span></div>
+        <h2 className="facility-vision-heading"><span>More room.</span><span>To enjoy life.</span></h2>
+        <div className="facility-vision-word"><strong key={current}>{facilities[current]}</strong></div>
+        <div className="facility-vision-bottom">
+          <div className="facility-vision-controls" aria-label="Explore facilities"><button type="button" disabled={facilities.length<2} onClick={()=>change(-1)} aria-label="Previous facility"><Icon name="arrowLeft"/></button><span aria-live="polite">{String(current+1).padStart(2,'0')} / {String(facilities.length).padStart(2,'0')}</span><button type="button" disabled={facilities.length<2} onClick={()=>change(1)} aria-label="Next facility"><Icon name="arrowRight"/></button></div>
+          <span className="facility-vision-hint">Scroll to explore <Icon name="arrowDown"/></span>
+          <button type="button" className="facilities-see-all" onClick={show} aria-haspopup="dialog">See all facilities <Icon name="arrowUpRight"/></button>
+        </div>
+        <div className="facility-vision-progress" aria-hidden="true"><span style={{transform:`scaleX(${(current+1)/facilities.length})`}}/></div>
       </div>
-    </div>
-    <dialog ref={dialog} className="facilities-dialog" aria-labelledby={titleId} onClose={()=>setOpen(false)} onClick={event=>{if(event.target===dialog.current)close()}}>
+    </div>    <dialog ref={dialog} className="facilities-dialog" aria-labelledby={titleId} onClose={()=>setOpen(false)} onClick={event=>{if(event.target===dialog.current)close()}}>
       <div className="facilities-dialog-heading"><h2 id={titleId}>Project Facilities</h2><button type="button" onClick={close} aria-label="Close facilities" autoFocus><Icon name="x"/></button></div>
       <div className="facilities-dialog-body"><FacilityList items={facilities}/></div>
     </dialog>

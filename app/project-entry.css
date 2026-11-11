@@ -462,6 +462,61 @@
 @media(max-width:800px){.facility-spatial-stage{padding:24px 20px;border-radius:18px}.facility-spatial-label{margin-bottom:24px}.project-story-facilities .facility-spatial-camera .facility-preview{gap:12px}.project-story-facilities .facility-spatial-camera .facility-preview li{padding:20px;min-height:145px;gap:16px}.project-story-facilities .facility-spatial-camera .facility-preview .icon{width:27px;height:27px}}
 
 /* Section handoffs belong exclusively to project info pages. */
+.project-story .project-story-section.project-story-facilities{padding:0}
+.facility-vision-stage{position:relative;display:grid;grid-template-rows:auto 1fr auto;min-height:calc(100svh - 100px);padding:32px clamp(20px,3vw,56px);background:var(--ink);color:var(--paper);overflow:clip}
+.facility-vision-top,.facility-vision-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;position:relative;z-index:2}
+.facility-vision-top>span:last-child{font-size:var(--text-caption);opacity:.65}
+.project-story .facility-vision-heading{display:flex;justify-content:space-between;align-items:center;gap:35%;font-size:clamp(30px,4.2vw,78px);line-height:1.05;letter-spacing:-.055em;font-weight:600;margin:0;pointer-events:none}
+.facility-vision-heading>span{max-width:32%}
+.facility-vision-heading>span:last-child{text-align:right}
+.facility-vision-word{position:absolute;inset:20% 30%;display:grid;place-items:center;text-align:center;pointer-events:none}
+.facility-vision-word strong{display:block;color:var(--secondary);font-size:clamp(36px,5vw,96px);font-weight:800;line-height:1;letter-spacing:-.05em;overflow-wrap:anywhere;text-wrap:balance}
+.facility-vision-controls{display:flex;align-items:center;gap:18px;font-size:var(--text-caption);font-variant-numeric:tabular-nums}
+.facility-vision-controls button{display:grid;place-items:center;width:42px;height:42px;border:1px solid currentColor;border-radius:50%;padding:0;background:transparent;color:inherit}
+.facility-vision-controls .icon{width:17px;height:17px}
+.facility-vision-controls button:disabled{opacity:.3;cursor:default}
+.project-story .facility-vision .facilities-see-all{display:flex;align-items:center;gap:12px;color:var(--paper);border-color:color-mix(in srgb,var(--paper) 40%,transparent);margin:0}
+.facility-vision .facilities-see-all .icon{width:17px;height:17px}
+.facility-vision-hint{display:none;align-items:center;gap:12px;font-size:var(--text-caption);opacity:.6}
+.facility-vision-hint .icon{width:14px;height:14px}
+.is-vision-scroll .facility-vision-hint{display:flex}
+.facility-vision-progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:#ffffff15}
+.facility-vision-progress>span{display:block;height:100%;background:var(--secondary);transform-origin:left}
+@media(prefers-reduced-motion:no-preference){.facility-vision-word strong{animation:facility-word-change .4s cubic-bezier(.22,1,.36,1) both}.facility-vision-progress>span{transition:transform .35s ease}@keyframes facility-word-change{from{opacity:0;transform:translateY(25px) rotateX(-25deg);filter:blur(5px)}to{opacity:1;transform:none;filter:blur(0)}}}
+@media(max-width:800px){.facility-vision-stage{min-height:75svh;padding:28px 20px;grid-template-rows:auto 1fr auto}.project-story .facility-vision-heading{align-items:flex-start;flex-direction:column;justify-content:space-between;gap:0;padding:30px 0;font-size:clamp(30px,8vw,48px)}.facility-vision-heading>span{max-width:100%}.facility-vision-heading>span:last-child{align-self:flex-end}.facility-vision-word{inset:27% 8%}.facility-vision-word strong{font-size:clamp(36px,10vw,72px)}.facility-vision-top{align-items:flex-start;gap:16px}.facility-vision-top>span:last-child{text-align:right}.facility-vision-bottom{flex-wrap:wrap;gap:18px}.project-story .facility-vision .facilities-see-all{padding:12px 16px;font-size:var(--text-caption)}}
+.project-story{--project-gutter:clamp(20px,3vw,56px);--project-section-space:clamp(32px,5svh,56px);padding-bottom:24px}
+.project-story .project-story-section{max-width:none;width:100%;padding:var(--project-section-space) var(--project-gutter)}
+.project-story .project-story-section-heading{gap:32px;margin-bottom:28px}
+.project-story .project-story-section-heading h2{margin-top:12px}
+.project-story .project-editorial-gallery{max-width:none}
+.project-story .project-editorial-photo{height:clamp(360px,65svh,900px)}
+.project-story .project-gallery-caption{padding-block:14px}
+.project-story .project-story-highlights-inner{max-width:none;padding:32px var(--project-gutter);gap:24px}
+.project-story .project-story-contact-grid{gap:clamp(32px,6vw,100px);min-height:calc(100svh - 100px)}
+.project-story .project-story-contact-copy>p{max-width:600px}
+.project-story .layout-scroll-studio>.project-story-section{padding-inline:var(--project-gutter)}
+.project-story .layout-scroll-studio .layout-studio-heading{margin-bottom:26px}
+.project-story .project-story-showroom .showroom-grid{gap:14px;grid-auto-rows:clamp(220px,32svh,420px)}
+.project-story .project-story-showroom .showroom-grid.count-1,.project-story .project-story-showroom .showroom-grid.count-2{grid-auto-rows:clamp(360px,64svh,850px)}
+.project-story .facility-spatial-stage{padding:28px}
+.project-story .facility-spatial-label{margin-bottom:20px}
+.project-story .location-atlas-sidebar{padding:32px clamp(20px,2.5vw,40px)}
+@media(min-width:1200px){.project-story #details .property-facts{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:32px}}
+@media(min-width:801px) and (min-height:700px) and (prefers-reduced-motion:no-preference){
+ .project-story .is-spatial .facility-spatial-stage{min-height:calc(100svh - 120px);padding:28px}
+ .project-story-facilities .is-spatial .facility-preview li{min-height:clamp(155px,23svh,270px)}
+}
+@media(max-width:800px){
+ .project-story{--project-gutter:20px;--project-section-space:32px}
+ .project-story .project-story-section-heading{margin-bottom:24px}
+ .project-story .project-editorial-photo{height:clamp(300px,55svh,580px)}
+ .project-story .project-story-contact-grid{min-height:0;gap:28px}
+ .project-story .facility-spatial-stage{padding:22px 16px}
+ .project-story .project-story-showroom .showroom-grid{gap:10px;grid-auto-rows:190px}
+ .project-story .project-story-showroom .showroom-grid.count-1,.project-story .project-story-showroom .showroom-grid.count-2{grid-auto-rows:clamp(280px,50svh,520px)}
+}
+/* Keep the overview's sticky camera full bleed, rather than adding outer gutters. */
+@media(min-width:801px) and (min-height:650px) and (prefers-reduced-motion:no-preference){.project-story .project-journey-intro.journey-motion{padding:0}}
 .project-story .hz-chapter-handoff{position:relative}
 .project-story .hz-chapter-handoff:after{content:'';position:absolute;top:0;left:6%;right:6%;height:70px;pointer-events:none;border-top:1px solid var(--line);border-radius:50% 50% 0 0;transform:scaleX(var(--chapter-arrival,1));transform-origin:50% 0;opacity:calc(.12 + var(--chapter-arrival,1) * .35);background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 6%,transparent),transparent)}
 @media(prefers-reduced-motion:reduce){.project-story .hz-chapter-handoff:after{display:none}}

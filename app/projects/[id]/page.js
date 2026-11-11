@@ -53,7 +53,7 @@ export default async function Project({params}){
 
   {visibility.units.length>0&&<ProjectLayouts units={visibility.units.map(unit=>({...unit,enquiryHref:whatsappNumber(profile)?whatsappLink(whatsappNumber(profile),projectMessage({kind:'enquiry',agent:profile?.name,project:p.name,layout:unit.name||'Unit layout'})):'#enquiry'}))} enquiry={visibility.enquiry}/>}
 
-  {visibility.facilities.length>0&&<section className="project-story-section project-story-facilities" id="amenities"><SectionHeading label="A LITTLE MORE TO EVERY DAY" title={<>More room<br/>to enjoy life.</>}><p>Explore the facilities and shared spaces within the project.</p></SectionHeading><ProjectFacilities facilities={visibility.facilities}/></section>}
+  {visibility.facilities.length>0&&<section className="project-story-section project-story-facilities" id="amenities"><ProjectFacilities facilities={visibility.facilities}/></section>}
 
   {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates} amenities={visibility.nearby}/>}
 
