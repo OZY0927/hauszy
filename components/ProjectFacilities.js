@@ -19,6 +19,10 @@ export default function ProjectFacilities({facilities}){
     const bottom=stage.querySelector('.facility-vision-bottom'),more=stage.querySelector('.facility-vision-more');
     return {x:stage.clientWidth/2-bottom.offsetLeft-more.offsetLeft-more.offsetWidth/2,y:stage.clientHeight/2-bottom.offsetTop-more.offsetTop-more.offsetHeight/2};
   }
+  function largeButton(stage){
+    const size=parseFloat(getComputedStyle(stage.querySelector('.facility-vision-word strong')).fontSize);
+    return {'--facility-cta-size':size+'px','--facility-cta-width':Math.min(760,stage.clientWidth*.76)+'px','--facility-cta-note-offset':size*1.15+'px'};
+  }
   useEffect(()=>{
     const shuffled=[...facilities];
     for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}
@@ -37,7 +41,9 @@ export default function ProjectFacilities({facilities}){
       }}).to(playhead,{progress:1,duration:1,ease:'none',onUpdate:()=>setActive(Math.min(preview.length-1,Math.floor(playhead.progress*steps)))},0);
       if(hasMore){
         const duration=1/steps;
-        tween.fromTo(stage.querySelector('.facility-vision-more'),{x:0,y:0},{x:()=>centerButton(stage).x,y:()=>centerButton(stage).y,duration,ease:'power2.inOut'},finalBeat);
+        const more=stage.querySelector('.facility-vision-more');
+        tween.fromTo(more,{x:0,y:0,'--facility-cta-size':'15px','--facility-cta-width':'230px','--facility-cta-note-offset':'27px'},{x:()=>centerButton(stage).x,y:()=>centerButton(stage).y,'--facility-cta-size':()=>largeButton(stage)['--facility-cta-size'],'--facility-cta-width':()=>largeButton(stage)['--facility-cta-width'],'--facility-cta-note-offset':()=>largeButton(stage)['--facility-cta-note-offset'],duration,ease:'power2.inOut'},finalBeat);
+        tween.to(more.querySelector('button'),{borderColor:'transparent',color:'var(--secondary)',fontWeight:800,duration},finalBeat);
         tween.to(stage.querySelector('.facility-vision-word'),{autoAlpha:0,duration:duration*.65},finalBeat);
         tween.fromTo(stage.querySelector('.facility-vision-more-note'),{autoAlpha:0},{autoAlpha:1,duration:duration*.6},finalBeat+duration*.4);
         tween.to(stage.querySelector('.facility-vision-hint'),{autoAlpha:0,duration:duration*.5},finalBeat);
@@ -55,8 +61,10 @@ export default function ProjectFacilities({facilities}){
     const end=current===preview.length-1;
     const media=gsap.matchMedia();
     media.add('(max-width: 800px), (max-height: 649px), (prefers-reduced-motion: reduce)',()=>{
-      gsap.to(more,{...(end?centerButton(stage):{x:0,y:0}),duration:matchMedia('(prefers-reduced-motion: reduce)').matches?0:.5});
-      const resize=()=>{if(end)gsap.set(more,centerButton(stage))};
+      const duration=matchMedia('(prefers-reduced-motion: reduce)').matches?0:.5;
+      gsap.to(more,{...(end?{...centerButton(stage),...largeButton(stage)}:{x:0,y:0,'--facility-cta-size':'15px','--facility-cta-width':'230px','--facility-cta-note-offset':'27px'}),duration});
+      if(end)gsap.to(more.querySelector('button'),{borderColor:'transparent',color:'var(--secondary)',fontWeight:800,duration});
+      const resize=()=>{if(end)gsap.set(more,{...centerButton(stage),...largeButton(stage)})};
       window.addEventListener('resize',resize);
       return()=>window.removeEventListener('resize',resize);
     },stage);
