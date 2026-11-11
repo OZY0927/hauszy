@@ -8,6 +8,8 @@ import './project-entry.css';
 import './project-typography.css';
 import './project-interactions.css';
 import './project-glass.css';
+import './project-viewport.css';
+import './project-gallery.css';
 import Header from '../components/Header';
 import Script from 'next/script';
 import SiteIntro from '../components/SiteIntro';

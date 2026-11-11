@@ -1,0 +1,42 @@
+/* One screen per chapter, with room for the fixed header and section navigation. */
+.project-story{
+ --project-header-space:100px;
+ --project-screen-height:calc(100dvh - var(--project-header-space));
+}
+.project-story>.project-story-hero{height:100dvh;min-height:0;max-height:none}
+.project-story>:is(.project-story-section,.project-story-highlights,.project-story-layouts,.project-story-neighbourhood,.project-story-contact){
+ box-sizing:border-box;
+ height:var(--project-screen-height);
+ min-height:0;
+ max-height:var(--project-screen-height);
+ overflow:auto;
+ scroll-margin-top:var(--project-header-space);
+ scrollbar-width:thin;
+}
+.project-story>.project-story-section{padding-bottom:calc(var(--project-section-space) + 72px)}
+.project-story>.project-story-highlights{display:grid;align-items:center}
+.project-story .project-story-highlights-inner{width:100%}
+.project-story .project-story-contact-grid{min-height:100%;padding-bottom:calc(var(--project-section-space) + 72px)}
+.project-story .location-atlas-stage{min-height:100%;height:100%}
+.project-story .location-atlas-sidebar{min-height:0;overflow:auto}
+.project-story .location-atlas-map{min-height:0}
+.project-story .location-atlas-map .nearby-map-stage,
+.project-story .location-atlas-map .location-atlas-fallback{height:100%;min-height:0}
+.project-story .layout-scroll-studio>.project-story-section{padding-bottom:calc(var(--project-section-space) + 72px)}
+.project-story .stack-enabled .layout-scroll-card{position:relative;top:auto}
+.project-story .layout-scroll-card .layout-studio-stage{transform:none;filter:none}
+.project-story .project-journey-intro:not(.journey-motion){padding-block:var(--project-section-space)}
+.project-story .project-journey-intro:not(.journey-motion) .project-journey-stage{padding-block:0;min-height:100%;display:grid;align-items:center}
+.project-story .project-story-section.project-story-facilities{padding:0}
+.project-story .facility-vision-stage{box-sizing:border-box;height:var(--project-screen-height);min-height:0;padding-bottom:90px}
+/* Animated chapters keep their scroll runway; their visible stage uses the same screen. */
+@media(min-width:801px) and (min-height:650px) and (prefers-reduced-motion:no-preference){
+ .project-story>.project-journey-intro.journey-motion{height:340svh;max-height:none;overflow:visible}
+ .project-story .journey-motion .project-journey-stage{top:var(--project-header-space);height:var(--project-screen-height);min-height:0}
+ .project-story>.project-story-facilities:has(.is-vision-scroll){height:auto;max-height:none;overflow:visible}
+}
+@media(max-width:800px){
+ .project-story{--project-header-space:90px}
+ .project-story .location-atlas-stage{height:auto;grid-template-rows:auto minmax(280px,1fr)}
+ .project-story .location-atlas-map{height:55dvh}
+}
