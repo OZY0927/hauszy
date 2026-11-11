@@ -26,7 +26,7 @@ export default function useProjectScrollEffects(root,ready){
     if(list.getBoundingClientRect().top<innerHeight*.94)return;
     gsap.from(list.children,{y:24,opacity:0,stagger:.065,duration:.65,ease:'power2.out',clearProps:'transform,opacity',scrollTrigger:{trigger:list,start:'top 88%',once:true}});
    });
-   page.querySelectorAll('.project-editorial-photo').forEach(photo=>{
+   page.querySelectorAll('.project-editorial-photo:not(.project-filmstrip-focus)').forEach(photo=>{
     reveal(photo,{clipPath:'inset(12% 5% 12% 5%)',y:0,duration:1.15});
     const image=photo.querySelector('img');
     if(desktop&&image)gsap.fromTo(image,{scale:1.16,yPercent:-3},{scale:1.02,yPercent:3,ease:'none',scrollTrigger:{trigger:photo,start:'top bottom',end:'bottom top',scrub:.8}});
