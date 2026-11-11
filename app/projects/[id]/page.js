@@ -7,7 +7,7 @@ import {notFound} from 'next/navigation';
 import {getProfile,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
 import {whatsappNumber,whatsappLink,projectMessage} from '../../../lib/whatsapp';
 import {hasProjectInfo,visibleFacts,projectSections} from '../../../lib/project-visibility';
-import {money,unitCountRange,groupAmenities,safeUrl,formatRange,pricePerSqft,vpQuarter,startingPrice,cardProject,listingName} from '../../../lib/project';
+import {money,unitCountRange,safeUrl,formatRange,pricePerSqft,vpQuarter,startingPrice,cardProject,listingName} from '../../../lib/project';
 import ProjectGallery from '../../../components/ProjectGallery';
 import ProjectSectionNav,{ProjectStory} from '../../../components/ProjectSectionNav';
 import ShowroomGallery from '../../../components/ShowroomGallery';
@@ -30,7 +30,7 @@ export default async function Project({params}){
  const [project,all,profile]=await Promise.all([getPublishedProject(id),getPublishedProjects().catch(()=>null),getProfile().catch(()=>null)]);
  if(!project)notFound();
  const p={...project,name:listingName(project)};
- const visibility=projectSections(p),groups=groupAmenities(visibility.nearby),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
+ const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
  const sections=[...(visibility.overview?[['overview','The project']]:[]),...(visibility.photos&&p.images.length?[['project-photos','Gallery']]:[]),...(visibility.details?[['details','Details']]:[]),...(visibility.units.length?[['units','Layouts']]:[]),...(visibility.facilities.length?[['amenities','Facilities']]:[]),...(visibility.location?[['location','Neighbourhood']]:[]),...(visibility.maintenance?[['maintenance','Charges']]:[]),...(visibility.showroom.length?[['showroom','Showroom']]:[])];
  const introFacts=[['Property type',p.type,'building'],['Tenure',p.tag,'key'],['Construction',p.construction,'industry'],['Estimated VP',vpQuarter(p.vp),'calendar']].filter(([,value])=>hasProjectInfo(value));
  return <ProjectStory key={id}>
@@ -55,7 +55,7 @@ export default async function Project({params}){
 
   {visibility.facilities.length>0&&<section className="project-story-section project-story-facilities" id="amenities"><SectionHeading label="A LITTLE MORE TO EVERY DAY" title={<>More room<br/>to enjoy life.</>}><p>Explore the facilities and shared spaces within the project.</p></SectionHeading><ProjectFacilities facilities={visibility.facilities}/></section>}
 
-  {visibility.location&&<ProjectNeighbourhood project={{name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} groups={groups} hasCoordinates={visibility.hasCoordinates}/>}
+  {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates}/>}
 
   {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<>A clearer view<br/>of ongoing costs.</>}/><Facts rows={[["Maintenance fee per sqft",hasProjectInfo(p.maintenance)?money(p.maintenance)+' / month':null],["Sinking fund",p.sinkingFund]]}/></section>}
 
