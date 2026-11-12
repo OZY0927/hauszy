@@ -2,11 +2,19 @@
 import {useEffect,useRef,useState} from 'react';
 import Icon from './Icon';
 import useProjectScrollEffects from './useProjectScrollEffects';
+import {prepareProjectImages} from '../lib/project-image-preload';
 
 // Hold imperative reveal mutations until React has hydrated the project content.
-export function ProjectStory({children}){
+export function ProjectStory({children,previewImages=[]}){
  const [ready,setReady]=useState(false);
  const story=useRef(null);
+ useEffect(()=>{
+  let cancelled=false;
+  // Lazy loading cannot predict images entering through transformed/pinned scenes.
+  story.current.querySelectorAll('img').forEach(image=>{if(!image.closest('dialog,#keep-exploring'))image.loading='eager'});
+  prepareProjectImages(previewImages).then(()=>{if(!cancelled&&story.current)story.current.dataset.imagesReady='true'});
+  return()=>{cancelled=true};
+ },[previewImages]);
  useEffect(()=>setReady(true),[]);
  useProjectScrollEffects(story,ready);
  return <main ref={story} className="project-story" data-motion-pending={ready?undefined:''}>{children}</main>;

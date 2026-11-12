@@ -2,13 +2,13 @@
 .journey{position:relative;width:100%;min-width:0}
 .root{--roll-height:clamp(220px,calc(100svh - 390px),480px);position:sticky;top:80px;isolation:isolate;width:100%;min-width:0;padding:clamp(12px,1.8vw,24px);border:1px solid #ffffffc9;border-radius:36px;background:linear-gradient(135deg,#ffffffb8,#fffaf16b 48%,#ead7c14d);box-shadow:inset 0 1px 0 #fff,inset 0 -1px 0 #ffffff70,0 24px 70px -32px #583a2e40;backdrop-filter:blur(18px) saturate(145%);-webkit-backdrop-filter:blur(18px) saturate(145%)}
 .root:before{content:'';position:absolute;inset:1px;z-index:-1;pointer-events:none;border-radius:inherit;background:radial-gradient(ellipse at 8% 0%,#ffffffd9,transparent 45%),radial-gradient(ellipse at 95% 100%,#dbb98f38,transparent 50%)}
-.scrollViewport{height:var(--roll-height);overflow:hidden;border-radius:24px}
+.scrollViewport{--roll-step:calc(var(--roll-height) * .4);height:var(--roll-height);overflow:hidden;border-radius:24px}
 .scrollViewport:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
 .stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;height:var(--roll-height);overflow:hidden;isolation:isolate}
 .labelWheel,.wheel{position:relative;height:var(--roll-height);perspective:1200px;overflow:hidden}
 .labelCounter{position:absolute;top:calc(50% - 105px);left:clamp(20px,5vw,80px);z-index:5;color:var(--primary);font-size:11px;letter-spacing:.12em;font-variant-numeric:tabular-nums}
 .labelItem{position:absolute;top:50%;left:0;width:100%;height:140px;margin-top:-70px;padding-inline:clamp(20px,5vw,80px);display:flex;flex-direction:column;justify-content:center;gap:14px;pointer-events:none}
-.labelItem h3{color:var(--primary);margin:0;font-size:clamp(28px,4vw,58px);font-weight:500;line-height:1.1;letter-spacing:-.045em;overflow-wrap:anywhere}
+.labelItem h3{color:var(--primary);margin:0;font-size:clamp(26px,3.4vw,48px);font-weight:500;line-height:1.1;letter-spacing:-.045em;overflow-wrap:anywhere}
 .labelItem small{font-size:11px;color:var(--muted)}
 .item{position:absolute;top:50%;left:50%;width:min(330px,80%);height:300px;margin-top:-150px;margin-left:max(-165px,-40%);display:flex;align-items:center;justify-content:center;padding:30px;text-align:center;color:var(--ink);pointer-events:none}
 .item strong{color:var(--ink);display:block;font-size:clamp(21px,2.6vw,36px);font-weight:500;line-height:1.2;letter-spacing:-.035em;overflow-wrap:anywhere;max-width:100%}
@@ -61,3 +61,5 @@
  .mobileDetails{animation:detail-view-enter .2s ease-out}
  @keyframes detail-view-enter{from{opacity:0}to{opacity:1}}
 }
+
+.labelItem[data-active=false] h3,.item[data-active=false] strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}

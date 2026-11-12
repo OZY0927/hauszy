@@ -1,11 +1,10 @@
 .loading{position:fixed;inset:0;z-index:2100;display:grid;place-items:center;background:var(--paper,#fcf8f2);color:var(--primary,#96351e)}
 .content{text-align:center;padding:24px}
-.mark{display:block;width:clamp(110px,18vw,160px);height:auto;margin:auto;overflow:visible}
-.letter{font-family:var(--font-site),sans-serif;font-size:140px;font-weight:800;letter-spacing:-.06em}
-.wave,.backWave{fill:currentColor}
-.wave{animation:project-loading-wave 2.4s linear infinite}
-.backWave{animation:project-loading-wave 3.6s linear infinite reverse}
+@property --project-reveal-radius{syntax:'<length>';inherits:false;initial-value:0px}
+.revealing{mask-image:radial-gradient(circle at center,transparent var(--project-reveal-radius),#000 calc(var(--project-reveal-radius) + 2px));animation:project-center-reveal .85s cubic-bezier(.65,0,.35,1) forwards;pointer-events:none}
+.revealing .content{opacity:0;transition:opacity .15s ease}
+@keyframes project-center-reveal{from{--project-reveal-radius:0px}to{--project-reveal-radius:75vmax}}
+@media(prefers-reduced-motion:reduce){.revealing{mask-image:none;animation:project-loading-fade .15s linear forwards}}
+@keyframes project-loading-fade{to{opacity:0}}
 .content p{margin:20px 0 0;color:var(--muted,#796b60);font-family:var(--font-site),sans-serif;font-size:13px;line-height:1.5;letter-spacing:.04em}
-@keyframes project-loading-wave{from{transform:translateX(0)}to{transform:translateX(-160px)}}
-@media(prefers-reduced-motion:reduce){.wave,.backWave{animation:none}}
 @media(forced-colors:active){.loading{background:Canvas;color:CanvasText}.content p{color:CanvasText}}

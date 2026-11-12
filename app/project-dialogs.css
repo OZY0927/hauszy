@@ -18,8 +18,43 @@ dialog.project-dialog .gallery-controls button{border:1px solid var(--line);bord
 dialog.project-dialog.floorplan-dialog{height:85svh;padding-top:70px}
 dialog.project-dialog .floorplan-dialog-heading{top:16px;right:16px;padding:0}
 dialog.project-dialog .floorplan-viewport{border-radius:14px;background:#f0e8dd}
-dialog#contactDialog.project-dialog{padding-top:64px;overflow:hidden}
-dialog#contactDialog.project-dialog .contact-form{padding:0 4px}
 @media(max-width:600px){dialog.project-dialog{border-radius:20px;padding:20px;max-height:85svh}dialog.project-dialog.photo-lightbox,dialog#contactDialog.project-dialog{padding-top:64px}dialog.project-dialog.floorplan-dialog{padding-top:70px}}
 @media(prefers-reduced-transparency:reduce){dialog.project-dialog{background:#fcf8f2}dialog.project-dialog::backdrop{backdrop-filter:none;-webkit-backdrop-filter:none}}
 @media(forced-colors:active){dialog.project-dialog{background:Canvas;color:CanvasText;border-color:CanvasText;box-shadow:none}}
+
+/* Enquiry and viewing share a focused, inset-scrolling form. */
+dialog#contactDialog.enquiry-dialog{width:min(640px,calc(100vw - 32px));max-width:640px;max-height:90svh;padding:0;background:#fcf8f2;border-radius:28px}
+.enquiry-dialog .project-dialog-body{padding:40px 30px 24px!important;scrollbar-gutter:stable;overflow-x:hidden}
+dialog#contactDialog.enquiry-dialog :is(.project-dialog-body,.contact-form,.enquiry-confirmation){background:transparent;background-image:none;box-shadow:none;border:0}
+.enquiry-dialog .contact-form{padding:0!important;gap:24px}
+.enquiry-dialog .contact-form[hidden]{display:none}
+.enquiry-dialog-heading{display:block;min-width:0;padding:0 40px 24px 0;border-bottom:1px solid var(--line)}
+.enquiry-dialog-symbol{display:grid;place-items:center;width:48px;height:48px;border:1px solid #96351e24;border-radius:16px;background:#96351e0a;color:var(--primary);margin-bottom:20px}
+.enquiry-dialog-symbol svg{width:23px;height:23px}
+.enquiry-dialog-heading .eyebrow{font-size:10px;letter-spacing:.14em;color:var(--primary);margin-bottom:10px}
+.enquiry-dialog .enquiry-dialog-heading h2{font-size:clamp(28px,4vw,36px);line-height:1.12;letter-spacing:-.045em;max-width:95%;margin:0 0 12px}
+.enquiry-dialog-heading>p{font-size:14px;line-height:1.65;color:var(--muted);margin:0;max-width:45ch}
+.enquiry-dialog-project{display:flex;align-items:center;gap:9px;margin-top:20px;color:var(--primary);font-size:13px;font-weight:500;overflow-wrap:anywhere;min-width:0}
+.enquiry-dialog-project span{min-width:0}
+.enquiry-dialog-project svg{width:16px;height:16px;flex:none}
+.enquiry-dialog-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.enquiry-dialog-fields>*{min-width:0}
+.enquiry-dialog .phone-label{font-size:13px;font-weight:500}
+.enquiry-dialog .phone-row{min-height:48px;border-radius:12px;border-color:#d9cbbd;background:#fffaf5}
+.enquiry-dialog .phone-field .phone-row input[type=tel]{font-size:14px;min-height:46px;padding:13px;border-radius:0 12px 12px 0}
+.enquiry-dialog .contact-form label{font-size:13px;font-weight:500}
+.enquiry-dialog .contact-form :is(input,textarea,select){background:#fffaf5;border-color:#d9cbbd;border-radius:12px;font-size:14px;min-height:48px;padding:13px;transition:border-color .2s,box-shadow .2s}
+.enquiry-dialog .contact-form :is(input,textarea,select):focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px #96351e10}
+.enquiry-dialog .contact-form :is(input,textarea)::placeholder{color:#998a7c;font-weight:400}
+.enquiry-dialog .contact-form .fine-print{font-size:11px;line-height:1.7;color:var(--muted)}
+.enquiry-dialog .contact-form>.search-btn,.enquiry-dialog .enquiry-confirmation>.search-btn{width:100%;min-height:52px;border-radius:999px;font-size:14px;margin:0;gap:10px}
+.enquiry-dialog .contact-form>[role=status]{font-size:13px;color:var(--primary)}
+.enquiry-dialog .contact-form>[role=status]:empty{display:none}
+.enquiry-dialog .viewing-calendar{background:transparent;border:0!important;border-radius:0;padding:0!important}
+.enquiry-dialog .viewing-picker legend{font-size:13px;font-weight:500}
+.enquiry-dialog .viewing-times .tms{width:100%;max-width:none;box-sizing:border-box}
+.enquiry-dialog .viewing-note{font-size:11px;line-height:1.6;color:var(--muted)}
+.enquiry-dialog[open]{animation:enquiry-dialog-enter .3s ease-out both}
+@keyframes enquiry-dialog-enter{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+@media(max-width:600px){dialog#contactDialog.enquiry-dialog{padding:0;border-radius:22px;max-height:88svh}.enquiry-dialog .project-dialog-body{padding:28px 20px 22px!important}.enquiry-dialog-fields{grid-template-columns:1fr;gap:20px}.enquiry-dialog-heading{padding-bottom:20px}.enquiry-dialog .enquiry-dialog-heading h2{max-width:100%;padding-right:12px}}
+@media(prefers-reduced-motion:reduce){.enquiry-dialog[open]{animation:none}}

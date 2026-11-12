@@ -17,10 +17,10 @@ export default function ProjectDetailsCards({facts}){
  // Small resting zones at each matching pair make both columns lock together.
  const magnetic=useTransform(target,value=>{
   const start=Math.floor(value),fraction=value-start;
-  const t=Math.min(1,Math.max(0,(fraction-.12)/.76));
+  const t=Math.min(1,Math.max(0,(fraction-.28)/.44));
   return start+t*t*(3-2*t);
  });
- const smooth=useSpring(magnetic,{stiffness:210,damping:30,mass:.45});
+ const smooth=useSpring(magnetic,{stiffness:280,damping:34,mass:.4});
  const progress=reduced?target:smooth;
  useMotionValueEvent(progress,'change',value=>{
   const next=Math.round(value);
@@ -54,10 +54,10 @@ export default function ProjectDetailsCards({facts}){
 // Both sides derive their position from the same scroll clock, avoiding competing springs.
 function RollItem({absolute,progress,side,active,reduced,children}){
  const distance=useTransform(progress,value=>absolute-(reduced?Math.round(value):value));
- const y=useTransform(distance,value=>value*(side==='label'?-210:230));
+ const y=useTransform(distance,value=>`calc(${value*(side==='label'?-1:1)} * var(--roll-step))`);
  const x=useTransform(distance,value=>Math.abs(value)*(side==='label'?-20:36));
  const rotateX=useTransform(distance,value=>reduced?0:value*(side==='label'?12:-14));
- const scale=useTransform(distance,value=>{const away=Math.min(2,Math.abs(value));return 1-away*.18+(reduced?0:.025*Math.max(0,1-away/.18))});
- const opacity=useTransform(distance,value=>Math.max(0,1-Math.abs(value)*.65));
- return <motion.div className={side==='label'?styles.labelItem:styles.item} aria-hidden={!active} style={{y,x,rotateX,scale,opacity,zIndex:active?3:1}}>{children}</motion.div>;
+ const scale=useTransform(distance,value=>{const away=Math.min(2,Math.abs(value));return 1-away*.26+(reduced?0:.025*Math.max(0,1-away/.18))});
+ const opacity=useTransform(distance,value=>Math.max(0,1-Math.abs(value)*.82));
+ return <motion.div className={side==='label'?styles.labelItem:styles.item} aria-hidden={!active} data-active={active} style={{y,x,rotateX,scale,opacity,zIndex:active?3:1}}>{children}</motion.div>;
 }

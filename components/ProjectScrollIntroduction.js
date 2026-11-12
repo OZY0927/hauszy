@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useRef} from 'react';
+import {useLayoutEffect,useRef} from 'react';
 import {gsap} from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import PreviewImage from './PreviewImage';
@@ -7,10 +7,10 @@ import PreviewImage from './PreviewImage';
 // ScrollTrigger scrubs the native sticky scene and its painted color wipe.
 export default function ProjectScrollIntroduction({photos=[],children}){
  const root=useRef(null),images=photos.filter(Boolean).slice(0,6);
- useEffect(()=>{
+ useLayoutEffect(()=>{
   gsap.registerPlugin(ScrollTrigger);
   const el=root.current,media=gsap.matchMedia();
-  media.add('(min-width: 801px) and (min-height: 650px) and (prefers-reduced-motion: no-preference)',()=>{
+  media.add('(min-width: 851px) and (min-height: 650px) and (prefers-reduced-motion: no-preference)',()=>{
    el.classList.add('journey-motion');
    const stage=el.querySelector('.project-journey-stage');
    // A second, inaccessible ink layer uses the exact same mask and coordinates

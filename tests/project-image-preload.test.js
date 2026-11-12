@@ -36,3 +36,27 @@ test('listing preview manifest warms additional photos without changing the cove
  preload({images:['/cover.jpg'],previewImages:['/one.jpg','/two.jpg']});
  assert.deepEqual(requests.map(image=>image.src),['/one.jpg','/two.jpg']);
 });
+
+test('project readiness waits for all unique images and original fallback to decode',async()=>{
+ const {prepareProjectImages}=await import('../lib/project-image-preload.js');
+ const requests=[];
+ class ImageStub{constructor(){requests.push(this)}decode(){return Promise.resolve()}}
+ const previous=globalThis.window;
+ globalThis.window={Image:ImageStub};
+ try{
+  const source='/media/property/projects/readiness.jpg';
+  let ready=false;
+  const task=prepareProjectImages([source,source,'/second-ready.jpg']).then(()=>{ready=true});
+  assert.equal(requests.length,2);
+  requests[0].onerror();
+  assert.equal(requests[0].src,source);
+  requests[1].onload();
+  await Promise.resolve();
+  assert.equal(ready,false);
+  requests[0].onload();
+  await task;
+  assert.equal(ready,true);
+  await prepareProjectImages([source]);
+  assert.equal(requests.length,2);
+ }finally{globalThis.window=previous}
+});

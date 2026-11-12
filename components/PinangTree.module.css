@@ -1,0 +1,6 @@
+.tree{display:inline-block;max-width:100%;aspect-ratio:1;vertical-align:middle}
+.tree img{display:block;width:100%;height:auto;transform-origin:49% 94%;user-select:none}
+@media(prefers-reduced-motion:no-preference){
+ .animated img{animation:pinang-sway 6s ease-in-out infinite;animation-composition:replace}
+ @keyframes pinang-sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+}

@@ -20,9 +20,9 @@ export default function ViewingPicker({min,date,time,slots,onDate,onTime}){
    <div className="viewing-days"><div className="viewing-weekdays" aria-hidden="true">{['M','T','W','T','F','S','S'].map((day,i)=><span key={i}>{day}</span>)}</div><div className="viewing-date-grid" role="group" aria-label={monthLabel(year,m)}>{Array.from({length:offset},(_,i)=><span key={'blank'+i}/>)}{Array.from({length:days},(_,i)=>{const day=i+1,key=dateKey(year,m,day);return <button type="button" key={key} data-viewing-date aria-label={fullLabel(year,m,day)} aria-pressed={date===key} aria-current={key===min?'date':undefined} disabled={key<min} onClick={()=>onDate(key)}>{day}</button>})}</div></div>
   </fieldset>
   <fieldset className="viewing-times"><legend>Preferred time <small>Malaysia · GMT+8</small></legend>
-   {!date?<p className="viewing-empty">Choose a date to see the time slots.</p>:!slots.length?<p className="viewing-empty">No more times today. Please choose another date.</p>:<><TimeScrubber key={`${date}:${slots[0]}`} min={slots[0]} max={slots[slots.length-1]} start={slots.find(n=>viewingTimeLabel(n)===time)??slots[0]} onChange={minutes=>onTime(viewingTimeLabel(minutes))}/><span className="tms-hint">{time?`Selected: ${time}`:'Drag the ruler or use the arrow keys to choose a time.'}</span></>}
+   {!date?<p className="viewing-empty">Choose a date to see the time slots.</p>:!slots.length?<p className="viewing-empty">No more times today. Please choose another date.</p>:<><TimeScrubber key={`${date}:${slots[0]}`} step={1} min={slots[0]} max={slots[slots.length-1]} start={slots.find(n=>viewingTimeLabel(n)===time)??slots[0]} onChange={minutes=>onTime(viewingTimeLabel(minutes))}/><span className="tms-hint">{time?`Selected: ${time}`:'Drag the ruler or use the arrow keys to choose a time.'}</span></>}
 
   </fieldset>
-  <small className="viewing-note">30-minute slots, 9:00 am–6:30 pm. Subject to agent confirmation.</small>
+  <small className="viewing-note">Choose any minute, 9:00 am–6:30 pm. Subject to agent confirmation.</small>
  </div>;
 }

@@ -34,7 +34,7 @@ export default async function Project({params}){
  const p={...project,name:listingName(project)};
  const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
  const sections=[...(visibility.overview||visibility.photos?[['overview','The project']]:[]),...(visibility.photos&&p.images.length?[['project-photos','Gallery']]:[]),...(visibility.details?[['details','Details']]:[]),...(visibility.units.length?[['units','Layouts']]:[]),...(visibility.facilities.length?[['amenities','Facilities']]:[]),...(visibility.location?[['location','Neighbourhood']]:[]),...(visibility.maintenance?[['maintenance','Charges']]:[]),...(visibility.showroom.length?[['showroom','Showroom']]:[])];
- return <ProjectStory key={id}>
+ return <ProjectStory key={id} previewImages={[...(visibility.photos?p.images:[]),...visibility.units.flatMap(unit=>unit.floorPlanUrls),...visibility.showroom]}>
   <JsonLd data={projectStructuredData(p)}/>
   <ProjectGallery photos={visibility.photos?p.images:[]} name={p.name} hero={{id:p.id,location:hasProjectInfo(p.location)?p.location:null,type:p.type,mode:p.mode,price:startingPrice(p),target:sections[0]?.[0]||(visibility.enquiry?'enquiry':null)}}/>
   <ProjectSectionNav sections={sections} enquiry={visibility.enquiry}/>
@@ -59,7 +59,7 @@ export default async function Project({params}){
 
   {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates} amenities={visibility.nearby}/>}
 
-  {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<>A clearer view<br/>of ongoing costs.</>}/><Facts rows={[["Maintenance fee per sqft",hasProjectInfo(p.maintenance)?money(p.maintenance)+' / month':null],["Sinking fund",p.sinkingFund]]}/></section>}
+  {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<><span className="charges-heading-line">A clearer view</span><span className="charges-heading-line">of ongoing costs.</span></>}/><Facts rows={[["Maintenance fee per sqft",hasProjectInfo(p.maintenance)?money(p.maintenance)+' / month':null],["Sinking fund",p.sinkingFund]]}/></section>}
 
   {visibility.showroom.length>0&&<section className="project-story-section project-story-showroom" id="showroom"><SectionHeading label="STEP INSIDE" title={<>Picture the<br/>possibilities.</>}><p>A look inside the showroom.</p></SectionHeading><ShowroomGallery photos={visibility.showroom} name={p.name}/><p className="project-story-fine-print">Showroom units are for illustration only and may include furnishings and finishes not included in the sale.</p></section>}
 

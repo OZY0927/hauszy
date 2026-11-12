@@ -54,10 +54,8 @@ const stillness = () =>
   typeof window !== "undefined" &&
   !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-const W = 300;
 /* px per minute along the ruler */
 const PX = 2;
-const HALF = (W - 36) / 2;
 const DAY = 1440;
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -110,6 +108,15 @@ export default function TimeScrubber({min=540,max=1110,start=min,onChange,step="
   const knobs = useRef({ step: Number(step) || 15, momentum });
   knobs.current = { step: Number(step) || 15, momentum };
   const ruler = useRef(null);
+  const [width,setWidth]=useState(300);
+  const half=Math.max(1,(width-36)/2);
+  useEffect(()=>{
+    const node=ruler.current;if(!node)return;
+    const measure=()=>setWidth(node.clientWidth);
+    measure();
+    const observer=new ResizeObserver(measure);observer.observe(node);
+    return()=>observer.disconnect();
+  },[]);
   const lastStep = useRef(Math.floor(start / (Number(step) || 15)));
 
   /* a tick under the thumb for every step crossed, a firmer one
@@ -230,11 +237,11 @@ export default function TimeScrubber({min=540,max=1110,start=min,onChange,step="
 
   /* ── the ticks in the window ───────────────────────────── */
   const ticks = [];
-  const span = HALF / PX + 10;
+  const span = half / PX + 10;
   for (let m = Math.ceil((pos - span) / 5) * 5; m <= pos + span; m += 5) {
     if(m<min||m>max)continue;
     const x = (m - pos) * PX;
-    const f = clamp(1 - Math.pow(Math.abs(x) / HALF, 2), 0, 1);
+    const f = clamp(1 - Math.pow(Math.abs(x) / half, 2), 0, 1);
     const w = wrap(m);
     ticks.push({ m, x, f, kind: w % 60 === 0 ? "hour" : w % 15 === 0 ? "quarter" : "five" });
   }

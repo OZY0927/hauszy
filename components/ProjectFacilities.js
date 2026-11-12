@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useId,useRef,useState} from 'react';
+import {useEffect,useLayoutEffect,useId,useRef,useState} from 'react';
 import Icon from './Icon';
 import {gsap} from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
@@ -28,7 +28,7 @@ export default function ProjectFacilities({facilities}){
     for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}
     setPreview(shuffled.slice(0,10));setActive(0);
   },[facilities]);
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     gsap.registerPlugin(ScrollTrigger);
     const root=vision.current,stage=root.querySelector('.facility-vision-stage'),media=gsap.matchMedia();
     let disposed=false;
@@ -36,7 +36,7 @@ export default function ProjectFacilities({facilities}){
       root.classList.add('is-vision-scroll');
       const playhead={progress:0},steps=preview.length+(hasMore?1:0),finalBeat=preview.length/steps;
       const tween=gsap.timeline({scrollTrigger:{
-        trigger:stage,start:'top 100px',end:()=>'+='+Math.round(innerHeight*Math.min(3,Math.max(1,steps*.18))),
+        trigger:stage,start:'top top',end:()=>'+='+Math.round(innerHeight*Math.min(3,Math.max(1,steps*.18))),
         pin:true,pinSpacing:true,scrub:.35,anticipatePin:1,invalidateOnRefresh:true,
       }}).to(playhead,{progress:1,duration:1,ease:'none',onUpdate:()=>setActive(Math.min(preview.length-1,Math.floor(playhead.progress*steps)))},0);
       if(hasMore){
@@ -55,7 +55,7 @@ export default function ProjectFacilities({facilities}){
     return()=>{disposed=true;media.revert()};
   },[facilities,preview.length,hasMore]);
   // Only compact-height desktop screens get the final centered invitation.
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if(!hasMore)return;
     const stage=vision.current.querySelector('.facility-vision-stage'),more=stage.querySelector('.facility-vision-more');
     const end=current===preview.length-1;
