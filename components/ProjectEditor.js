@@ -5,16 +5,57 @@ import {vpQuarter,SHOWROOM_LIMIT} from '../lib/project';
 import {groups} from '../lib/project-fields';
 import {isAdminToken} from '../lib/admin-access';
 import {buildProject,UNIT_TEXT} from '../lib/project-editor';
+import {projectChanges} from '../lib/project-changes';
+import {uploadProjectMedia} from '../lib/project-media';
 import {parseProjectJson} from '../lib/project-import';
 import {getFirebase,refreshSite,uploadPhoto} from '../lib/firebase-client';
-import {doc,writeBatch,serverTimestamp,getDocFromServer} from 'firebase/firestore';
+import {doc,writeBatch,serverTimestamp,deleteField} from 'firebase/firestore';
 import {authErrorMessage} from '../lib/auth-errors';
 import PhotoPicker from './PhotoPicker';
 import Icon from './Icon';
 import {PROJECT_SECTIONS,sectionVisibility} from '../lib/project-sections';
-export default function ProjectEditor({record,options,onClose,onSave}){const dialog=useRef(null),[form,setForm]=useState({...record,status:record?.status==='Published'?'Published':'Archived',vp:vpQuarter(record?.vp)||record?.vp||'',mapCoordinates:record?.latitude!=null&&record?.longitude!=null?`${record.latitude}, ${record.longitude}`:''}),[units,setUnits]=useState(record?.units||[]),[floorPlans,setFloorPlans]=useState((record?.units||[]).map(unit=>({key:crypto.randomUUID(),photos:floorPlanList(unit).map(url=>({url}))}))),[amenities,setAmenities]=useState(record?.nearbyAmenities||[]),[photos,setPhotos]=useState((record?.images||[]).map(url=>({url}))),[showroom,setShowroom]=useState((record?.showroomImages||[]).map(url=>({url}))),[json,setJson]=useState(''),[importNotice,setImportNotice]=useState(''),[busy,setBusy]=useState(false),[status,setStatus]=useState('');useEffect(()=>{dialog.current.showModal()},[]);function update(k,v){setForm(f=>({...f,[k]:v}))}
+export default function ProjectEditor({record,options,onClose,onSave}){const dialog=useRef(null),[form,setForm]=useState({...record,status:record?.status==='Published'?'Published':'Archived',vp:vpQuarter(record?.vp)||record?.vp||'',mapCoordinates:record?.latitude!=null&&record?.longitude!=null?`${record.latitude}, ${record.longitude}`:''}),[units,setUnits]=useState(record?.units||[]),[floorPlans,setFloorPlans]=useState((record?.units||[]).map(unit=>({key:crypto.randomUUID(),photos:floorPlanList(unit).map(url=>({url}))}))),[amenities,setAmenities]=useState(record?.nearbyAmenities||[]),[photos,setPhotos]=useState((record?.images||[]).map(url=>({url}))),[showroom,setShowroom]=useState((record?.showroomImages||[]).map(url=>({url}))),[json,setJson]=useState(''),[importNotice,setImportNotice]=useState(''),[busy,setBusy]=useState(false),[status,setStatus]=useState('');const initial=useRef({form,units,amenities});useEffect(()=>{dialog.current.showModal()},[]);function update(k,v){setForm(f=>({...f,[k]:v}))}
 function importJson(){try{const imported=parseProjectJson(json,form.status);setForm(imported.form);setUnits(imported.units);setFloorPlans(imported.units.map(unit=>({key:crypto.randomUUID(),photos:floorPlanList(unit).map(url=>({url}))})));setAmenities(imported.nearbyAmenities);setPhotos(imported.photos);setShowroom(imported.showroomPhotos);setImportNotice('Imported. Review the fields below, then save the project.')}catch(e){setImportNotice(e.message)}}
-async function save(e){e.preventDefault();setBusy(true);setStatus('Saving…');try{const id=record?.id||crypto.randomUUID(),value=buildProject(form,units,amenities,id);value.units=await uploadLayoutFloorPlans(value.units,floorPlans.map(selection=>selection.photos),`projects/${id}`,uploadPhoto);value.images=[];for(const photo of photos)value.images.push(await uploadPhoto(photo,`projects/${id}`));value.showroomImages=[];for(const photo of showroom.slice(0,SHOWROOM_LIMIT))value.showroomImages.push(await uploadPhoto(photo,`projects/${id}`));value.updatedAt=new Date().toISOString();const {db,auth}=getFirebase();if(!auth.currentUser)throw Error('Your session expired. Sign in again.');const token=await auth.currentUser.getIdTokenResult(true);if(!isAdminToken(token))throw Error('Administrator access required. Sign in again.');const batch=writeBatch(db),payload={...value,updatedAt:serverTimestamp()};batch.set(doc(db,'projects',id),payload);if(value.status==='Published')batch.set(doc(db,'publicProjects',id),payload);else batch.delete(doc(db,'publicProjects',id));await batch.commit();await refreshSite(['projects']);const result=await getDocFromServer(doc(db,'projects',id));if(!result.exists())throw Error('Saved data could not be verified. Refresh before trying again.');await onSave(value);onClose()}catch(e){setStatus(e.code?authErrorMessage(e):e.message)}finally{setBusy(false)}}
+const projectId=useRef(record?.id||crypto.randomUUID()),uploadedPhotos=useRef(new Map());
+async function save(e){
+ e.preventDefault();if(busy)return;setBusy(true);setStatus('Saving...');
+ try{
+  const {db,auth}=getFirebase();
+  if(!auth.currentUser)throw Error('Your session expired. Sign in again.');
+  if(!isAdminToken(await auth.currentUser.getIdTokenResult()))throw Error('Administrator access required. Sign in again.');
+  const id=projectId.current,value=buildProject(form,units,amenities,id);
+  Object.assign(value,await uploadProjectMedia({units:value.units,floorPlans:floorPlans.map(selection=>selection.photos),photos,showroom:showroom.slice(0,SHOWROOM_LIMIT)},`projects/${id}`,uploadPhoto,{
+   cache:uploadedPhotos.current,
+   onProgress:(done,total)=>setStatus(total?`Uploading photos (${done}/${total})...`:'Saving project...'),
+  }));
+  setStatus('Saving project...');
+  let changes={fields:value,removed:[]};
+  if(record){
+   let baseline;
+   try{baseline=buildProject(initial.current.form,initial.current.units,initial.current.amenities,id)}catch{baseline={...record}}
+   baseline.units=await uploadLayoutFloorPlans(baseline.units||[],(baseline.units||[]).map(unit=>floorPlanList(unit).map(url=>({url}))),`projects/${id}`,async photo=>photo.url);
+   baseline.images=record.images||[];baseline.showroomImages=record.showroomImages||[];
+   changes=projectChanges(baseline,value);
+   if(!Object.keys(changes.fields).length&&!changes.removed.length){setStatus('No changes to save.');return}
+  }
+  const patch={...changes.fields,...Object.fromEntries(changes.removed.map(key=>[key,deleteField()])),updatedAt:serverTimestamp()};
+  const batch=writeBatch(db);
+  if(record)batch.update(doc(db,'projects',id),patch);
+  else batch.set(doc(db,'projects',id),{...value,updatedAt:serverTimestamp()});
+  if(value.status==='Published'){
+   if(record?.status==='Published')batch.set(doc(db,'publicProjects',id),patch,{mergeFields:Object.keys(patch)});
+   else batch.set(doc(db,'publicProjects',id),{...value,updatedAt:serverTimestamp()});
+  }else if(record?.status==='Published')batch.delete(doc(db,'publicProjects',id));
+  await batch.commit();
+  // The acknowledged batch confirms persistence; no extra document read is needed.
+  value.updatedAt=new Date().toISOString();
+  await refreshSite(['projects']);
+  const saved=record?{...record,...changes.fields,updatedAt:value.updatedAt}:value;
+  for(const key of changes.removed)delete saved[key];
+  await onSave(saved);
+  onClose();
+ }catch(e){setStatus(e.code?authErrorMessage(e):e.message)}finally{setBusy(false)}
+}
 function choiceOptions(key,defaults,current=form[key]){return [...new Set([...(options?.[key]||defaults.filter(Boolean)),current].filter(Boolean))]}
 const visible=sectionVisibility(form.sectionVisibility),parts=[['Page sections'],...groups.map(([heading])=>[heading]),['Nearby amenities'],['Unit layouts'],['Project photos'],['Showroom photos']],jump=i=>dialog.current.querySelector(`[data-part="${i}"]`)?.scrollIntoView({block:'start'});
 return <dialog className="st-sheet" ref={dialog} aria-labelledby="editor-title" onCancel={e=>{if(e.target!==e.currentTarget)return;if(busy)e.preventDefault();else onClose()}}><form method="post" onSubmit={save}>
