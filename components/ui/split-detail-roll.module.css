@@ -66,6 +66,5 @@
 
 /* Keep the pinned details centered below the navigation on every screen height. */
 @media(min-width:851px){
- .root{--roll-height:max(220px,calc(100svh - 260px));top:88px;min-height:calc(100svh - 112px);display:flex;flex-direction:column;justify-content:center}
- .scrollViewport{flex:none}
+ .root{top:max(80px,calc((100svh + 80px - var(--detail-panel-height,480px)) / 2))}
 }

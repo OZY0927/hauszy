@@ -8,6 +8,13 @@ const wrap=(value,count)=>(value%count+count)%count;
 export default function ProjectDetailsCards({facts}){
  const [position,setPosition]=useState(0);
  const scrollRef=useRef(null);
+ const panelRef=useRef(null);
+ useEffect(()=>{
+  const panel=panelRef.current;if(!panel)return;
+  const measure=()=>panel.style.setProperty('--detail-panel-height',`${panel.offsetHeight}px`);
+  const observer=new ResizeObserver(measure);observer.observe(panel);measure();
+  return()=>observer.disconnect();
+ },[]);
  const dialogRef=useRef(null);
  const [dialogOpen,setDialogOpen]=useState(false);
  useEffect(()=>{if(!dialogOpen)return;const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=previous}},[dialogOpen]);
@@ -30,7 +37,7 @@ export default function ProjectDetailsCards({facts}){
  const current=wrap(position,facts.length);
  const go=direction=>window.scrollBy({top:direction*360,behavior:reduced?'instant':'smooth'});
  const slots=Array.from({length:Math.min(5,facts.length)},(_,index)=>index-Math.floor(Math.min(5,facts.length)/2));
- return <><dl className={styles.mobileDetails} aria-label="Project specifications">{facts.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl><div ref={scrollRef} className={styles.journey} style={{height:`calc(100svh + ${facts.length*360}px)`}}><div className={styles.root}>
+ return <><dl className={styles.mobileDetails} aria-label="Project specifications">{facts.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl><div ref={scrollRef} className={styles.journey} style={{height:`calc(100svh + ${facts.length*360}px)`}}><div ref={panelRef} className={styles.root}>
   <div className={styles.scrollViewport} role="region" aria-roledescription="carousel" aria-label="Project specifications" tabIndex={0} onKeyDown={event=>{if(event.key==='ArrowDown'||event.key==='ArrowRight'){event.preventDefault();go(1)}if(event.key==='ArrowUp'||event.key==='ArrowLeft'){event.preventDefault();go(-1)}}}>
    <div className={styles.stage}>
    <div className={styles.labelWheel}>
