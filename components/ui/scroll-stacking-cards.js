@@ -17,21 +17,23 @@ export function ProjectDeck({children,renderScene}){
  const progress=scrollYProgress;
  useMotionValueEvent(progress,'change',value=>{const next=layoutFront(value,count);setFront(previous=>previous===next?previous:next)});
  useEffect(()=>{
+  const element=deck.current;if(!element)return;
   const media=matchMedia('(min-width:851px) and (min-height:500px) and (prefers-reduced-motion:no-preference)');
-  let frame=0;
+  let frame=0,disposed=false;
   const measure=()=>{
    frame=0;
-   const contents=[...deck.current.querySelectorAll('[data-deck-content] > article')];
+   if(disposed||!element.isConnected)return;
+   const contents=[...element.querySelectorAll('[data-deck-content] > article')];
    const tallest=Math.max(1,...contents.map(element=>element.offsetHeight));
    setCardHeight(tallest);
    setFit(Math.min(1,(innerHeight-150)/tallest));
    setEnabled(count>1&&media.matches);
   };
-  const schedule=()=>{if(!frame)frame=requestAnimationFrame(measure)};
+  const schedule=()=>{if(!disposed&&!frame)frame=requestAnimationFrame(measure)};
   const observer=new ResizeObserver(schedule);
-  deck.current.querySelectorAll('[data-deck-content] > article').forEach(element=>observer.observe(element));
+  element.querySelectorAll('[data-deck-content] > article').forEach(article=>observer.observe(article));
   media.addEventListener('change',schedule);window.addEventListener('resize',schedule);measure();
-  return()=>{cancelAnimationFrame(frame);observer.disconnect();media.removeEventListener('change',schedule);window.removeEventListener('resize',schedule)};
+  return()=>{disposed=true;cancelAnimationFrame(frame);observer.disconnect();media.removeEventListener('change',schedule);window.removeEventListener('resize',schedule)};
  },[count]);
  return <div ref={deck} className={styles.deck} data-enabled={enabled} data-decorated={!!renderScene} style={{height:enabled?`${count*100}svh`:undefined,'--deck-card-height':`${cardHeight}px`,'--layout-visible-height':`${cardHeight*(enabled?fit:1)}px`}}>
   <div className={styles.stage} data-layout-scene data-pinned={enabled}>{renderScene?.({progress,foregroundZ:count+1})}{cards.map((card,index)=><DeckCard key={card.key??index} index={index} count={count} progress={progress} enabled={enabled} fit={fit} centerOffset={(1-fit)*cardHeight/2} active={front===index}>{card}</DeckCard>)}</div>
