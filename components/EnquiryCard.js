@@ -7,7 +7,6 @@ import PhoneInput from './PhoneInput';
 import EnquiryConfirmation from './EnquiryConfirmation';
 import ViewingPicker from './ViewingPicker';
 import {projectMessage,whatsappLink} from '../lib/whatsapp';
-import {phoneDisplay} from '../lib/phone';
 // Available viewing minutes from 9:00 am to 6:30 pm.
 const SLOTS=Array.from({length:571},(_,i)=>540+i);
 // agent: {name,ren,agency,portrait,whatsapp} from the admin profile; whatsapp is digits with country code, '' when not set.

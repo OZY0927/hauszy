@@ -34,13 +34,14 @@ export function ProjectDeck({children}){
   return()=>{cancelAnimationFrame(frame);observer.disconnect();media.removeEventListener('change',schedule);window.removeEventListener('resize',schedule)};
  },[count]);
  return <div ref={deck} className={styles.deck} data-enabled={enabled} style={{height:enabled?`${count*100}svh`:undefined,'--deck-card-height':`${cardHeight}px`}}>
-  <div className={styles.stage}>{cards.map((card,index)=><DeckCard key={card.key??index} index={index} count={count} progress={progress} enabled={enabled} fit={fit} active={front===index}>{card}</DeckCard>)}</div>
+  <div className={styles.stage}>{cards.map((card,index)=><DeckCard key={card.key??index} index={index} count={count} progress={progress} enabled={enabled} fit={fit} centerOffset={(1-fit)*cardHeight/2} active={front===index}>{card}</DeckCard>)}</div>
  </div>;
 }
 
-function DeckCard({children,index,count,progress,enabled,fit,active}){
+function DeckCard({children,index,count,progress,enabled,fit,centerOffset,active}){
  const pose=useTransform(progress,value=>layoutPose(index,value,count));
- const y=useTransform(pose,({entered,above})=>`calc(${(1-entered)*108}svh - ${above*18}px)`);
+ // Center the fitted front card, but let covered cards recede from their top edge.
+ const y=useTransform(pose,({entered,above})=>`calc(${(1-entered)*108}svh + ${centerOffset-above*18}px)`);
  const rotateX=useTransform(pose,({entered})=>-(1-entered)*22);
  const scale=useTransform(pose,({entered,above})=>(.9+.1*entered-above*.05)*fit);
  const filter=useTransform(pose,({entered,above})=>`blur(${((1-entered)**2*3+above*.3).toFixed(2)}px)`);

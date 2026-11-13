@@ -264,8 +264,6 @@ footer.site-footer{display:block;max-width:none;margin:64px 0 0;padding:0;border
 .footer-bottom{max-width:1280px;margin:auto;padding:18px 5% 28px;border-top:1px solid var(--line);display:flex;gap:10px 28px;align-items:center;flex-wrap:wrap;color:var(--muted)}
 .site-footer .footer-bottom>span{width:auto;margin:0;font-size:var(--text-body);color:var(--muted)}
 
-
-
 .social-label{display:inline-flex;align-items:center;gap:8px}
 .social-label .icon{width:16px;height:16px;color:var(--primary)}
 @media(max-width:900px){.footer-main{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}}
@@ -472,29 +470,7 @@ img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;user-select
 
 .project-section-switches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.project-section-switches .publish-toggle{display:flex;width:100%;justify-content:flex-start;padding:14px;border:1px solid var(--line);border-radius:8px;background:white;text-align:left;gap:12px}.project-section-switches .publish-track{flex:none}.project-section-switches .publish-text{flex:1;white-space:normal;font-size:var(--text-body)}.project-section-switches small{font-size:var(--text-caption);color:var(--muted)}.property-layout.without-enquiry{grid-template-columns:minmax(0,1fr)}.property-nav:empty{display:none}@media(max-width:650px){.project-section-switches{grid-template-columns:1fr}}
 
-/* A scroll-driven oval window opens into a full-width property story. */
-.home-reveal{position:relative;margin:90px 0 0;padding-bottom:0;background:var(--paper)}
-.home-reveal-intro{max-width:1280px;margin:0 auto;padding:0 5% 40px;display:flex;align-items:end;justify-content:space-between;gap:40px}
-.home-reveal-intro h2{max-width:550px;margin-bottom:0}.home-reveal-intro p{font-size:var(--text-body);margin:0}
-.home-reveal-stage{position:relative;height:calc(100svh - 100px);min-height:560px;background:var(--paper)}
-.home-reveal.is-scroll-ready .home-reveal-travel{height:85svh}.home-reveal.is-scroll-ready .home-reveal-stage{position:sticky;top:100px}
-.home-reveal-window{position:absolute;inset:0;overflow:hidden;isolation:isolate;clip-path:inset(var(--window-inset,0%) round var(--window-round,0%));background:var(--ink)}
-.home-reveal-image{position:absolute;width:100%;height:100%;object-fit:cover;transform:scale(var(--image-scale,1))}
-.is-scroll-ready .home-reveal-image{will-change:transform}
-.home-reveal-shade{position:absolute;inset:0;background:linear-gradient(180deg,#211b1833 0%,#211b1840 30%,#211b18d9 100%)}
-.home-reveal-content{position:absolute;inset:0;padding:8% 7% 65px;display:flex;flex-direction:column;justify-content:end;color:white}
-.home-reveal-kicker{font-size:var(--text-control);letter-spacing:2px;margin-bottom:24px}
-.home-reveal-content h2{font:500 calc(clamp(2.5rem,5.7vw,5.375rem) + 1px)/1.13 Manrope;letter-spacing:-2.5px;margin:0 0 32px;color:white}
-.home-reveal-content h2 em{font-family:var(--font-site);font-weight:400;color:#ead5b9}
-.home-reveal-bottom{display:flex;align-items:end;justify-content:space-between;gap:24px}.home-reveal-bottom p{font-size:var(--text-body);line-height:1.7;color:#ffffffd9;margin:0}
-.home-reveal-bottom a{display:inline-flex;align-items:center;justify-content:space-between;gap:32px;background:var(--paper);color:var(--ink);padding:18px 24px;border-radius:999px;font-size:var(--text-body);flex-shrink:0}.home-reveal-bottom a:hover{background:var(--secondary)}
-.home-reveal-caption{position:absolute;right:7%;bottom:22px;color:#ffffffa6;font-size:var(--text-caption)}
-.home-reveal-hint{position:absolute;top:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;white-space:nowrap;font-size:var(--text-label);letter-spacing:2px;color:var(--ink);mix-blend-mode:multiply;pointer-events:none}
-.home-reveal-window:focus-within{clip-path:inset(0 round 0)}
-@media(max-width:800px){.home-reveal{margin-top:60px}.home-reveal-intro{padding:0 6% 28px;display:block}.home-reveal-intro p{margin-top:20px}.home-reveal-stage{height:calc(100svh - 80px);min-height:540px}.home-reveal.is-scroll-ready .home-reveal-stage{top:80px}.home-reveal.is-scroll-ready .home-reveal-travel{height:65svh}.home-reveal-content{padding:40px 7% 60px}.home-reveal-content h2{font-size:calc(clamp(2.125rem,7vw,3.5rem) + 1px);letter-spacing:-1.5px}.home-reveal-bottom{align-items:start;flex-direction:column;gap:20px}.home-reveal-bottom p{font-size:var(--text-body)}.home-reveal-bottom a{padding:14px 20px}.home-reveal-kicker{font-size:var(--text-label);letter-spacing:1.5px}.home-reveal-caption{font-size:var(--text-label);left:7%;right:auto}}
-@media(prefers-reduced-motion:reduce){.home-reveal.is-scroll-ready .home-reveal-travel{height:0}.home-reveal.is-scroll-ready .home-reveal-stage{position:relative;top:auto}.home-reveal-window{clip-path:none}.home-reveal-image{transform:none}.home-reveal-hint{display:none}}
-
-.home-page{max-width:none;padding:0}.home-reveal-hint{color:var(--paper);mix-blend-mode:difference}
+.home-page{max-width:none;padding:0}
 
 /* Property collection: a persistent filter rail and quiet, image-led cards. */
 .projects-page{max-width:1600px;padding:48px 4% 70px;margin:auto}
@@ -898,13 +874,6 @@ h1,h2,h3,h4{font-family:var(--font-site);font-weight:500}
 ::view-transition-new(.project-morph){animation-duration:450ms}
 @media(prefers-reduced-motion:reduce){::view-transition-group(.project-morph),::view-transition-old(.project-morph),::view-transition-new(.project-morph){animation-duration:0s!important}}
 
-.project-transition-overlay{position:fixed;z-index:1100;pointer-events:none;overflow:hidden;background:var(--secondary);box-shadow:0 15px 70px #352a2526}
-.project-transition-overlay img{width:100%;height:100%;object-fit:cover;display:block}
-@media(prefers-reduced-motion:reduce){.project-transition-overlay{display:none}}
-
-
-
-
 /* Bencho Time scrubber — MIT: https://bencho.dev/licence */
 /* ══ Time scrubber ═══════════════════════════════════════ */
 .tms {
@@ -1245,68 +1214,6 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
 .tool-design-eligibility .dsr-final-result .uc-summary{color:var(--paper);border-color:#fcf8f240}
 .tool-design-eligibility .calculator-sources{margin:26px 0 0 298px}
 @media(max-width:800px){.tool-design-eligibility .tools-intro{display:block;padding-bottom:28px;margin-bottom:24px}.tool-design-eligibility .tools-intro>p{margin:20px 0 0;max-width:550px}.tool-design-eligibility .dsr-wizard{grid-template-columns:1fr;gap:18px}.tool-design-eligibility .dsr-progress{position:static;padding:20px;border-radius:14px}.tool-design-eligibility .dsr-progress-head{flex-direction:row;align-items:center;justify-content:space-between;margin-bottom:14px}.tool-design-eligibility .dsr-progress-head>strong{display:none}.tool-design-eligibility .dsr-stage-number{font-size:2.0625rem;letter-spacing:-1.5px}.tool-design-eligibility .dsr-stage-number small{font-size:0.9375rem}.tool-design-eligibility .dsr-step-tabs{flex-direction:row;justify-content:space-between;gap:8px;margin:16px 0 0}.tool-design-eligibility .dsr-step-tabs button{flex-direction:column;font-size:var(--text-caption);gap:7px;text-align:center}.tool-design-eligibility .dsr-plan-snapshot{display:none}.tool-design-eligibility .dsr-step-panel{padding:25px 22px;min-height:0;border-radius:14px}.tool-design-eligibility .calculator-sources{margin:24px 0 0}.tool-design-eligibility .dsr-step-fields .uc-number input{font-size:1.9375rem}.tool-design-eligibility .dsr-privacy-note{display:block}.tool-design-eligibility .dsr-debt-row{gap:8px;grid-template-columns:minmax(0,1fr) minmax(0,.8fr) 26px}.tool-design-eligibility .dsr-debt-row input{padding:12px 8px}}
-
-/* Card showcase (homepage hot projects): a pinned 3D ring of photo cards unfolds into a tilted wall, which slides left
-   for the collection text. Scene timing and geometry live in lib/card-showcase/config.js; this is layout and the text reveal.
-   Before scripts run, without WebGL or with reduced motion, a still CSS wall stands in for the canvas. */
-.cs{position:relative;height:calc(var(--cs-scroll,4.6)*100svh);background:var(--paper)}
-.cs-stage{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;isolation:isolate}
-.cs-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;transition:opacity .8s cubic-bezier(.22,1,.36,1)}
-.cs-canvas[data-ready]{opacity:1}
-.cs:not(.is-live) .cs-canvas{display:none}
-.cs-wall{position:absolute;top:0;bottom:0;left:0;width:50%;overflow:hidden;perspective:1600px}
-.cs-wall-plane{position:absolute;left:50%;top:50%;width:150%;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;transform:translate(-50%,-50%) rotateZ(12deg) rotateY(14deg) rotateX(28deg)}
-.cs-wall-plane img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:6px;background:var(--line)}
-.cs-panel{position:absolute;top:0;bottom:0;left:50%;right:0;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:90px 7% 40px 6%;color:var(--ink)}
-.cs-label{display:flex;align-items:center;gap:12px;margin-bottom:28px;font-size:var(--text-label);font-weight:500;letter-spacing:.17em;color:var(--primary)}
-.cs-label:before{content:'';width:28px;height:1px;background:var(--secondary)}
-.cs-title{margin:0;font-size:calc(clamp(3rem,5.6vw,6.5rem) + 1px);font-weight:500;line-height:1;letter-spacing:-.05em}
-.cs-line{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
-.cs-line>span{display:block}
-.cs-copy{max-width:30rem;margin:30px 0 0;font-size:calc(clamp(1rem,1.15vw,1.25rem) + 1px);line-height:1.7;color:var(--muted)}
-.cs-cta{display:inline-flex;align-items:center;gap:18px;margin-top:36px;padding:18px 24px;border-radius:14px;background:var(--primary);color:var(--paper);font-size:var(--text-small);font-weight:600;transition:background-color .25s,gap .3s cubic-bezier(.22,1,.36,1)}
-.cs-cta>.icon{width:18px;height:18px}
-.cs-cta:hover{background:var(--ink);gap:24px}
-.cs-cta:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
-.cs-extra{width:min(100%,30rem)}
-/* The reveal is scroll-triggered and reverses on the way back up; it is only armed while the scene is live,
-   and focus always shows the text so keyboard users never land on something invisible. */
-.cs.is-live .cs-panel>*{opacity:0;transform:translateY(22px);transition:opacity .45s ease,transform .7s cubic-bezier(.22,1,.36,1)}
-.cs.is-live .cs-panel>.cs-title{opacity:1;transform:none}
-.cs.is-live .cs-line>span{transform:translateY(105%);transition:transform .9s cubic-bezier(.22,1,.36,1)}
-.cs.is-live .cs-panel:not([data-revealed]){pointer-events:none}
-.cs.is-live .cs-panel[data-revealed]>*{opacity:1;transform:none;transition-delay:calc(var(--d,0)*.09s)}
-.cs.is-live .cs-panel[data-revealed] .cs-line>span{transform:none;transition-delay:calc(.08s + var(--l,0)*.08s)}
-.cs.is-live .cs-panel:focus-within>*,.cs.is-live .cs-panel:focus-within .cs-line>span{opacity:1;transform:none}
-.cs.is-still{height:auto}
-.cs.is-still .cs-stage{position:relative;height:auto;min-height:min(100svh,860px)}
-.cs.is-still .cs-panel{position:relative;inset:auto;min-height:inherit;margin-left:50%}
-@media(max-height:760px) and (min-width:801px){.cs-cta{margin-top:26px}}
-@media(max-width:800px){
- .cs{height:calc(var(--cs-scroll-compact,3.4)*100svh)}
- .cs-stage{min-height:520px}
- .cs-wall{width:auto;right:0;bottom:56%}
- .cs-wall-plane{width:130%;grid-template-columns:repeat(3,1fr);gap:10px}
- .cs-panel{top:44%;left:0;padding:18px 6% 24px;justify-content:flex-start}
- .cs-label{margin-bottom:12px}
- .cs-title{font-size:calc(clamp(2.25rem,10vw,3.25rem) + 1px)}
- .cs-copy{margin-top:12px;font-size:var(--text-body);line-height:1.6}
- .cs-cta{margin-top:18px;padding:15px 20px}
- .cs.is-still .cs-stage{min-height:0}
- .cs.is-still .cs-wall{position:relative;height:56svh;bottom:auto}
- .cs.is-still .cs-panel{margin-left:0;padding:28px 6% 44px}
-}
-@media(prefers-reduced-motion:reduce){
- .cs{height:auto}
- .cs-stage{position:relative;height:auto;min-height:min(100svh,860px)}
- .cs-panel{position:relative;inset:auto;min-height:inherit;margin-left:50%}
- .cs-cta{transition:none}
-}
-@media(prefers-reduced-motion:reduce) and (max-width:800px){
- .cs-stage{min-height:0}
- .cs-wall{position:relative;height:56svh;bottom:auto}
- .cs-panel{margin-left:0;padding:28px 6% 44px}
-}
 
 /* Project overview: balanced editorial copy and a contained fact sheet. */
 .project-story .project-story-intro{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,90px);align-items:center;padding-top:72px;padding-bottom:72px}

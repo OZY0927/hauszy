@@ -18,7 +18,7 @@
 .pg-film-copy h2,.pg-next h2,.project-story-intro h2,
 .project-story-contact-copy h2,.about h2,.aj-path-heading h2,
 .aj-moments h2,.aj-contact h2,.footer-editorial .footer-invitation h2,
-.cs-title,.pg-intro-statement,.aj-statement {
+.pg-intro-statement,.aj-statement {
   font-size:var(--text-section);
   line-height:1.2;
   letter-spacing:-.035em;
@@ -43,7 +43,7 @@
   letter-spacing:-.02em;
 }
 
-.cs-copy,.pg-hero-copy>p,.aj-hero>p,
+.pg-hero-copy>p,.aj-hero>p,
 .pg-chapter-copy>p,.pg-next-layout>div>p,.pg-perspectives-grid p,
 .project-story-intro-main>p,.project-story-contact-copy>p,
 .about p,.policy-page p,.tools-studio .tools-intro>p {
