@@ -53,7 +53,13 @@ export default function ProjectNavigationLoading(){
    // Capture before Next Link consumes the click; navigation proceeds behind the overlay.
    flushSync(()=>start(path));
   };
-  const history=()=>{const path=cleanPath(location.pathname);if(projectPath(path))start(path);else controller.current?.cancel()};
+  const history=()=>{
+   const path=cleanPath(location.pathname);
+   // Anchor navigation can emit popstate too. Only a different page needs loading;
+   // section links and their Back/Forward entries keep the native smooth scroll.
+   if(path===committed.current)return;
+   if(projectPath(path))start(path);else controller.current?.cancel();
+  };
   document.addEventListener('click',click,true);
   window.addEventListener('popstate',history);
   return()=>{disposed=true;clearTimeout(warmTimer);clear();observer.disconnect();controller.current=null;document.removeEventListener('click',click,true);window.removeEventListener('popstate',history)};

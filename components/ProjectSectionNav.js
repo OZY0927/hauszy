@@ -3,6 +3,8 @@ import {useEffect,useRef,useState} from 'react';
 import Icon from './Icon';
 import useProjectScrollEffects from './useProjectScrollEffects';
 import {prepareProjectImages} from '../lib/project-image-preload';
+import {gsap} from 'gsap';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
 
 // Hold imperative reveal mutations until React has hydrated the project content.
 export function ProjectStory({children,previewImages=[]}){
@@ -24,6 +26,25 @@ export default function ProjectSectionNav({sections,enquiry}){
  const [active,setActive]=useState(sections[0]?.[0]||''),[visible,setVisible]=useState(false);
  const links=useRef(null);
  const navigation=useRef(null);
+ const arrival=useRef(null);
+ useEffect(()=>()=>arrival.current?.cancel(),[]);
+ function jump(event,id){
+  if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  const target=document.getElementById(id);if(!target)return;
+  event.preventDefault();arrival.current?.cancel();
+  setActive(id);
+  history.pushState(history.state,'','#'+id);
+  // Jump over the intervening pinned scenes, then slide only the destination in.
+  const margin=parseFloat(getComputedStyle(target).scrollMarginTop)||80;
+  window.scrollTo({top:Math.max(0,window.scrollY+target.getBoundingClientRect().top-margin),behavior:'instant'});
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.update();
+  for(const trigger of ScrollTrigger.getAll()){
+   trigger.getTween()?.progress(1);
+   if(!trigger.vars.scrub&&trigger.trigger&&target.contains(trigger.trigger)&&trigger.isActive)trigger.animation?.progress(1);
+  }
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)arrival.current=target.animate([{opacity:.65,translate:'0 20px'},{opacity:1,translate:'0 0'}],{duration:360,easing:'cubic-bezier(.22,1,.36,1)'});
+ }
  useEffect(()=>{
   let frame=0;
   const update=()=>{frame=0;const shell=document.querySelector('.project-story');if(!shell)return;const rect=shell.getBoundingClientRect(),hero=shell.querySelector('.project-hero-scroll');setVisible((hero?hero.getBoundingClientRect().bottom<innerHeight*.6:window.scrollY>120)&&rect.bottom>140);navigation.current?.style.setProperty('--project-progress',Math.max(0,Math.min(1,-rect.top/Math.max(1,shell.offsetHeight-innerHeight))).toFixed(4))};
@@ -41,7 +62,7 @@ export default function ProjectSectionNav({sections,enquiry}){
  },[active]);
  if(!sections.length&&!enquiry)return null;
  return <nav ref={navigation} className={'project-section-nav'+(visible?' is-visible':'')} aria-label="Project sections" inert={!visible}>
-  <div className="project-section-links" ref={links}>{sections.map(([id,label])=><a key={id} href={'#'+id} aria-current={active===id?'location':undefined} onClick={()=>setActive(id)}>{label}</a>)}</div>
-  {enquiry&&<a className="project-section-enquire" href="#enquiry" aria-current={active==='enquiry'?'location':undefined} onClick={()=>setActive('enquiry')}>Enquire <Icon name="arrowUpRight"/></a>}
+  <div className="project-section-links" ref={links}>{sections.map(([id,label])=><a key={id} href={'#'+id} aria-current={active===id?'location':undefined} onClick={event=>jump(event,id)}>{label}</a>)}</div>
+  {enquiry&&<a className="project-section-enquire" href="#enquiry" aria-current={active==='enquiry'?'location':undefined} onClick={event=>jump(event,'enquiry')}>Enquire <Icon name="arrowUpRight"/></a>}
  </nav>;
 }

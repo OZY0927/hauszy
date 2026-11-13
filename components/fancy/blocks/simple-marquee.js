@@ -18,19 +18,22 @@ export default function SimpleMarquee({children,className='',direction='left',ba
  const scrollDirection=useRef(1);
  const x=useTransform(position,value=>`${wrap(0,-100,value)}%`);
  useEffect(()=>{
-  const observer=new IntersectionObserver(entries=>{visible.current=entries.some(entry=>entry.isIntersecting)},{rootMargin:'100px'});
-  observer.observe(root.current);
+  const element=root.current;if(!element)return;
+  let disposed=false;
+  const observer=new IntersectionObserver(entries=>{if(!disposed)visible.current=entries.some(entry=>entry.isIntersecting)},{rootMargin:'100px'});
+  observer.observe(element);
   const measure=()=>{
-   const group=root.current.firstElementChild;
-   if(group?.offsetWidth)setCopies(repeat===1?1:Math.max(repeat,Math.ceil(root.current.clientWidth/group.offsetWidth)+1));
+   if(disposed||!element.isConnected)return;
+   const group=element.firstElementChild;
+   if(group?.offsetWidth)setCopies(repeat===1?1:Math.max(repeat,Math.ceil(element.clientWidth/group.offsetWidth)+1));
   };
   const resize=new ResizeObserver(measure);
-  resize.observe(root.current);if(root.current.firstElementChild)resize.observe(root.current.firstElementChild);measure();
+  resize.observe(element);if(element.firstElementChild)resize.observe(element.firstElementChild);measure();
   const visibility=()=>setPageVisible(!document.hidden);
   visibility();document.addEventListener('visibilitychange',visibility);
-  return()=>{observer.disconnect();resize.disconnect();document.removeEventListener('visibilitychange',visibility)};
+  return()=>{disposed=true;visible.current=false;observer.disconnect();resize.disconnect();document.removeEventListener('visibilitychange',visibility)};
  },[repeat]);
- useEffect(()=>{root.current.querySelectorAll('[data-marquee-copy] a,[data-marquee-copy] button').forEach(element=>{element.tabIndex=-1})},[copies,children]);
+ useEffect(()=>{root.current?.querySelectorAll('[data-marquee-copy] a,[data-marquee-copy] button').forEach(element=>{element.tabIndex=-1})},[copies,children]);
  useAnimationFrame((_,delta)=>{
   if(paused||reducedMotion||!pageVisible||!visible.current||focused.current)return;
   hoverFactor.set(hovered.current&&slowdownOnHover?slowDownFactor:1);
