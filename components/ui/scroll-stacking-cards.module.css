@@ -1,9 +1,9 @@
 .deck{position:relative;width:100%}
 .stage{display:grid;gap:32px}
-.card{min-width:0;width:100%;position:relative;transform-origin:50% 0}
+.card{min-width:0;width:100%;position:relative;transform-origin:50% 50%}
 .content{position:relative;border-radius:26px;overflow:hidden}
 .shade{position:absolute;inset:0;pointer-events:none;background:#0a0c14;border-radius:inherit}
-.deck[data-enabled=true] .stage{position:sticky;top:0;height:100svh;display:grid;place-items:start center;gap:0;perspective:1800px;overflow:hidden;padding-block:90px 60px;grid-template-rows:minmax(0,1fr)}
+.deck[data-enabled=true] .stage{position:sticky;top:0;height:100svh;display:grid;place-items:center;gap:0;perspective:1800px;overflow:hidden;padding-block:88px 24px;grid-template-rows:minmax(0,1fr)}
 .deck[data-enabled=true] .card{grid-column:1;grid-row:1;will-change:transform}
 .deck[data-enabled=true] .content{min-height:var(--deck-card-height);background:#ead6bd;box-shadow:0 40px 70px -35px #352a2570}
 

@@ -63,3 +63,9 @@
 }
 
 .labelItem[data-active=false] h3,.item[data-active=false] strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+
+/* Keep the pinned details centered below the navigation on every screen height. */
+@media(min-width:851px){
+ .root{--roll-height:max(220px,calc(100svh - 260px));top:88px;min-height:calc(100svh - 112px);display:flex;flex-direction:column;justify-content:center}
+ .scrollViewport{flex:none}
+}

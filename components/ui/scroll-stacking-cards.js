@@ -24,7 +24,7 @@ export function ProjectDeck({children}){
    const contents=[...deck.current.querySelectorAll('[data-deck-content] > article')];
    const tallest=Math.max(1,...contents.map(element=>element.offsetHeight));
    setCardHeight(tallest);
-   setFit(Math.min(1,(innerHeight-150)/tallest));
+   setFit(Math.min(1,(innerHeight-136)/tallest));
    setEnabled(count>1&&media.matches);
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(measure)};

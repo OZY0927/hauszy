@@ -512,3 +512,16 @@
 .project-story .project-story-charges .property-facts{width:100%;max-width:900px;grid-template-columns:minmax(0,1fr);column-gap:0}
 .project-story .project-story-charges .property-facts>div{min-width:0;gap:20px}
 .project-story .project-story-charges .property-facts :is(dt,dd){min-width:0;overflow-wrap:anywhere}
+
+/* Center each project chapter in the viewport without fixing long content heights. */
+.project-story .project-journey-intro:not(.journey-motion){min-height:calc(100svh - 88px);display:flex;flex-direction:column;justify-content:center;padding-block:48px}
+.project-story .project-journey-intro:not(.journey-motion) .project-journey-stage{width:100%}
+.project-story .layout-scroll-studio>.project-story-section{min-height:calc(100svh - 88px);display:flex;flex-direction:column;justify-content:center;padding-block:40px}
+.project-story .layout-scroll-studio .layout-studio-stage{min-height:calc(100svh - 160px)}
+@media(min-width:851px) and (min-height:650px) and (prefers-reduced-motion:no-preference){
+ .journey-motion .project-story-intro-main{inset:0 14%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding-block:100px 40px}
+ .journey-motion .project-story-intro-main>*{flex-shrink:0}
+}
+@media(max-width:850px){
+ .project-story .layout-scroll-studio .layout-studio-stage{min-height:calc(100svh - 128px)}
+}

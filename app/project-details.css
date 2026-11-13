@@ -13,3 +13,7 @@
 @media(min-width:1200px) and (min-height:700px){.project-story .project-details{padding-top:48px;padding-bottom:88px}.project-details-inner{gap:36px}}
 @media(max-width:700px){.project-story .project-details{padding:32px 20px 64px}.project-story .project-details-intro{display:block}.project-details-intro-note{text-align:left;margin-top:18px}.project-details-aura{inset:20% 10% 20%}}
 @media(prefers-reduced-transparency:reduce),(forced-colors:active){.project-details-aura{display:none}}
+
+/* Short sections fill the usable viewport; long specifications stay in flow. */
+.project-story .project-details{min-height:calc(100svh - 88px);padding-block:40px;display:flex;flex-direction:column;justify-content:center}
+.project-details-inner{width:100%}
