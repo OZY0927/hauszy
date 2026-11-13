@@ -1,0 +1,44 @@
+﻿.scene {
+  --lost-ink: #3e291f;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100svh;
+  padding: 140px 5vw 28px;
+  background: #f5ebde;
+  color: var(--lost-ink);
+  text-align: center;
+}
+.topline, .bottomline { display: flex; justify-content: space-between; gap: 20px; font-size: 10px; font-weight: 600; letter-spacing: .16em; }
+.topline { border-top: 1px solid #3e291f26; padding-top: 16px; }
+.title { margin: 22px -5vw 0; font-family: Impact, 'Arial Narrow', sans-serif; font-weight: 900; letter-spacing: -.055em; line-height: .85; color: var(--lost-ink); }
+.code { display: block; font-size: clamp(112px, 15vw, 220px); }
+.words { display: block; font-size: clamp(70px, 16.7vw, 250px); white-space: nowrap; }
+.house { position: relative; width: min(340px, 70vw); margin: -52px auto 0; }
+.houseImage { position: relative; display: block; width: 100%; height: auto; transform: rotate(-8deg); animation: arrive 1s cubic-bezier(.22,1,.36,1) both, drift 7s 1s ease-in-out infinite; filter: drop-shadow(10px 18px 13px #49331e20); }
+.shadow { position: absolute; bottom: 5%; left: 10%; width: 85%; height: 12%; border-radius: 50%; background: #63452e26; filter: blur(15px); }
+.address { position: absolute; right: -45px; bottom: 28px; padding: 11px 15px; background: #e8b957; border: 1px solid #3e291f24; transform: rotate(-6deg); box-shadow: 0 4px 8px #3e291f10; font-size: 9px; font-weight: 700; letter-spacing: .1em; }
+.copy { position: relative; margin: 20px auto 50px; max-width: 370px; }
+.copy h2 { margin: 0 0 10px; font-size: clamp(22px, 2.3vw, 28px); line-height: 1.2; letter-spacing: -.04em; }
+.copy p { margin: 0; font-size: 14px; line-height: 1.65; color: #725e50; text-wrap: pretty; }
+.home { display: flex; align-items: center; justify-content: center; gap: 25px; width: fit-content; margin: 25px auto 16px; padding: 16px 27px; border-radius: 40px; background: var(--lost-ink); color: #fff8ed; font-size: 13px; font-weight: 600; text-decoration: none; transition: background .2s, transform .2s; }
+.home:hover { background: #674730; transform: translateY(-3px); }
+.home svg, .explore svg { width: 17px; height: 17px; }
+.explore { display: inline-flex; align-items: center; gap: 7px; color: var(--lost-ink); font-size: 12px; text-underline-offset: 4px; }
+.explore:hover { text-decoration: underline; }
+.home:focus-visible, .explore:focus-visible { outline: 2px solid var(--lost-ink); outline-offset: 5px; }
+.bottomline { border-top: 1px solid #3e291f26; padding-top: 18px; color: #725e50; }
+:global(body):has(.scene) :global(.site-footer) { display: none; }
+@keyframes arrive { from { opacity: 0; transform: translateY(24px) rotate(-12deg); } to { opacity: 1; transform: translateY(0) rotate(-8deg); } }
+@keyframes drift { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-10px) rotate(-5deg); } }
+@media (min-width: 1500px) { .scene { padding-top: 155px; } }
+@media (max-width: 600px) {
+  .scene { padding: 115px 6vw 22px; }
+  .topline, .bottomline { font-size: 8px; letter-spacing: .1em; }
+  .title { margin-top: 35px; }
+  .house { margin-top: -14px; width: min(280px, 66vw); }
+  .address { right: -25px; bottom: 12px; font-size: 8px; padding: 10px; }
+  .copy { margin-top: 28px; margin-bottom: 40px; }
+  .copy p { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) { .houseImage { animation: none; } .home { transition: none; } }
