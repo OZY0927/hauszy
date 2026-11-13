@@ -1,5 +1,13 @@
 .loading{position:fixed;inset:0;z-index:2100;display:grid;place-items:center;background:var(--paper,#fcf8f2);color:var(--primary,#96351e)}
 .content{text-align:center;padding:24px}
+.artwork{position:relative;isolation:isolate}
+.fireworks{position:absolute;inset:-65px -85px;pointer-events:none}
+.burst{position:absolute;left:15%;top:28%;width:0;height:0;color:var(--primary)}
+.burst:nth-child(2){left:85%;top:12%;color:#bb8d35}
+.burst:nth-child(3){left:58%;top:65%;color:#b76b40}
+.burst i{position:absolute;left:0;top:0;width:7px;height:3px;border-radius:3px;background:currentColor;animation:project-firework 1s cubic-bezier(.16,1,.3,1) calc(var(--burst)*.12s) both}
+@keyframes project-firework{0%{transform:rotate(var(--angle)) translateX(0) scale(0);opacity:0}15%{opacity:1}75%{opacity:.8}100%{transform:rotate(var(--angle)) translateX(72px) scale(.25);opacity:0}}
+@media(prefers-reduced-motion:reduce){.fireworks{display:none}}
 @property --project-reveal-radius{syntax:'<length>';inherits:false;initial-value:0px}
 .revealing{mask-image:radial-gradient(circle at center,transparent var(--project-reveal-radius),#000 calc(var(--project-reveal-radius) + 2px));animation:project-center-reveal .85s cubic-bezier(.65,0,.35,1) forwards;pointer-events:none}
 .revealing .content{opacity:0;transition:opacity .15s ease}

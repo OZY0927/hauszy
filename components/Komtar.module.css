@@ -1,0 +1,6 @@
+.icon{display:inline-block;max-width:100%;aspect-ratio:1;vertical-align:middle}
+.icon img{display:block;width:100%;height:auto;user-select:none}
+@media(prefers-reduced-motion:no-preference){
+ .animated img{animation:komtar-float 5s ease-in-out infinite}
+ @keyframes komtar-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+}

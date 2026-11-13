@@ -1,0 +1,19 @@
+.loading{display:block;width:var(--icon-width,112px);height:112px;max-width:100%;margin:auto}
+.sway{position:relative;width:100%;height:100%;transform-origin:50% 90%}
+.loading img{display:block;width:100%;height:100%;object-fit:contain;user-select:none}
+.empty{filter:grayscale(1);opacity:.28}
+.fill{position:absolute;inset:0}
+@media(prefers-reduced-motion:no-preference){
+ .sway{animation:landmark-sway 1.8s ease-in-out infinite}
+ .fill{animation:landmark-fill 4.5s linear infinite;will-change:clip-path}
+}
+.complete .fill{animation:none;clip-path:none;will-change:auto}
+.complete .sway{animation:none}
+@keyframes landmark-fill{
+ 0%,100%{clip-path:polygon(0 100%,20% 104%,40% 100%,60% 104%,80% 100%,100% 104%,100% 110%,0 110%)}
+ 25%{clip-path:polygon(0 72%,20% 68%,40% 72%,60% 68%,80% 72%,100% 68%,100% 110%,0 110%)}
+ 50%{clip-path:polygon(0 40%,20% 44%,40% 40%,60% 44%,80% 40%,100% 44%,100% 110%,0 110%)}
+ 75%,92%{clip-path:polygon(0 -8%,20% -4%,40% -8%,60% -4%,80% -8%,100% -4%,100% 110%,0 110%)}
+}
+@keyframes landmark-sway{0%,100%{transform:rotate(-3deg) skewX(-1deg)}50%{transform:rotate(3deg) skewX(1deg)}}
+@media(max-width:850px){.loading{width:var(--icon-mobile-width,96px);height:96px}}
