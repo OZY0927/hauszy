@@ -1,0 +1,20 @@
+.label {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  max-width: calc(100% - 76px);
+  padding: 7px 11px;
+  border: 1px solid #96351e20;
+  border-radius: 999px;
+  background: #fcf8f2ed;
+  color: #6b4b37;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: .025em;
+  pointer-events: none;
+}
+@media (max-width: 600px) {
+  .label { top: 10px; left: 10px; padding: 5px 8px; font-size: 9px; }
+}
