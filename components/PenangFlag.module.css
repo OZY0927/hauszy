@@ -1,7 +1,7 @@
 .flag{position:relative;display:inline-block;max-width:100%;aspect-ratio:3/2;vertical-align:middle;container-type:inline-size}
 .flag img{display:block;width:100%;height:auto;user-select:none}
 .fabric{display:none;position:absolute;inset:0;pointer-events:none}
-.strip{position:absolute;top:0;height:100%;background-image:url('/images/penang-flag-only-3d.webp');background-repeat:no-repeat;background-size:4000% 100%;transform-origin:center;animation:penang-wind 3s cubic-bezier(.37,0,.63,1) var(--delay) infinite}
+.strip{position:absolute;top:0;height:100%;background-image:var(--flag-image,url('/images/penang-flag-only-3d.webp'));background-repeat:no-repeat;background-size:4000% 100%;transform-origin:center;animation:penang-wind 3s cubic-bezier(.37,0,.63,1) var(--delay) infinite}
 @media(prefers-reduced-motion:no-preference){.animated img{visibility:hidden}.animated .fabric{display:block}}
 @keyframes penang-wind{
  0%,100%{transform:translateY(0) skewY(calc(-1 * var(--bend)))}

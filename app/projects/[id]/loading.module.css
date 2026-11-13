@@ -5,14 +5,18 @@
 .burst{position:absolute;left:15%;top:28%;width:0;height:0;color:var(--primary)}
 .burst:nth-child(2){left:85%;top:12%;color:#bb8d35}
 .burst:nth-child(3){left:58%;top:65%;color:#b76b40}
-.burst i{position:absolute;left:0;top:0;width:7px;height:3px;border-radius:3px;background:currentColor;animation:project-firework 1s cubic-bezier(.16,1,.3,1) calc(var(--burst)*.12s) both}
+.burst i{position:absolute;left:0;top:0;width:7px;height:3px;border-radius:3px;background:currentColor;animation:project-firework  .7s cubic-bezier(.16,1,.3,1) calc(var(--burst)*.08s) both}
 @keyframes project-firework{0%{transform:rotate(var(--angle)) translateX(0) scale(0);opacity:0}15%{opacity:1}75%{opacity:.8}100%{transform:rotate(var(--angle)) translateX(72px) scale(.25);opacity:0}}
 @media(prefers-reduced-motion:reduce){.fireworks{display:none}}
 @property --project-reveal-radius{syntax:'<length>';inherits:false;initial-value:0px}
-.revealing{mask-image:radial-gradient(circle at center,transparent var(--project-reveal-radius),#000 calc(var(--project-reveal-radius) + 2px));animation:project-center-reveal .85s cubic-bezier(.65,0,.35,1) forwards;pointer-events:none}
+.revealing{mask-image:radial-gradient(circle at center,transparent var(--project-reveal-radius),#000 calc(var(--project-reveal-radius) + 2px));animation:project-center-reveal .4s cubic-bezier(.65,0,.35,1) forwards;pointer-events:none}
 .revealing .content{opacity:0;transition:opacity .15s ease}
 @keyframes project-center-reveal{from{--project-reveal-radius:0px}to{--project-reveal-radius:75vmax}}
 @media(prefers-reduced-motion:reduce){.revealing{mask-image:none;animation:project-loading-fade .15s linear forwards}}
 @keyframes project-loading-fade{to{opacity:0}}
 .content p{margin:20px 0 0;color:var(--muted,#796b60);font-family:var(--font-site),sans-serif;font-size:13px;line-height:1.5;letter-spacing:.04em}
 @media(forced-colors:active){.loading{background:Canvas;color:CanvasText}.content p{color:CanvasText}}
+
+/* The persistent navigation overlay owns the exit; suppress stacked route/brand fallbacks. */
+:global(body:has([data-project-navigation-loading])) .loading[data-project-route-fallback],
+.loading[data-project-navigation-loading]~:global(.hauszy-loader){display:none}

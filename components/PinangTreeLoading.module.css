@@ -2,12 +2,10 @@
 .flag{position:relative}
 .flag>.empty,.flag>.fill{position:absolute;inset:0;display:flex;align-items:center}
 .flag img{height:auto}
-.sway{position:relative;width:100%;height:100%;transform-origin:50% 90%;animation:tree-sway 1.8s ease-in-out infinite}
 .tree img{display:block;width:100%;height:100%;object-fit:contain}
 .empty{filter:grayscale(1);opacity:.28}
 .fill{position:absolute;inset:0;animation:tree-fill 4.5s linear infinite;will-change:clip-path}
 .complete .fill{animation:none;clip-path:none}
-.complete .sway{animation:none}
 @keyframes tree-fill{
  0%{clip-path:polygon(0 100%,20% 104%,40% 100%,60% 104%,80% 100%,100% 104%,100% 110%,0 110%)}
  25%{clip-path:polygon(0 72%,20% 68%,40% 72%,60% 68%,80% 72%,100% 68%,100% 110%,0 110%)}
@@ -15,6 +13,5 @@
  75%,92%{clip-path:polygon(0 -8%,20% -4%,40% -8%,60% -4%,80% -8%,100% -4%,100% 110%,0 110%)}
  100%{clip-path:polygon(0 100%,20% 104%,40% 100%,60% 104%,80% 100%,100% 104%,100% 110%,0 110%)}
 }
-@keyframes tree-sway{0%,100%{transform:rotate(-3deg) skewX(-1deg)}50%{transform:rotate(3deg) skewX(1deg)}}
 @media(max-width:850px){.tree{width:96px;height:96px}}
-@media(prefers-reduced-motion:reduce){.sway{animation:none}.fill{animation:none;clip-path:none}}
+@media(prefers-reduced-motion:reduce){.fill{animation:none;clip-path:none}}
