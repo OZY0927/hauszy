@@ -1,0 +1,39 @@
+/* Layers share the sticky scene, not the card transforms. Keep this wrapper free
+   of transforms/opacity/z-index so its two layers straddle the card stack. */
+.scene{position:absolute;inset:0;pointer-events:none;user-select:none}
+.layer{position:absolute;inset:0;pointer-events:none;perspective:1000px}
+.anchor{position:absolute;width:var(--size);height:var(--size);opacity:var(--alpha,.75);filter:blur(var(--blur,0px));transform:rotate(var(--angle,0deg))}
+.parallax{display:block;width:100%;height:100%;transform:translate3d(calc(var(--pointer-x,0) * var(--parallax,3px)),calc(var(--pointer-y,0) * var(--parallax,3px) + var(--scene-progress,0) * var(--scroll-depth,8px)),0)}
+.float{display:block;width:100%;height:100%;filter:drop-shadow(0 12px 10px #60442f25);animation:layout-icon-float var(--duration,8s) var(--delay,0s) ease-in-out infinite;animation-play-state:paused}
+.scene[data-visible=true] .float{animation-play-state:running}
+.float img{display:block;width:100%;height:100%;object-fit:contain}
+.bridge{--size:112px;--angle:-9deg;--alpha:.5;--blur:1px;--duration:9s;--delay:-3s;left:29%;top:1%}
+.tower{--size:78px;--angle:12deg;--alpha:.55;--blur:.7px;--duration:7s;--delay:-5s;right:9%;top:2%}
+.tree{--size:66px;--angle:-14deg;--alpha:.4;--blur:1.3px;--duration:10s;--delay:-4s;left:-12px;top:43%}
+.hill{--size:104px;--angle:8deg;--alpha:.55;--blur:.6px;--duration:8s;--delay:-2s;right:31%;bottom:0}
+.temple{--size:82px;--angle:-8deg;--alpha:.45;--blur:.9px;--duration:9.5s;--delay:-7s;right:-14px;top:55%}
+/* Only two foreground accents. Anchor near the resting card's outer boundary;
+   at most ~16px overlap, leaving the padded information and floor plan clear. */
+.house{--size:92px;--angle:-6deg;--alpha:1;--parallax:6px;--scroll-depth:6px;--duration:7.5s;--delay:-1s;left:6%;top:max(8px,calc(50% + 15px - var(--layout-visible-height,500px)/2 - 76px))}
+.trishaw{--size:80px;--angle:10deg;--alpha:.95;--parallax:8px;--scroll-depth:-8px;--duration:6.5s;--delay:-4s;right:4%;top:min(calc(100% - 84px),calc(50% + 15px + var(--layout-visible-height,500px)/2 - 14px))}
+:global([data-layout-scene][data-pinned=false]) .house{--size:60px;--parallax:0px;--scroll-depth:0px;top:-12px}
+:global([data-layout-scene][data-pinned=false]) .trishaw{--size:64px;--parallax:0px;--scroll-depth:0px;top:auto;bottom:8px}
+@keyframes layout-icon-float{0%,100%{transform:translate3d(0,4px,0) rotate(-3deg)}50%{transform:translate3d(4px,-8px,16px) rotate(3deg)}}
+@media(max-width:1100px){
+ .anchor{width:calc(var(--size)*.75);height:calc(var(--size)*.75)}
+ .parallax{--parallax:0px;--scroll-depth:6px}
+ .float{animation-name:layout-icon-float-small}
+ .house{left:3%}.trishaw{right:3%}
+}
+@keyframes layout-icon-float-small{0%,100%{transform:translate3d(0,2px,0) rotate(-2deg)}50%{transform:translate3d(2px,-6px,8px) rotate(2deg)}}
+@media(max-width:850px){
+ .bridge,.tree,.hill,.temple{display:none}
+ .anchor{width:46px;height:46px}
+ .tower{right:30%;top:8px}
+ .house{left:2%;top:4px}
+ .trishaw{right:5%;top:auto;bottom:4px}
+ .parallax{transform:none}
+ :global([data-layout-scene][data-pinned=false]) .house{top:4px}
+}
+@media(prefers-reduced-motion:reduce){.float{animation:none}.parallax{transform:none}}
+@media(forced-colors:active){.scene{display:none}}

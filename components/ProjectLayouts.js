@@ -4,12 +4,13 @@ import FloorPlanViewer from './FloorPlanViewer';
 import Icon from './Icon';
 import {money} from '../lib/project';
 import {hasProjectInfo} from '../lib/project-visibility';
+import LayoutAtmosphere from './LayoutAtmosphere';
 
 export default function ProjectLayouts({units,enquiry}){
  return <section className="project-story-layouts layout-studio layout-scroll-studio" id="units"><div className="project-story-section">
   <div className="layout-studio-heading" data-reveal><div><span className="eyebrow">EXPLORE THE LAYOUTS</span><h2>A space for<br/><em>every chapter.</em></h2></div><p>{units.length} {units.length===1?'layout':'layouts'} to explore.</p></div>
 
-  <ProjectDeck>{units.map((unit,index)=>{
+  <ProjectDeck renderScene={props=><LayoutAtmosphere {...props}/>}>{units.map((unit,index)=>{
    const facts=[['Built-up size',hasProjectInfo(unit.size)?unit.size+' sqft':null,'ruler'],['Bedrooms',unit.bedrooms,'bed'],['Bathrooms',unit.bathrooms,'bath'],['Car parks',unit.carParks,'car']].filter(([,value])=>hasProjectInfo(value));
    return <article key={index} id={'unit-layout-'+index}><div className={'layout-studio-stage'+(!unit.floorPlanUrls.length?' without-plan':'')}>
     <span className="layout-card-watermark" aria-hidden="true">{String(index+1).padStart(2,'0')}</span>

@@ -1,5 +1,6 @@
 .deck{position:relative;width:100%}
-.stage{display:grid;gap:32px}
+.stage{position:relative;isolation:isolate;display:grid;gap:32px}
+.deck[data-decorated=true][data-enabled=false] .stage{padding-block:64px 72px}
 .card{min-width:0;width:100%;position:relative;transform-origin:50% 0}
 .content{position:relative;border-radius:26px;overflow:hidden}
 .shade{position:absolute;inset:0;pointer-events:none;background:#0a0c14;border-radius:inherit}

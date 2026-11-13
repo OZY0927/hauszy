@@ -5,7 +5,7 @@ import {motion,useScroll,useTransform,useMotionValueEvent} from 'motion/react';
 import styles from './scroll-stacking-cards.module.css';
 import {layoutFront,layoutPose} from '../../lib/layout-deck';
 
-export function ProjectDeck({children}){
+export function ProjectDeck({children,renderScene}){
  const cards=Children.toArray(children),count=cards.length;
  const deck=useRef(null);
  const [enabled,setEnabled]=useState(false);
@@ -33,8 +33,8 @@ export function ProjectDeck({children}){
   media.addEventListener('change',schedule);window.addEventListener('resize',schedule);measure();
   return()=>{cancelAnimationFrame(frame);observer.disconnect();media.removeEventListener('change',schedule);window.removeEventListener('resize',schedule)};
  },[count]);
- return <div ref={deck} className={styles.deck} data-enabled={enabled} style={{height:enabled?`${count*100}svh`:undefined,'--deck-card-height':`${cardHeight}px`}}>
-  <div className={styles.stage}>{cards.map((card,index)=><DeckCard key={card.key??index} index={index} count={count} progress={progress} enabled={enabled} fit={fit} centerOffset={(1-fit)*cardHeight/2} active={front===index}>{card}</DeckCard>)}</div>
+ return <div ref={deck} className={styles.deck} data-enabled={enabled} data-decorated={!!renderScene} style={{height:enabled?`${count*100}svh`:undefined,'--deck-card-height':`${cardHeight}px`,'--layout-visible-height':`${cardHeight*(enabled?fit:1)}px`}}>
+  <div className={styles.stage} data-layout-scene data-pinned={enabled}>{renderScene?.({progress,foregroundZ:count+1})}{cards.map((card,index)=><DeckCard key={card.key??index} index={index} count={count} progress={progress} enabled={enabled} fit={fit} centerOffset={(1-fit)*cardHeight/2} active={front===index}>{card}</DeckCard>)}</div>
  </div>;
 }
 
