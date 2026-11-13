@@ -1,0 +1,31 @@
+.missingHero:global(.project-story-hero) {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: 4vw;
+  height: auto;
+  min-height: 650px;
+  max-height: none;
+  padding: 160px 5% 110px;
+  background: #f4e6d6;
+}
+.placeholder { grid-column: 2; grid-row: 1; min-width: 0; aspect-ratio: 4 / 3; }
+.placeholder img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
+.missingHero :global(.project-story-hero-shade) { display: none; }
+.missingHero :global(.project-story-hero-copy) {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  top: auto;
+  left: auto;
+  transform: none;
+  width: 100%;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.missingHero :global(.project-story-hero-copy) h1 { font-size: clamp(2.5rem, 5vw, 5rem); }
+@media (max-width: 700px) {
+  .missingHero:global(.project-story-hero) { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 25px; padding: 160px 6% 30px; }
+  .placeholder { grid-column: 1; grid-row: 2; }
+  .missingHero :global(.project-story-hero-bottom) { position: relative; grid-column: 1; grid-row: 3; left: auto; right: auto; bottom: auto; }
+}
