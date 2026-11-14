@@ -8,7 +8,7 @@ import {notFound} from 'next/navigation';
 import {getProfile,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
 import {whatsappNumber,whatsappLink,projectMessage} from '../../../lib/whatsapp';
 import {hasProjectInfo,visibleFacts,projectSections} from '../../../lib/project-visibility';
-import {money,unitCountRange,safeUrl,startingPrice,cardProject,listingName} from '../../../lib/project';
+import {sinkingFundText,maintenanceText,money,unitCountRange,safeUrl,startingPrice,cardProject,listingName} from '../../../lib/project';
 import ProjectGallery from '../../../components/ProjectGallery';
 import ProjectSectionNav,{ProjectStory} from '../../../components/ProjectSectionNav';
 import ShowroomGallery from '../../../components/ShowroomGallery';
@@ -59,7 +59,7 @@ export default async function Project({params}){
 
   {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates} amenities={visibility.nearby}/>}
 
-  {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<><span className="charges-heading-line">A clearer view</span><span className="charges-heading-line">of ongoing costs.</span></>}/><Facts rows={[["Maintenance fee per sqft",hasProjectInfo(p.maintenance)?money(p.maintenance)+' / month':null],["Sinking fund",p.sinkingFund]]}/></section>}
+  {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<><span className="charges-heading-line">A clearer view</span><span className="charges-heading-line">of ongoing costs.</span></>}/><Facts rows={[["Maintenance fee",hasProjectInfo(p.maintenance)?maintenanceText(p):null],["Sinking fund",sinkingFundText(p)]]}/></section>}
 
   {visibility.showroom.length>0&&<section className="project-story-section project-story-showroom" id="showroom"><SectionHeading label="STEP INSIDE" title={<>Picture the<br/>possibilities.</>}><p>A look inside the showroom.</p></SectionHeading><ShowroomGallery photos={visibility.showroom} name={p.name}/><p className="project-story-fine-print">Showroom units are for illustration only and may include furnishings and finishes not included in the sale.</p></section>}
 
