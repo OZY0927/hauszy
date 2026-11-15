@@ -12,8 +12,7 @@ import './project-gallery.css';
 import './project-details.css';
 import './project-dialogs.css';
 import Header from '../components/Header';
-import Script from 'next/script';
-import {headers} from 'next/headers';
+import PublicScrollScript from '../components/PublicScrollScript';
 import SiteIntro from '../components/SiteIntro';
 import Motion from '../components/Motion';
 import Footer from '../components/Footer';
@@ -25,4 +24,4 @@ import ProjectNavigationLoading from '../components/ProjectNavigationLoading';
 import {getSiteUrl} from '../lib/seo';
 const siteUrl=getSiteUrl();
 export const metadata={...(siteUrl?{metadataBase:new URL(siteUrl)}:{}),...(process.env.GOOGLE_SITE_VERIFICATION?{verification:{google:process.env.GOOGLE_SITE_VERIFICATION}}:{}),title:{default:'Hauszy — Penang Property & New Launches',template:'%s · Hauszy'},description:'Explore Penang properties with Hauszy. Compare homes, commercial spaces and industrial projects across Penang Island and Seberang Perai.'};
-export default async function Layout({children}){const nonce=(await headers()).get('x-nonce')||undefined;return <html lang="en-MY" data-scroll-behavior="smooth"><head><link rel="preload" as="image" href="/images/loading/tree.webp" fetchPriority="high"/></head><body><Script src="/scroll-behavior.js" strategy="beforeInteractive" nonce={nonce}/><ProjectNavigationLoading/><SiteIntro/><Header/>{children}<Motion/><Footer/><GoogleAnalytics/><ProjectActivity/><ImageGuard/><BackgroundMusic/></body></html>}
+export default function Layout({children}){return <html lang="en-MY" data-scroll-behavior="smooth"><head><link rel="preload" as="image" href="/images/loading/tree.webp" fetchPriority="high"/></head><body><PublicScrollScript/><ProjectNavigationLoading/><SiteIntro/><Header/>{children}<Motion/><Footer/><GoogleAnalytics/><ProjectActivity/><ImageGuard/><BackgroundMusic/></body></html>}
