@@ -7,19 +7,24 @@ import styles from './ui/split-detail-roll.module.css';
 const wrap=(value,count)=>(value%count+count)%count;
 export default function ProjectDetailsCards({facts}){
  const [position,setPosition]=useState(0);
+ const [pinTop,setPinTop]=useState(80);
  const scrollRef=useRef(null);
  const panelRef=useRef(null);
  useEffect(()=>{
   const panel=panelRef.current;if(!panel)return;
-  const measure=()=>panel.style.setProperty('--detail-panel-height',`${panel.offsetHeight}px`);
-  const observer=new ResizeObserver(measure);observer.observe(panel);measure();
-  return()=>observer.disconnect();
+  const measure=()=>{
+   panel.style.setProperty('--detail-panel-height',`${panel.offsetHeight}px`);
+   const top=parseFloat(getComputedStyle(panel).top);
+   if(Number.isFinite(top))setPinTop(top);
+  };
+  const observer=new ResizeObserver(measure);observer.observe(panel);window.addEventListener('resize',measure);measure();
+  return()=>{observer.disconnect();window.removeEventListener('resize',measure)};
  },[]);
  const dialogRef=useRef(null);
  const [dialogOpen,setDialogOpen]=useState(false);
  useEffect(()=>{if(!dialogOpen)return;const previous=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=previous}},[dialogOpen]);
  const reduced=useReducedMotion();
- const {scrollYProgress}=useScroll({target:scrollRef,offset:['start 80px','end end']});
+ const {scrollYProgress}=useScroll({target:scrollRef,offset:[`start ${pinTop}px`,'end end']});
  const target=useTransform(scrollYProgress,value=>Math.min(Math.max(0,facts.length-1),Math.max(0,value*facts.length)));
  // Small resting zones at each matching pair make both columns lock together.
  const magnetic=useTransform(target,value=>{

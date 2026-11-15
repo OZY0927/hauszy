@@ -64,7 +64,7 @@
 
 .labelItem[data-active=false] h3,.item[data-active=false] strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 
-/* Keep the pinned details centered below the navigation on every screen height. */
+/* Center the panel once its heading scrolls away; retain navigation clearance on short screens. */
 @media(min-width:851px){
- .root{top:max(80px,calc((100svh + 80px - var(--detail-panel-height,480px)) / 2))}
+ .root{top:max(80px,calc((100svh - var(--detail-panel-height,480px)) / 2))}
 }
