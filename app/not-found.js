@@ -1,7 +1,13 @@
-﻿import Image from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import Icon from '../components/Icon';
 import styles from './not-found.module.css';
+
+export const metadata={
+ title:'Page not found',
+ description:'This address could not be found. Return to Hauszy or explore Penang projects.',
+ robots:{index:false,follow:false},
+};
 
 export default function NotFound() {
   return (
