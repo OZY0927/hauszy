@@ -3,7 +3,7 @@ import {useEffect,useState} from 'react';
 import Icon from './Icon';
 const METRICS=[['click','Project clicks','arrowUpRight'],['view','Page views','eye'],['floor_plan','Floor-plan opens','maximize'],['contact','Contact clicks','message']];
 export default function ProjectAnalytics({user,records}){
- const [days,setDays]=useState(30),[order,setOrder]=useState('click'),[data,setData]=useState(null),[error,setError]=useState(''),[busy,setBusy]=useState(true),[refresh,setRefresh]=useState(0);
+ const [days,setDays]=useState(30),[order,setOrder]=useState('click'),[data,setData]=useState(null),[error,setError]=useState(''),[busy,setBusy]=useState(true),[refresh,setRefresh]=useState(0),[resetting,setResetting]=useState(false),[notice,setNotice]=useState('');
  useEffect(()=>{
   let active=true;const controller=new AbortController();setBusy(true);setError('');setData(null);
   (async()=>{try{
@@ -12,10 +12,21 @@ export default function ProjectAnalytics({user,records}){
   }catch(e){if(active)setError(e.message)}finally{if(active)setBusy(false)}})();
   return ()=>{active=false;controller.abort()};
  },[user,days,refresh]);
+ async function resetAnalytics(){
+  if(resetting||!window.confirm('Reset all dashboard analytics? This clears project clicks, page views, floor-plan opens and contact clicks for every date range. This cannot be undone. Your projects and published listings will stay unchanged.'))return;
+  setResetting(true);setNotice('');
+  try{
+   const token=await user.getIdToken();
+   const response=await fetch('/api/admin/project-activity/',{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({action:'reset'})});
+   const result=await response.json();if(!response.ok)throw Error(result.error||'Could not reset analytics.');
+   setNotice('Dashboard analytics reset. New visitor activity will start counting again.');setRefresh(n=>n+1);
+  }catch(e){setNotice(e.message)}finally{setResetting(false)}
+ }
  const ranked=(data?.projects||[]).map(row=>({...row,name:records.find(p=>p.id===row.id)?.name||'Deleted project',status:records.find(p=>p.id===row.id)?.status||'Deleted'})).sort((a,b)=>b[order]-a[order]||b.view-a.view||a.name.localeCompare(b.name));
  const top=Math.max(1,...ranked.map(row=>row[order]));
  return <section className="st-view" aria-labelledby="activity-title">
-  <div className="st-toolbar"><h2 id="activity-title" className="st-grow st-eyebrow">Project performance</h2><div className="st-segment" role="group" aria-label="Period">{[7,30,90].map(n=><button key={n} type="button" aria-pressed={days===n} onClick={()=>setDays(n)}>Last {n} days</button>)}</div><button type="button" className="st-btn" disabled={busy} onClick={()=>setRefresh(n=>n+1)}><Icon name="refresh"/>Refresh</button></div>
+  <div className="st-toolbar"><h2 id="activity-title" className="st-grow st-eyebrow">Project performance</h2><div className="st-segment" role="group" aria-label="Period">{[7,30,90].map(n=><button key={n} type="button" aria-pressed={days===n} disabled={resetting} onClick={()=>setDays(n)}>Last {n} days</button>)}</div><button type="button" className="st-btn" disabled={busy||resetting} onClick={()=>setRefresh(n=>n+1)}><Icon name="refresh"/>Refresh</button><button type="button" className="st-btn danger" disabled={busy||resetting} onClick={resetAnalytics}><Icon name="trash"/>{resetting?'Resetting…':'Reset analytics'}</button></div>
+  {notice&&<p className="st-alert" role="status">{notice}</p>}
   {busy?<div className="st-card st-empty" role="status"><Icon name="pieChart"/><p>Loading project activity…</p></div>:error?<div className="st-alert bad" role="alert"><Icon name="circleAlert"/><p>{error}</p></div>:<>
   <div className="st-kpis">{METRICS.map(([key,label,icon])=><div key={key} className="st-card st-kpi"><span className="st-kpi-label"><Icon name={icon}/>{label}</span><strong>{(data?.totals[key]||0).toLocaleString('en-MY')}</strong><small>Last {days} days</small></div>)}</div>
   <div className="st-card"><div className="st-card-head"><div><h3><Icon name="trendingUp"/>Project rankings</h3><p>{ranked.length} project{ranked.length===1?'':'s'} with activity in this period</p></div><label className="st-sort st-field">Rank by<select value={order} onChange={e=>setOrder(e.target.value)}>{METRICS.map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label></div>

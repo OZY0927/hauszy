@@ -1,6 +1,6 @@
 import {getSupabaseUploadServer} from '../../../../lib/supabase-server';
 import {verifyAdminIdToken} from '../../../../lib/verify-admin';
-import {revalidationToken,RequestError} from '../../../../lib/revalidation-security';
+import {readSmallJson,revalidationToken,RequestError} from '../../../../lib/revalidation-security';
 import {activitySince,summarizeActivity} from '../../../../lib/project-activity';
 const headers={'Cache-Control':'no-store'};
 export async function GET(request){
@@ -15,4 +15,17 @@ export async function GET(request){
   }
   throw new RequestError(503,'Too much activity for this period. Choose a shorter range.');
  }catch(error){return Response.json({error:error instanceof RequestError?error.message:'Could not load analytics.'},{status:error instanceof RequestError?error.status:500,headers})}
+}
+
+export async function POST(request){
+ try{
+  await verifyAdminIdToken(revalidationToken(request));
+  const body=await readSmallJson(request);
+  if(!body||body.action!=='reset'||Object.keys(body).length!==1)throw new RequestError(400,'Choose the reset action.');
+  const {client}=getSupabaseUploadServer();
+  // Reset in one statement, using the existing service-role update permission.
+  const {error}=await client.from('project_activity_daily').update({count:0}).gte('count',0);
+  if(error)throw new RequestError(503,'Could not reset analytics. Check that analytics storage is configured.');
+  return Response.json({ok:true},{headers});
+ }catch(error){return Response.json({error:error instanceof RequestError?error.message:'Could not reset analytics.'},{status:error instanceof RequestError?error.status:500,headers})}
 }

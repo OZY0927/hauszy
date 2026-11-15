@@ -23,7 +23,7 @@ async function loadRoute(path,mocks){
   if(mocks.includes(name))return `const {${names}}=globalThis.__activityTest;`;
   return `import {${names}} from '${new URL('../lib/'+name+'.js',import.meta.url).href}';`;
  });
- return import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+ return import('data:text/javascript;base64,'+Buffer.from(source+'\n// '+mocks.join(',')).toString('base64'));
 }
 test('public collection rejects cross-site, invalid and unpublished requests before writing',async()=>{
  let writes=0,published=true;
@@ -44,5 +44,29 @@ test('admin reporting authenticates before database access and validates report 
  assert.equal((await GET(request(30))).status,403);assert.equal(reads,0);
  authorized=true;assert.equal((await GET(request(365))).status,400);assert.equal(reads,0);
  const response=await GET(request(30));assert.equal(response.status,500);assert.ok(!(await response.text()).includes('secret'));assert.equal(response.headers.get('Cache-Control'),'no-store');
+ delete globalThis.__activityTest;
+});
+
+test('reset counters disappear from rankings and totals',()=>{
+ assert.deepEqual(summarizeActivity([{project_id:'a',event:'view',count:0}]),{totals:{click:0,view:0,floor_plan:0,contact:0},projects:[]});
+});
+test('admin reset authenticates, validates intent and resets all counters',async()=>{
+ let authorized=false,writes=0,fail=false;
+ const client={from(table){
+  assert.equal(table,'project_activity_daily');
+  return {update(values){
+   assert.deepEqual(values,{count:0});
+   return {async gte(key,value){assert.equal(key,'count');assert.equal(value,0);writes++;return {error:fail?new Error('private database error'):null}}};
+  }};
+ }};
+ globalThis.__activityTest={verifyAdminIdToken:async()=>{if(!authorized)throw new RequestError(403,'Admin required.')},getSupabaseUploadServer:()=>({client})};
+ const {POST}=await loadRoute('../app/api/admin/project-activity/route.js',['verify-admin','supabase-server']);
+ const request=(body={action:'reset'},origin='https://hauszy.com')=>new Request('https://hauszy.com/api/admin/project-activity/',{method:'POST',headers:{Origin:origin,Authorization:'Bearer abc.def.ghi','Content-Type':'application/json'},body:JSON.stringify(body)});
+ assert.equal((await POST(request())).status,403);assert.equal(writes,0);
+ authorized=true;
+ assert.equal((await POST(request({},'https://evil.example'))).status,403);
+ assert.equal((await POST(request({action:'other'}))).status,400);assert.equal(writes,0);
+ assert.equal((await POST(request())).status,200);assert.equal(writes,1);
+ fail=true;const response=await POST(request());assert.equal(response.status,503);assert.ok(!(await response.text()).includes('private database error'));
  delete globalThis.__activityTest;
 });
