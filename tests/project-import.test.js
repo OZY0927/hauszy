@@ -29,3 +29,35 @@ test('amenity distance and travel time accept only nonnegative integers or decim
   for(const value of ['nearby','2 km','5 mins',-1,'-1','1e3','Infinity',true])assert.throws(()=>parse({name:'Home',location:'KL',nearbyAmenities:[{category:'Schools',name:'School',[key]:value}]}),/must be/);
  }
 });
+
+ test('legacy amenity text becomes a saveable blank without changing numeric values or names',async()=>{
+ const {editableAmenities,buildProject}=await import('../lib/project-editor.js');
+ const original=[{category:'Schools',name:'School',distance:'2 km',travelTime:'5 mins'},{category:'Shopping',name:'Mall',distance:0,travelTime:'1.5'},{category:'Parks',name:'Park',distance:' ',travelTime:null}];
+ const rows=editableAmenities(original);
+ assert.equal(rows[0].distance,'');assert.equal(rows[0].travelTime,'');
+ assert.equal(rows[1].distance,'0');assert.equal(rows[1].travelTime,'1.5');
+ assert.equal(rows[2].distance,'');assert.equal(rows[2].travelTime,'');
+ assert.equal(original[0].distance,'2 km');
+ const saved=buildProject({name:'Home',location:'KL'},[],rows,'home');
+ assert.equal(saved.nearbyAmenities[0].name,'School');
+ assert.equal(saved.nearbyAmenities[0].distance,'');
+ assert.equal(saved.nearbyAmenities[0].travelTime,'');
+ });
+
+test('all project and layout number inputs clear hidden text while preserving visible numbers and text fields',async()=>{
+ const {editableProjectNumbers,editableUnits,editableNumber,buildProject}=await import('../lib/project-editor.js');
+ const {groups}=await import('../lib/project-fields.js');
+ const source={name:'Home',location:'KL',sinkingFund:'10% of maintenance'};
+ const keys=groups.flatMap(([,fields])=>fields.flatMap(([key,,type])=>type==='range'?[key,key+'Max']:['number','maintenance'].includes(type)?[key]:[]));
+ for(const key of keys)source[key]='To be confirmed';
+ const form=editableProjectNumbers(source);
+ for(const key of keys)assert.equal(form[key],'');
+ assert.equal(form.sinkingFund,'10% of maintenance');
+ assert.equal(source.price,'To be confirmed');
+ const units=editableUnits([{name:'A',price:'RM 500000',size:'900 sqft',bedrooms:'3+1',bathrooms:'2',carParks:'1–2'}]);
+ assert.equal(units[0].price,'');assert.equal(units[0].size,'');assert.equal(units[0].bedrooms,'3+1');assert.equal(units[0].carParks,'1–2');
+ assert.doesNotThrow(()=>buildProject(form,units,[],'home'));
+ for(const value of [0,1.5,'0','1.25','-2','1e3'])assert.equal(editableNumber(value),String(value));
+ assert.equal(editableNumber(' 1.5 '),'1.5');
+ for(const value of [null,undefined,'',' ','NaN','Infinity','1,000','0x10'])assert.equal(editableNumber(value),'');
+});
