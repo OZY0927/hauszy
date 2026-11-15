@@ -34,11 +34,20 @@ test('sinking fund inclusion replaces legacy text and clears additional amounts'
  assert.equal(projectSections(form).maintenance,true);
  assert.equal(sinkingFundText({sinkingFund:'10% of maintenance'}),'10% of maintenance');
 });
-test('excluded sinking fund requires a valid amount and displays its basis',async()=>{
+test('excluded sinking fund accepts free text and preserves legacy amounts',async()=>{
  const {sinkingFundText}=await import('../lib/project.js');
  const data={...project,sinkingFundStatus:'excluded',sinkingFundAmount:30};
  assert.equal(sinkingFundText(parseProjectJson(JSON.stringify(data)).form),'RM 30.00 / month (additional)');
  assert.equal(sinkingFundText(parseProjectJson(JSON.stringify({...data,sinkingFundAmount:0.03,sinkingFundBasis:'per_sqft'})).form),'RM 0.03 / sqft / month (additional)');
- for(const sinkingFundAmount of [null,'',-1])assert.throws(()=>parseProjectJson(JSON.stringify({...data,sinkingFundAmount})),/sinking fund amount|sinkingFundAmount/);
+ for(const sinkingFund of ['10% of maintenance fee','RM 30 monthly','']){const {form}=parseProjectJson(JSON.stringify({...project,sinkingFundStatus:'excluded',sinkingFund}));assert.equal(form.sinkingFund,sinkingFund);assert.equal(form.sinkingFundAmount,null);assert.equal(sinkingFundText(form),sinkingFund||null)}
+ assert.throws(()=>parseProjectJson(JSON.stringify({...project,sinkingFundStatus:'excluded',sinkingFund:'a'.repeat(501)})),/500/);
  assert.throws(()=>parseProjectJson(JSON.stringify({...data,sinkingFundStatus:'other'})),/sinking fund option/);
 });
+
+ test('shared unit maintenance survives import and listing projection',()=>{
+ const {form}=parseProjectJson(JSON.stringify({...project,maintenance:0.5,maintenanceBasis:'per_shared_unit'}));
+ const card=cardProject(normaliseProject(form,'home'));
+ assert.equal(form.maintenanceBasis,'per_shared_unit');
+ assert.equal(card.maintenanceBasis,'per_shared_unit');
+ assert.equal(maintenanceText(card),'RM 0.50 / shared unit / month');
+ });

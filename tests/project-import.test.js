@@ -22,3 +22,10 @@ test('display name imports and saves as optional text while the project name sta
  assert.throws(()=>parse({name:'Official name',displayName:123,location:'Penang'}),/text/);
  assert.throws(()=>parse({name:'Official name',displayName:'a'.repeat(501),location:'Penang'}),/500/);
 });
+
+test('amenity distance and travel time accept only nonnegative integers or decimals',()=>{
+ for(const key of ['distance','travelTime']){
+  for(const value of [0,2,1.25,'0','2','1.25','.5',''])assert.doesNotThrow(()=>parse({name:'Home',location:'KL',nearbyAmenities:[{category:'Schools',name:'School',[key]:value}]}));
+  for(const value of ['nearby','2 km','5 mins',-1,'-1','1e3','Infinity',true])assert.throws(()=>parse({name:'Home',location:'KL',nearbyAmenities:[{category:'Schools',name:'School',[key]:value}]}),/must be/);
+ }
+});
