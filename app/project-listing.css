@@ -172,3 +172,153 @@
 @media(prefers-reduced-motion:reduce){.project-catalog.catalog-view-list .catalog-list-row{transform:none;transition:none}.project-catalog.catalog-view-list .catalog-list-row::before{transition:none}}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.project-catalog.catalog-view-list .catalog-list-row{background:linear-gradient(135deg,#f3e3cf,#dbb98f)}}
 @media(max-width:560px){.project-catalog.catalog-view-list .catalog-list-row{border-radius:18px}.project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save{width:44px;height:44px;min-height:44px}}
+
+/* A viewport-sized mesh stays behind the entire listing without covering controls. */
+.projects-page:has(.listing-mesh-background){position:relative;isolation:isolate;background:transparent}
+.listing-mesh-background{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:clip;background:radial-gradient(ellipse at 20% 30%,#dbb98f80,transparent 65%),var(--paper)}
+.listing-mesh-background canvas{position:sticky;top:0;display:block;width:100%;height:100svh;opacity:.45}
+
+/* Let the listing mesh show through the navigation at the top of the page. */
+body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.projects-page .listing-mesh-background{top:-100px}
+@media(max-width:800px){.projects-page .listing-mesh-background{top:-80px}}
+
+.projects-page .all-projects-heading{display:block;text-align:center}
+.projects-page .all-projects-heading #project-listing-title{max-width:none;width:100%;margin-inline:auto;font-weight:800;text-align:center}
+.projects-page #project-listing-title>span{display:block;font-weight:800}
+.projects-page #project-listing-title .listing-title-lead{font-size:clamp(24px,3vw,40px);line-height:1.25;letter-spacing:-.035em;margin-bottom:8px}
+.projects-page #project-listing-title .listing-title-place{font-size:clamp(48px,8vw,108px);line-height:1.08;letter-spacing:-.055em}
+
+
+/* Two-layer trading-card shell with a sculpted inner panel. */
+.property-tile-edition,.property-tile-frame,.property-tile-footer{display:none}
+.project-catalog.catalog-view-grid .cards{gap:26px 22px}
+.project-catalog.catalog-view-grid .property-tile{
+ --card-shell:var(--primary);--card-panel:#e8b69e;--card-ink:var(--ink);
+ aspect-ratio:3/4.5;min-height:590px;border-radius:28px;background:var(--card-shell);color:var(--card-ink);
+ border:0;outline:none;box-shadow:0 2px 4px #352a2526,0 16px 28px -18px #352a2573;
+ transition:scale .25s ease,box-shadow .25s ease;
+}
+.project-catalog.catalog-view-grid .property-tile[data-category="Landed"]{--card-shell:#b18557;--card-panel:#ecdbc1}
+.project-catalog.catalog-view-grid .property-tile[data-category="Commercial"]{--card-shell:var(--ink);--card-panel:#cbb7a6}
+.project-catalog.catalog-view-grid .property-tile-frame{display:block;position:absolute;inset:5px;width:calc(100% - 10px);height:calc(100% - 10px);pointer-events:none}
+.project-catalog.catalog-view-grid .property-tile-frame path{fill:var(--card-panel);stroke:#fcf8f299;stroke-width:.3;vector-effect:non-scaling-stroke}
+.project-catalog.catalog-view-grid .property-tile::before,.project-catalog.catalog-view-grid .property-tile::after{content:none}
+.project-catalog.catalog-view-grid .property-tile-photo{inset:80px 26px auto;height:35%;border-radius:14px;overflow:hidden;z-index:0;box-shadow:0 8px 18px #352a251f}
+.project-catalog.catalog-view-grid .property-tile-photo img{height:100%;width:100%;object-fit:cover}
+.project-catalog.catalog-view-grid .property-tile:hover .property-tile-photo img{transform:none}
+.project-catalog.catalog-view-grid .property-tile-link{padding:0 28px 68px;z-index:1;justify-content:flex-end;gap:18px;color:var(--card-ink)}
+.project-catalog.catalog-view-grid .property-tile-link::before{display:none}
+.project-catalog.catalog-view-grid .property-tile-edition{position:absolute;inset:30px 28px auto;display:flex;align-items:center;gap:12px;justify-content:flex-start}
+.project-catalog.catalog-view-grid .property-tile-edition>span:first-child{font-size:27px;font-weight:800;letter-spacing:-2px;line-height:1}
+.project-catalog.catalog-view-grid .property-tile-edition>span:first-child>span{font-size:10px;vertical-align:top;letter-spacing:0;margin-left:3px}
+.project-catalog.catalog-view-grid .property-tile-edition>span:last-child{font-size:8px;letter-spacing:.08em;margin-left:8px;max-width:75px}
+.project-catalog.catalog-view-grid .property-tile-info{padding:0;margin-top:0}
+.project-catalog.catalog-view-grid .property-tile-type{position:absolute;top:34px;right:25px;max-width:26%;color:var(--paper);font-size:9px;text-align:right;letter-spacing:.02em;margin:0;line-height:1.3}
+.project-catalog.catalog-view-grid .property-tile-info h3{font-family:var(--font-site);font-size:clamp(25px,2.4vw,36px);font-weight:600;line-height:1.06;letter-spacing:-.045em;margin:0 0 9px;text-wrap:balance}
+.project-catalog.catalog-view-grid .property-tile-info p{font-size:12px;color:var(--card-ink)}
+.project-catalog.catalog-view-grid .property-tile-facts{font-size:10px;gap:5px 10px;color:var(--card-ink)}
+.project-catalog.catalog-view-grid .property-tile-bottom{padding:14px 0 0;border-top:1px solid #352a2526;gap:12px;color:var(--card-ink)}
+.project-catalog.catalog-view-grid .property-tile-price{gap:3px}
+.project-catalog.catalog-view-grid .property-tile-price>span{color:var(--card-ink);font-size:9px;letter-spacing:.09em;text-transform:uppercase}
+.project-catalog.catalog-view-grid .property-tile-price strong{font-size:clamp(20px,1.8vw,28px);letter-spacing:-.035em;font-weight:600;line-height:1.12}
+.project-catalog.catalog-view-grid .property-tile-arrow{width:34px;height:34px;border-color:#352a2540;background:transparent;color:var(--card-ink)}
+.project-catalog.catalog-view-grid .property-tile:hover .property-tile-arrow{background:var(--card-ink);color:var(--card-panel)}
+.project-catalog.catalog-view-grid .property-tile-save{z-index:2;top:auto;bottom:24px;right:25px;width:32px;height:32px;border-radius:50%;background:transparent;backdrop-filter:none;border-color:#352a2540;color:var(--card-ink)}
+.project-catalog.catalog-view-grid .property-tile-save.is-saved{background:var(--paper);color:var(--primary)}
+.project-catalog.catalog-view-grid .property-tile-footer{display:block;position:absolute;bottom:19px;left:29%;width:42%;font-size:6px;letter-spacing:.02em;text-align:center;color:var(--paper);pointer-events:none}
+.project-catalog.catalog-view-grid .property-tile-link:focus-visible{outline:3px solid var(--paper);outline-offset:-5px;border-radius:28px}
+@media(prefers-reduced-motion:no-preference){.project-catalog.catalog-view-grid .property-tile:active:not(:has(button:active)){scale:.975}}
+@media(max-width:640px){.project-catalog.catalog-view-grid .property-tile{min-height:620px}.project-catalog.catalog-view-grid .property-tile-info h3{font-size:32px}}
+@media(prefers-reduced-motion:reduce){.project-catalog.catalog-view-grid .property-tile{transition:none}}
+
+/* Full-bleed photography follows the sculpted inner silhouette. */
+.project-catalog.catalog-view-grid .property-tile-photo{
+ inset:5px;height:auto;border-radius:0;clip-path:var(--card-image-clip);box-shadow:none;
+}
+.project-catalog.catalog-view-grid .property-tile-photo::after{
+ content:'';position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(180deg,#352a2573 0%,#352a2500 30%,#352a2533 45%,#352a25e6 78%,#352a25f2 100%);
+}
+.project-catalog.catalog-view-grid .property-tile-info,
+.project-catalog.catalog-view-grid .property-tile-edition,
+.project-catalog.catalog-view-grid .property-tile-price,
+.project-catalog.catalog-view-grid .property-tile-price>span,
+.project-catalog.catalog-view-grid .property-tile-info p,
+.project-catalog.catalog-view-grid .property-tile-facts{color:var(--paper)}
+.project-catalog.catalog-view-grid .property-tile-bottom{color:var(--paper);border-top-color:#fcf8f24d}
+.project-catalog.catalog-view-grid .property-tile-arrow,
+.project-catalog.catalog-view-grid .property-tile-save{color:var(--paper);border-color:#fcf8f280}
+.project-catalog.catalog-view-grid .property-tile:hover .property-tile-arrow{background:var(--paper);color:var(--primary)}
+.project-catalog.catalog-view-grid .property-tile-type{top:22px;right:20px;max-width:18%;font-size:8px}
+.project-catalog.catalog-view-grid .property-tile-footer{bottom:12px;font-size:5px}
+
+/* Slight light-to-shade variation gives the category frame a softer finish. */
+.project-catalog.catalog-view-grid .property-tile{
+ background:linear-gradient(145deg,color-mix(in srgb,var(--card-shell) 65%,var(--paper)),var(--card-shell) 48%,color-mix(in srgb,var(--card-shell) 70%,var(--ink)));
+}
+.project-catalog.catalog-view-grid .property-tile-footer{bottom:20px;left:31%;width:38%;font-size:clamp(5px,.5vw,6px);line-height:1.3;letter-spacing:0}
+
+/* Keep the original property information layout inside the new card shell. */
+.project-catalog.catalog-view-grid .property-tile-link{padding:28px 28px 64px;justify-content:space-between;gap:24px}
+.project-catalog.catalog-view-grid .property-tile-edition{display:none}
+.project-catalog.catalog-view-grid .property-tile-info{margin-top:0;padding:0 32px 0 0}
+.project-catalog.catalog-view-grid .property-tile-type{position:static;display:block;max-width:none;text-align:left;font-size:10px;letter-spacing:.12em;margin:0 0 12px;color:var(--paper)}
+.project-catalog.catalog-view-grid .property-tile-info h3{font-size:clamp(22px,2vw,30px);font-weight:500;line-height:1.2;letter-spacing:-.025em;text-wrap:pretty}
+.project-catalog.catalog-view-grid .property-tile-info p{font-size:13px;line-height:1.6}
+.project-catalog.catalog-view-grid .property-tile-facts{font-size:12px;gap:7px 12px;margin-top:8px}
+.project-catalog.catalog-view-grid .property-tile-bottom{border-top:0;padding:0;align-items:flex-end}
+.project-catalog.catalog-view-grid .property-tile-price>span{font-size:11px;text-transform:none;letter-spacing:0}
+.project-catalog.catalog-view-grid .property-tile-price strong{font-size:clamp(24px,2.4vw,34px);font-weight:500}
+.project-catalog.catalog-view-grid .property-tile-save{top:24px;right:23px;bottom:auto}
+.project-catalog.catalog-view-grid .property-tile-save{top:12px;right:12px;bottom:auto;width:30px;height:30px;border-color:transparent;background:transparent;color:var(--paper)}
+.project-catalog.catalog-view-grid .property-tile-save .icon{width:18px;height:18px}
+.project-catalog.catalog-view-grid .property-tile-save:hover,
+.project-catalog.catalog-view-grid .property-tile-save.is-saved{background:var(--paper);color:var(--primary)}
+.project-catalog.catalog-view-grid .property-tile-save{top:calc(5px + (100% - 10px) * .035);right:calc(5px + (100% - 10px) * .075);translate:50% -50%}
+
+/* Pointer-lit trading-card foil and reflective face. */
+.project-catalog.catalog-view-grid .property-tile{
+ --card-tilt-x:0deg;--card-tilt-y:0deg;--card-light-x:50%;--card-light-y:30%;
+ transition:transform .22s ease-out,scale .25s ease,box-shadow .3s ease;
+}
+.project-catalog.catalog-view-grid .property-tile::before,
+.project-catalog.catalog-view-grid .property-tile::after{
+ content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:0;transition:opacity .3s ease;
+}
+.project-catalog.catalog-view-grid .property-tile::before{
+ z-index:0;
+ background:radial-gradient(ellipse at var(--card-light-x) var(--card-light-y),#fff9,transparent 65%),repeating-linear-gradient(125deg,#fcf8f247 0 1px,transparent 1px 5px,#dbb98f4d 5px 6px,transparent 6px 11px);
+ mix-blend-mode:soft-light;
+}
+.project-catalog.catalog-view-grid .property-tile::after{
+ z-index:3;inset:5px;border-radius:0;clip-path:var(--card-image-clip);
+ background:radial-gradient(ellipse at var(--card-light-x) var(--card-light-y),#fff7 0%,#fff2 22%,transparent 60%),linear-gradient(115deg,transparent 25%,#fcf8f21f 42%,#fff5 48%,#dbb98f1a 54%,transparent 70%);
+ background-size:100% 100%,220% 220%;background-position:center,var(--card-light-x) var(--card-light-y);
+ mix-blend-mode:screen;
+}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ .project-catalog.catalog-view-grid .property-tile:hover{
+  z-index:4;transform:perspective(1100px) rotateX(var(--card-tilt-x)) rotateY(var(--card-tilt-y));
+  box-shadow:0 4px 8px #352a2526,0 24px 38px -18px #352a2566;
+ }
+ .project-catalog.catalog-view-grid .property-tile:hover::before,
+ .project-catalog.catalog-view-grid .property-tile:hover::after{opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+ .project-catalog.catalog-view-grid .property-tile,
+ .project-catalog.catalog-view-grid .property-tile::before,
+ .project-catalog.catalog-view-grid .property-tile::after{transition:none}
+}
+/* Foil reflection belongs only to the category-colored outer frame. */
+.project-catalog.catalog-view-grid .property-tile::after{content:none}
+/* A restrained iridescent reflection moves across the exposed outer foil. */
+.project-catalog.catalog-view-grid .property-tile::before{
+ background:
+  radial-gradient(ellipse at var(--card-light-x) var(--card-light-y),#ffffff99,transparent 65%),
+  linear-gradient(115deg,transparent 12%,#ffc2c94d 25%,#ffe3a85c 35%,#c8f0d94d 45%,#b7dcff5c 55%,#dac6ff4d 65%,#ffc6e04d 75%,transparent 88%),
+  repeating-linear-gradient(125deg,#fcf8f247 0 1px,transparent 1px 5px,#dbb98f4d 5px 6px,transparent 6px 11px);
+ background-size:100% 100%,220% 220%,100% 100%;
+ background-position:center,var(--card-light-x) var(--card-light-y),center;
+ mix-blend-mode:soft-light;
+}

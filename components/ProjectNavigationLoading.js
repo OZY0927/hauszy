@@ -2,6 +2,8 @@
 import {useEffect,useRef,useState} from 'react';
 import {usePathname} from 'next/navigation';
 import {flushSync} from 'react-dom';
+import {gsap} from 'gsap';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import ProjectLoading from './ProjectLoading';
 import {randomProjectLoadingIcon} from '../lib/project-loading-icons';
 import {createLoadingIconPreloader} from '../lib/loading-icon-preload';
@@ -12,7 +14,7 @@ export default function ProjectNavigationLoading(){
  const pathname=usePathname();
  const [kind,setKind]=useState(()=>projectPath(cleanPath(pathname))?(cleanPath(pathname)==='/projects'?'listing':'details'):null);
  const [revealing,setRevealing]=useState(false),[celebrating,setCelebrating]=useState(false),[icon,setIcon]=useState('tree');
- const controller=useRef(null),destination=useRef(null),committed=useRef(cleanPath(pathname));
+ const controller=useRef(null),destination=useRef(null),committed=useRef(cleanPath(pathname)),freshProject=useRef(null);
  useEffect(()=>{
   let timer,exitTimer,safetyTimer,warmTimer,running=false,completing=false,started=0,disposed=false,nextIcon='tree';
   const preload=createLoadingIconPreloader(window.Image);
@@ -26,6 +28,15 @@ export default function ProjectNavigationLoading(){
    const failed=!!document.querySelector('main.property-missing');
    const ready=failed||(destination.current==='/projects'?document.querySelector('main.projects-page'):document.querySelector('main.project-story[data-images-ready="true"]:not([data-motion-pending])'));
    if(!ready)return;
+   // Next may retain the old scroll offset when the tall hero is already visible.
+   // Reset only explicit project-link visits, after the destination layout is ready.
+   if(freshProject.current===destination.current){
+    freshProject.current=null;
+    window.scrollTo({top:0,left:0,behavior:'instant'});
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.refresh();ScrollTrigger.update();
+    for(const trigger of ScrollTrigger.getAll())trigger.getTween()?.progress(1);
+   }
    completing=true;clearTimeout(safetyTimer);observer.disconnect();
    timer=setTimeout(()=>{
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -51,10 +62,12 @@ export default function ProjectNavigationLoading(){
    const url=new URL(link.href,location.href),path=cleanPath(url.pathname);
    if(url.origin!==location.origin||!/^\/projects(?:\/[^/]+)?$/.test(path)||path===cleanPath(location.pathname))return;
    // Capture before Next Link consumes the click; navigation proceeds behind the overlay.
+   freshProject.current=/^\/projects\/[^/]+$/.test(path)&&!url.hash?path:null;
    window.__hauszyPriceNoticePath=/^\/projects\/[^/]+$/.test(path)?path:null;
    flushSync(()=>start(path));
   };
   const history=()=>{
+   freshProject.current=null;
    const path=cleanPath(location.pathname);
    // Anchor navigation can emit popstate too. Only a different page needs loading;
    // section links and their Back/Forward entries keep the native smooth scroll.

@@ -1292,3 +1292,7 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
 @media(max-width:600px){.neighbourhood-heading{grid-template-columns:1fr;gap:26px;margin-bottom:26px}.neighbourhood-address{justify-self:start;max-width:none}.neighbourhood-map-title{padding:20px}.project-story .neighbourhood-map-card #projectMap{height:330px}.neighbourhood-directory-heading{padding:24px 20px 18px}.neighbourhood-categories{padding:0 20px 22px;gap:7px}.neighbourhood-place-panel{padding:0 20px 8px}.neighbourhood-note{text-align:left}.neighbourhood-workspace{gap:18px}.neighbourhood-map-card,.neighbourhood-directory{border-radius:14px}}
 
 @media(max-width:850px){body>header.hz-header>.hz-header-cta{display:none}}
+
+/* Shared supporting colors for warm surfaces and readable interaction states. */
+:root{--surface:#fffdf9;--surface-soft:#f3eadd;--primary-soft:#f2e7df;--primary-strong:#7a2914;--line-strong:#d6c4af;--overlay-rgb:53,42,37;--success:#2f7d4f;--danger:#a12d1a}
+::selection{background:var(--secondary);color:var(--ink)}

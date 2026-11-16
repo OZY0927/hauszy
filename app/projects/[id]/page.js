@@ -42,7 +42,7 @@ export default async function Project({params}){
 
   {(visibility.overview||visibility.photos)&&<ProjectScrollIntroduction photos={visibility.photos?p.images:[]}>
    {visibility.overview&&<>
-   <div className="project-story-intro-main"><div className="eyebrow">THE PROJECT</div><h2>{hasProjectInfo(p.title)&&p.title.trim().toLowerCase()!==p.name.trim().toLowerCase()?p.title:<>A closer look.<br/>A place to call yours.</>}</h2>{hasProjectInfo(p.location)&&<span className="project-overview-location"><Icon name="mapPin"/>{p.location}</span>}<p>Explore the layouts, spaces and details. Picture the possibilities for your next chapter.</p>{visibility.enquiry&&<a className="project-story-pill" href="#enquiry">Enquire about this project <Icon name="arrowUpRight"/></a>}</div>
+   <div className="project-story-intro-main"><div className="eyebrow">THE PROJECT</div><h2>{hasProjectInfo(p.title)&&p.title.trim().toLowerCase()!==p.name.trim().toLowerCase()?p.title:<>A closer look.<br/>A place to call yours.</>}</h2>{visibility.enquiry&&<a className="project-story-pill" href="#enquiry">Enquire about this project <Icon name="arrowUpRight"/></a>}</div>
 
    </>}
   </ProjectScrollIntroduction>}
