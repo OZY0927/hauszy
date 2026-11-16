@@ -145,14 +145,13 @@
 
 /* Liquid glass is exclusive to the project listing's list cards. */
 .project-catalog.catalog-view-list .catalog-list-row{
- --glass-x:35%;--glass-y:15%;--glass-rx:0deg;--glass-ry:0deg;
+ --glass-x:35%;--glass-y:15%;
  position:relative;isolation:isolate;
  border:1px solid #dbb98fc7;border-radius:22px;
  background:linear-gradient(135deg,#f3e3cfdc,#dbb98fb8 48%,#bb886b85);
  box-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px #96351e12,inset 1px 0 1px #fff9,0 10px 26px #63341e18,0 3px 8px #63341e10;
  -webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
- transform:perspective(1100px) rotateX(var(--glass-rx)) rotateY(var(--glass-ry));
- transition:transform .3s ease-out,box-shadow .3s,border-color .3s;
+ transition:box-shadow .3s,border-color .3s;
 }
 .project-catalog.catalog-view-list .catalog-list-row::before,
 .project-catalog.catalog-view-list .catalog-list-row::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1}

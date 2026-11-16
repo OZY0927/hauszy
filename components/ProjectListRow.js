@@ -18,11 +18,9 @@ export default function ProjectListRow({project,saved,onSave}){
    if(!surface.current)return;
    surface.current.style.setProperty('--glass-x',`${x*100}%`);
    surface.current.style.setProperty('--glass-y',`${y*100}%`);
-   surface.current.style.setProperty('--glass-rx',`${(0.5-y)*3}deg`);
-   surface.current.style.setProperty('--glass-ry',`${(x-0.5)*3}deg`);
   });
  }
- function resetGlass(){cancelAnimationFrame(frame.current);for(const key of ['--glass-x','--glass-y','--glass-rx','--glass-ry'])surface.current?.style.removeProperty(key)}
+ function resetGlass(){cancelAnimationFrame(frame.current);for(const key of ['--glass-x','--glass-y'])surface.current?.style.removeProperty(key)}
  const name=listingName(project),href='/projects/'+encodeURIComponent(project.id);
  const [lead,amount]=startingPrice(project)||[],size=unitMin(project.units,'size');
  const bedrooms=unitLeast(project.units,'bedrooms'),bathrooms=unitLeast(project.units,'bathrooms');
