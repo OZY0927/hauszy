@@ -51,6 +51,7 @@ export default function ProjectNavigationLoading(){
    const url=new URL(link.href,location.href),path=cleanPath(url.pathname);
    if(url.origin!==location.origin||!/^\/projects(?:\/[^/]+)?$/.test(path)||path===cleanPath(location.pathname))return;
    // Capture before Next Link consumes the click; navigation proceeds behind the overlay.
+   window.__hauszyPriceNoticePath=/^\/projects\/[^/]+$/.test(path)?path:null;
    flushSync(()=>start(path));
   };
   const history=()=>{
