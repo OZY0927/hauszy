@@ -142,3 +142,34 @@
  .catalog-list-summary .catalog-list-actions{flex-wrap:wrap;padding-top:12px;gap:10px}
  .catalog-list-price>strong{font-size:1.1875rem}
 }
+
+/* Liquid glass is exclusive to the project listing's list cards. */
+.project-catalog.catalog-view-list .catalog-list-row{
+ --glass-x:35%;--glass-y:15%;--glass-rx:0deg;--glass-ry:0deg;
+ position:relative;isolation:isolate;
+ border:1px solid #ffffffc7;border-radius:22px;
+ background:linear-gradient(135deg,#fffdf8d9,#fcf8f2b8 48%,#dbb98f40);
+ box-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px #96351e12,inset 1px 0 1px #fff9,0 8px 22px #63341e0a,0 2px 5px #63341e08;
+ -webkit-backdrop-filter:blur(20px) saturate(135%);backdrop-filter:blur(20px) saturate(135%);
+ transform:perspective(1100px) rotateX(var(--glass-rx)) rotateY(var(--glass-ry));
+ transition:transform .3s ease-out,box-shadow .3s,border-color .3s;
+}
+.project-catalog.catalog-view-list .catalog-list-row::before,
+.project-catalog.catalog-view-list .catalog-list-row::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1}
+.project-catalog.catalog-view-list .catalog-list-row::before{background:radial-gradient(ellipse at var(--glass-x) var(--glass-y),#ffffffb3,transparent 65%);opacity:.65;transition:opacity .3s}
+.project-catalog.catalog-view-list .catalog-list-row::after{inset:1px;border:1px solid #ffffff70;background:linear-gradient(115deg,#fff5,transparent 30%,transparent 70%,#dbb98f18);box-shadow:inset 0 0 12px #ffffff55}
+.project-catalog.catalog-view-list .catalog-list-photo{box-shadow:0 8px 18px #352a251c,0 0 0 1px #fff9}
+.project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save,
+.project-catalog.catalog-view-list .catalog-list-actions .catalog-list-link{border-color:#ffffffd9;background:linear-gradient(140deg,#ffffffcf,#fcf8f270);box-shadow:inset 0 1px 1px #fff,0 3px 8px #63341e0c;color:var(--primary)}
+.project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save[aria-pressed=true]{background:linear-gradient(135deg,#f3e0d6,#dbb98f85);border-color:#96351e35}
+.project-catalog.catalog-view-list .catalog-list-summary .catalog-list-actions{border-top-color:#96351e15}
+.project-catalog.catalog-view-list .catalog-list-specifications>.catalog-list-tenure{border-color:#ffffffb3;background:#fff6;color:var(--muted)}
+.project-catalog.catalog-view-list .catalog-list-actions .catalog-list-link:hover{background:var(--primary);border-color:var(--primary);color:var(--paper)}
+.project-catalog.catalog-view-list .catalog-list-row:focus-within{border-color:#96351e65;box-shadow:inset 0 1px 1px #fff,0 10px 30px #63341e14}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ .project-catalog.catalog-view-list .catalog-list-row:hover{box-shadow:inset 0 1px 2px #fff,inset 0 -1px 1px #96351e18,0 18px 38px #63341e16,0 4px 10px #63341e0a;border-color:#fff}
+ .project-catalog.catalog-view-list .catalog-list-row:hover::before{opacity:1}
+}
+@media(prefers-reduced-motion:reduce){.project-catalog.catalog-view-list .catalog-list-row{transform:none;transition:none}.project-catalog.catalog-view-list .catalog-list-row::before{transition:none}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.project-catalog.catalog-view-list .catalog-list-row{background:linear-gradient(135deg,#fffcf8,#f3e7d8)}}
+@media(max-width:560px){.project-catalog.catalog-view-list .catalog-list-row{border-radius:18px}.project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save{width:44px;height:44px;min-height:44px}}
