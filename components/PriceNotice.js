@@ -7,7 +7,7 @@ const DISMISSED_KEY='hauszy:spa-price-notice-dismissed';
 export default function PriceNotice({children}){
  const dialog=useRef(null),timer=useRef(null),previousOverflow=useRef(null);
  const [mounted,setMounted]=useState(false),[closing,setClosing]=useState(false);
- const title=useId(),description=useId();
+ const description=useId();
  function restoreScroll(){if(previousOverflow.current!==null){document.body.style.overflow=previousOverflow.current;previousOverflow.current=null}}
  function open(){if(!dialog.current||dialog.current.open)return;setClosing(false);previousOverflow.current=document.body.style.overflow;document.body.style.overflow='hidden';dialog.current.showModal()}
  function close(){
@@ -32,8 +32,8 @@ export default function PriceNotice({children}){
   return()=>clearTimeout(arrival);
  },[mounted]);
  return <><div className={styles.trigger}>{children}<span className={styles.priceLabel}>SPA price</span></div>{mounted&&createPortal(
-  <dialog ref={dialog} className={styles.dialog} data-closing={closing} aria-labelledby={title} aria-describedby={description} onCancel={event=>{event.preventDefault();close()}} onClose={()=>{clearTimeout(timer.current);restoreScroll();setClosing(false)}}>
-   <div className={styles.art} aria-hidden="true"><div className={styles.orbit}/><img src="/images/nyonya-notice-3d.png" width={1280} height={1280} alt=""/></div>
-   <div className={styles.copy}><span className={styles.eyebrow}>A LITTLE NOTE ON PRICING</span><h2 id={title}>The price.<br/><em>The possibilities.</em></h2><p id={description}>The prices shown are <strong>Sale and Purchase Agreement (SPA) prices.</strong> For the latest promotions and available packages, please contact us to find out more.</p><button type="button" className={styles.close} onClick={close} autoFocus>Close <span aria-hidden="true">×</span></button><button type="button" className={styles.dismiss} onClick={dismiss}>Do not show again</button></div>
+  <dialog ref={dialog} className={styles.dialog} data-closing={closing} aria-label="Price notice" aria-describedby={description} onCancel={event=>{event.preventDefault();close()}} onClose={()=>{clearTimeout(timer.current);restoreScroll();setClosing(false)}}>
+   <div className={styles.art} aria-hidden="true"><div className={styles.orbit}/><img src="/images/nyonya-notice-3d-terracotta.png" width={1280} height={1280} alt=""/></div>
+   <div className={styles.copy}><p id={description}>The prices shown are <strong>Sale and Purchase Agreement (SPA) prices.</strong> For the <strong>latest promotions</strong> and <strong>available packages</strong>, please <strong>contact us</strong> to find out more.</p><button type="button" className={styles.close} onClick={close} autoFocus>Close <span aria-hidden="true">×</span></button><button type="button" className={styles.dismiss} onClick={dismiss}>Do not show again</button></div>
   </dialog>,document.body)}</>;
 }
