@@ -23,14 +23,14 @@ export default function ListingMeshBackground(){
   const theme=getComputedStyle(document.documentElement);
   const hex=name=>theme.getPropertyValue(name).trim();
   const rgb=color=>{const value=color.replace('#','');return [0,2,4].map(i=>parseInt(value.slice(i,i+2),16)/255)};
-  // Hauszy paper, terracotta, warm sand and pale cream replace the reference palette.
-  const colors=[hex('--paper')||'#FCF8F2',hex('--primary')||'#96351E',hex('--secondary')||'#DBB98F',hex('--surface-soft')||'#F3EADD',hex('--line')||'#E7D8C7'];
-  gl.uniform3fv(gl.getUniformLocation(program,'u_colors[0]'),new Float32Array([...colors,...Array(3).fill(colors[0])].flatMap(rgb)));
+  // Hauszy paper, terracotta, warm sand, pale cream and soft peach replace the reference palette.
+  const colors=[hex('--paper')||'#FCF8F2',hex('--primary')||'#96351E',hex('--secondary')||'#DBB98F',hex('--surface-soft')||'#F3EADD',hex('--line')||'#E7D8C7','#E8B69E'];
+  gl.uniform3fv(gl.getUniformLocation(program,'u_colors[0]'),new Float32Array([...colors,...Array(8-colors.length).fill(colors[0])].flatMap(rgb)));
   set('u_shape',1.26,.35,.28,0);set('u_surface',1.82,1.17,0,1);set('u_finish',0,.15,.007,.04);set('u_transform',5069,0,.15,0);
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   // The swirl wanders on its own along a slow looping path instead of following the pointer.
   const swirl=()=>[.55*Math.sin(time*.21),.45*Math.sin(time*.17+1)];
-  const draw=()=>{const ratio=Math.min(devicePixelRatio||1,2),width=Math.round(el.clientWidth*ratio),height=Math.round(el.clientHeight*ratio);if(!width||!height)return;if(el.width!==width||el.height!==height){el.width=width;el.height=height;gl.viewport(0,0,width,height)}set('u_scene',width,height,time*-.57,5);set('u_space',.09,.15,...swirl());set('u_cursor',reduced.matches?0:1,2,.73,.36);gl.drawArrays(gl.TRIANGLES,0,3)};
+  const draw=()=>{const ratio=Math.min(devicePixelRatio||1,2),width=Math.round(el.clientWidth*ratio),height=Math.round(el.clientHeight*ratio);if(!width||!height)return;if(el.width!==width||el.height!==height){el.width=width;el.height=height;gl.viewport(0,0,width,height)}set('u_scene',width,height,time*-.57,colors.length);set('u_space',.09,.15,...swirl());set('u_cursor',reduced.matches?0:1,2,.73,.36);gl.drawArrays(gl.TRIANGLES,0,3)};
   const tick=now=>{frame=0;if(disposed||document.hidden||reduced.matches)return;if(now-last>=1000/30){time+=last?Math.min((now-last)/1000,.1):0;last=now;draw()}frame=requestAnimationFrame(tick)};
   const resume=()=>{cancelAnimationFrame(frame);frame=0;last=0;draw();if(!document.hidden&&!reduced.matches&&!disposed)frame=requestAnimationFrame(tick)};
   const lost=event=>{event.preventDefault();cancelAnimationFrame(frame)};
