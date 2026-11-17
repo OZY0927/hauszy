@@ -27,18 +27,17 @@ export default function ListingMeshBackground(){
   const colors=[hex('--paper')||'#FCF8F2',hex('--primary')||'#96351E',hex('--secondary')||'#DBB98F',hex('--surface-soft')||'#F3EADD',hex('--line')||'#E7D8C7'];
   gl.uniform3fv(gl.getUniformLocation(program,'u_colors[0]'),new Float32Array([...colors,...Array(3).fill(colors[0])].flatMap(rgb)));
   set('u_shape',1.26,.35,.28,0);set('u_surface',1.82,1.17,0,1);set('u_finish',0,.15,.007,.04);set('u_transform',5069,0,.15,0);
-  let pointer=[0,0],presence=0;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-  const draw=()=>{const ratio=Math.min(devicePixelRatio||1,2),width=Math.round(el.clientWidth*ratio),height=Math.round(el.clientHeight*ratio);if(!width||!height)return;if(el.width!==width||el.height!==height){el.width=width;el.height=height;gl.viewport(0,0,width,height)}set('u_scene',width,height,time*-.57,5);set('u_space',.09,.15,...pointer);set('u_cursor',reduced.matches?0:presence,2,.73,.36);gl.drawArrays(gl.TRIANGLES,0,3)};
+  // The swirl wanders on its own along a slow looping path instead of following the pointer.
+  const swirl=()=>[.55*Math.sin(time*.21),.45*Math.sin(time*.17+1)];
+  const draw=()=>{const ratio=Math.min(devicePixelRatio||1,2),width=Math.round(el.clientWidth*ratio),height=Math.round(el.clientHeight*ratio);if(!width||!height)return;if(el.width!==width||el.height!==height){el.width=width;el.height=height;gl.viewport(0,0,width,height)}set('u_scene',width,height,time*-.57,5);set('u_space',.09,.15,...swirl());set('u_cursor',reduced.matches?0:1,2,.73,.36);gl.drawArrays(gl.TRIANGLES,0,3)};
   const tick=now=>{frame=0;if(disposed||document.hidden||reduced.matches)return;if(now-last>=1000/30){time+=last?Math.min((now-last)/1000,.1):0;last=now;draw()}frame=requestAnimationFrame(tick)};
   const resume=()=>{cancelAnimationFrame(frame);frame=0;last=0;draw();if(!document.hidden&&!reduced.matches&&!disposed)frame=requestAnimationFrame(tick)};
-  const move=event=>{const rect=el.getBoundingClientRect();pointer=[(event.clientX-rect.left)/rect.width*2-1,1-(event.clientY-rect.top)/rect.height*2];presence=1};
-  const leave=()=>{presence=0};
   const lost=event=>{event.preventDefault();cancelAnimationFrame(frame)};
   const resize=new ResizeObserver(()=>draw());resize.observe(el);
-  window.addEventListener('pointermove',move,{passive:true});document.documentElement.addEventListener('pointerleave',leave);document.addEventListener('visibilitychange',resume);reduced.addEventListener('change',resume);el.addEventListener('webglcontextlost',lost);
+  document.addEventListener('visibilitychange',resume);reduced.addEventListener('change',resume);el.addEventListener('webglcontextlost',lost);
   resume();
-  return()=>{disposed=true;cancelAnimationFrame(frame);resize.disconnect();window.removeEventListener('pointermove',move);document.documentElement.removeEventListener('pointerleave',leave);document.removeEventListener('visibilitychange',resume);reduced.removeEventListener('change',resume);el.removeEventListener('webglcontextlost',lost);gl.deleteBuffer(buffer);gl.deleteProgram(program);shaders.forEach(s=>gl.deleteShader(s))};
+  return()=>{disposed=true;cancelAnimationFrame(frame);resize.disconnect();document.removeEventListener('visibilitychange',resume);reduced.removeEventListener('change',resume);el.removeEventListener('webglcontextlost',lost);gl.deleteBuffer(buffer);gl.deleteProgram(program);shaders.forEach(s=>gl.deleteShader(s))};
  },[]);
  return <div className="listing-mesh-background" aria-hidden="true"><canvas ref={canvas}/></div>;
 }
