@@ -8,7 +8,7 @@
 }
 .project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta):disabled{cursor:not-allowed}
 @media(hover:hover){
- .project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta):not(:disabled):hover{box-shadow:0 6px 18px #352a2518}
+ .project-story :is(button,a.project-story-pill,a.project-section-enquire,a.search-btn,a.loan-project-cta):not(:disabled):hover{box-shadow:0 6px 18px color-mix(in srgb,var(--ink) 9.4%,transparent)}
  .project-story :is(.project-story-cover,.floorplan-open,.project-editorial-photo):hover{box-shadow:none}
  .project-story .project-section-links>a:hover{background:color-mix(in srgb,var(--primary) 8%,transparent);border-radius:999px}
  .project-story .location-atlas-categories button:hover{background:color-mix(in srgb,var(--primary) 5%,transparent)}

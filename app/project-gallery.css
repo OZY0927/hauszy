@@ -1,5 +1,5 @@
 /* Expanding photo gallery, scoped to the project photography section. */
-.project-story #project-photos{color:var(--paper);background:radial-gradient(ellipse at 12% 70%,#96351e45,transparent 55%),#211914;padding-block:clamp(36px,5vw,72px);overflow:hidden}
+.project-story #project-photos{color:var(--paper);background:radial-gradient(ellipse at 12% 70%,color-mix(in srgb,var(--primary) 27.1%,transparent),transparent 55%),var(--ink);padding-block:clamp(36px,5vw,72px);overflow:hidden}
 .project-story #project-photos>.project-story-section-heading{max-width:1320px;margin:0 auto 32px;align-items:end}
 .project-story #project-photos .project-story-section-heading h2{font-size:clamp(28px,3.2vw,48px);line-height:1.12;max-width:650px}
 .project-story #project-photos .eyebrow{color:var(--secondary)}

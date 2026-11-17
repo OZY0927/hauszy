@@ -19,7 +19,7 @@
 .catalog-top .catalog-filter-heading :is(button,select):focus-visible{outline:2px solid var(--primary);outline-offset:3px}
 .catalog-screen-reader{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
-.catalog-top.project-catalog .catalog-filters form{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:20px 32px;padding:28px;border:1px solid var(--line);border-top:0;background:#f1eae0}
+.catalog-top.project-catalog .catalog-filters form{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:20px 32px;padding:28px;border:1px solid var(--line);border-top:0;background:var(--surface-soft)}
 .catalog-top .catalog-sort-field{grid-column:1;grid-row:1}
 .catalog-sort-field>span{display:flex;align-items:center;gap:7px}
 .catalog-top .catalog-sort-field select{width:100%;margin-top:10px;padding:13px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);font-family:var(--font-site);font-size:var(--text-body);letter-spacing:0}
@@ -120,7 +120,7 @@
 .catalog-list-location{margin:0;gap:5px;align-items:flex-start;font-size:var(--text-small);line-height:1.5}
 .catalog-list-location .icon{width:14px;height:14px;margin-top:3px}
 .catalog-list-title-row .catalog-list-save{display:grid;place-items:center;flex:none;width:36px;height:36px;min-height:36px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--muted)}
-.catalog-list-title-row .catalog-list-save[aria-pressed=true]{color:var(--primary);background:#ead3c5;border-color:#d7b59f}
+.catalog-list-title-row .catalog-list-save[aria-pressed=true]{color:var(--primary);background:var(--line);border-color:var(--line-strong)}
 .catalog-list-specifications{display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px;font-size:var(--text-small);color:var(--ink)}
 .catalog-list-specifications>span{display:inline-flex;align-items:center;gap:6px;line-height:1.5}
 .catalog-list-specifications .icon{width:15px;height:15px;color:var(--muted);flex:none}
@@ -143,45 +143,62 @@
  .catalog-list-price>strong{font-size:1.1875rem}
 }
 
-/* Liquid glass is exclusive to the project listing's list cards. */
+/* Glass card, values taken directly from the "Glass Card 3D" reference (only the size differs):
+   warm translucent gradient, blur, bevelled edge, layered shadow, specular sheen, inner refraction ring,
+   and a 3D tilt that eases toward the pointer from a flat rest (driven from ProjectListRow). */
 .project-catalog.catalog-view-list .catalog-list-row{
- --glass-x:35%;--glass-y:15%;
- position:relative;isolation:isolate;
- border:1px solid #dbb98fc7;border-radius:22px;
- background:linear-gradient(135deg,#f3e3cfdc,#dbb98fb8 48%,#bb886b85);
- box-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px #96351e12,inset 1px 0 1px #fff9,0 10px 26px #63341e18,0 3px 8px #63341e10;
- -webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%);
- transition:box-shadow .3s,border-color .3s;
+ position:relative;isolation:isolate;transform-style:preserve-3d;
+ transform:perspective(1200px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+ transition:transform .25s ease-out;
+ border-radius:28px;
+ background:linear-gradient(155deg,color-mix(in srgb,var(--surface-soft) 38%,transparent) 0%,color-mix(in srgb,var(--line-strong) 16%,transparent) 40%,color-mix(in srgb,var(--secondary) 10%,transparent) 100%);
+ -webkit-backdrop-filter:blur(9px) saturate(1.25) brightness(1.04);backdrop-filter:blur(9px) saturate(1.25) brightness(1.04);
+ border:1.5px solid color-mix(in srgb,var(--surface-soft) 65%,transparent);
+ box-shadow:
+  inset 0 2px 1px rgba(255,255,255,.75),
+  inset 0 -2px 2px color-mix(in srgb,var(--primary) 25%,transparent),
+  inset 2px 0 2px rgba(255,255,255,.25),
+  inset -2px 0 3px color-mix(in srgb,var(--primary) 15%,transparent),
+  0 2px 4px color-mix(in srgb,var(--primary-strong) 18%,transparent),
+  0 18px 40px color-mix(in srgb,var(--primary-strong) 32%,transparent),
+  0 40px 80px color-mix(in srgb,var(--primary-strong) 25%,transparent);
 }
-.project-catalog.catalog-view-list .catalog-list-row::before,
-.project-catalog.catalog-view-list .catalog-list-row::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1}
-.project-catalog.catalog-view-list .catalog-list-row::before{background:radial-gradient(ellipse at var(--glass-x) var(--glass-y),#fff5e28c,transparent 65%);opacity:.55;transition:opacity .3s}
-.project-catalog.catalog-view-list .catalog-list-row::after{inset:1px;border:1px solid #fff5e28c;background:linear-gradient(115deg,#fff5e233,transparent 30%,transparent 70%,#96351e18);box-shadow:inset 0 0 12px #fff5e233}
-.project-catalog.catalog-view-list .catalog-list-photo{box-shadow:0 8px 18px #352a251c,0 0 0 1px #fff9}
+/* Specular sheen sweeping across the glass. */
+.project-catalog.catalog-view-list .catalog-list-row::before{
+ content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+ background:
+  radial-gradient(80% 45% at 18% 0%,rgba(255,255,255,.35),transparent 60%),
+  linear-gradient(115deg,transparent 38%,rgba(255,255,255,.10) 45%,transparent 55%);
+}
+/* Subtle edge refraction ring. */
+.project-catalog.catalog-view-list .catalog-list-row::after{
+ content:'';position:absolute;inset:6px;border-radius:calc(28px - 6px);pointer-events:none;z-index:-1;
+ border:1px solid rgba(255,255,255,.12);
+}
+.project-catalog.catalog-view-list .catalog-list-photo{box-shadow:0 8px 18px color-mix(in srgb,var(--primary-strong) 18%,transparent),0 0 0 1px color-mix(in srgb,var(--surface-soft) 65%,transparent)}
 .project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save,
-.project-catalog.catalog-view-list .catalog-list-actions .catalog-list-link{border-color:#ffffffd9;background:linear-gradient(140deg,#fff5e2b8,#dbb98f80);box-shadow:inset 0 1px 1px #fff,0 3px 8px #63341e0c;color:var(--primary)}
-.project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save[aria-pressed=true]{background:linear-gradient(135deg,#f3e0d6,#dbb98f85);border-color:#96351e35}
-.project-catalog.catalog-view-list .catalog-list-summary .catalog-list-actions{border-top-color:#96351e2b}
-.project-catalog.catalog-view-list .catalog-list-specifications>.catalog-list-tenure{border-color:#fff5e280;background:#fcf8f259;color:var(--ink)}
-.project-catalog.catalog-view-list .catalog-list-actions .catalog-list-link:hover{background:var(--primary);border-color:var(--primary);color:var(--paper)}
-.project-catalog.catalog-view-list .catalog-list-row:focus-within{border-color:#96351e65;box-shadow:inset 0 1px 1px #fff,0 10px 30px #63341e14}
-@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
- .project-catalog.catalog-view-list .catalog-list-row:hover{box-shadow:inset 0 1px 2px #fff,inset 0 -1px 1px #96351e18,0 18px 38px #63341e26,0 4px 10px #63341e14;border-color:#fff2de}
- .project-catalog.catalog-view-list .catalog-list-row:hover::before{opacity:1}
+.project-catalog.catalog-view-list .catalog-list-actions .catalog-list-link{
+ border:1.5px solid color-mix(in srgb,var(--surface-soft) 65%,transparent);background:linear-gradient(155deg,color-mix(in srgb,var(--surface-soft) 38%,transparent),color-mix(in srgb,var(--secondary) 10%,transparent));
+ box-shadow:inset 0 2px 1px rgba(255,255,255,.75),inset 0 -2px 2px color-mix(in srgb,var(--primary) 25%,transparent),0 2px 4px color-mix(in srgb,var(--primary-strong) 18%,transparent);color:var(--primary)
 }
-@media(prefers-reduced-motion:reduce){.project-catalog.catalog-view-list .catalog-list-row{transform:none;transition:none}.project-catalog.catalog-view-list .catalog-list-row::before{transition:none}}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.project-catalog.catalog-view-list .catalog-list-row{background:linear-gradient(135deg,#f3e3cf,#dbb98f)}}
-@media(max-width:560px){.project-catalog.catalog-view-list .catalog-list-row{border-radius:18px}.project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save{width:44px;height:44px;min-height:44px}}
+.project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save[aria-pressed=true]{background:linear-gradient(155deg,color-mix(in srgb,var(--surface-soft) 70%,transparent),color-mix(in srgb,var(--secondary) 45%,transparent))}
+.project-catalog.catalog-view-list .catalog-list-summary .catalog-list-actions{border-top-color:color-mix(in srgb,var(--primary) 18%,transparent)}
+.project-catalog.catalog-view-list .catalog-list-specifications>.catalog-list-tenure{border-color:color-mix(in srgb,var(--surface-soft) 65%,transparent);background:color-mix(in srgb,var(--surface-soft) 38%,transparent);color:var(--ink)}
+.project-catalog.catalog-view-list .catalog-list-actions .catalog-list-link:hover{background:var(--primary);border-color:var(--primary);color:var(--paper)}
+.project-catalog.catalog-view-list .catalog-list-row:focus-within{border-color:color-mix(in srgb,var(--primary) 45%,transparent)}
+@media(prefers-reduced-motion:reduce){.project-catalog.catalog-view-list .catalog-list-row{transition:none}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.project-catalog.catalog-view-list .catalog-list-row{background:linear-gradient(155deg,var(--paper),var(--primary-soft))}}
+@media(max-width:560px){.project-catalog.catalog-view-list .catalog-list-row{border-radius:20px}.project-catalog.catalog-view-list .catalog-list-row::after{border-radius:14px}.project-catalog.catalog-view-list .catalog-list-title-row .catalog-list-save{width:44px;height:44px;min-height:44px}}
 
-/* A viewport-sized mesh stays behind the entire listing without covering controls. */
-.projects-page:has(.listing-mesh-background){position:relative;isolation:isolate;background:transparent}
-.listing-mesh-background{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:clip;background:radial-gradient(ellipse at 20% 30%,#dbb98f80,transparent 65%),var(--paper)}
-.listing-mesh-background canvas{position:sticky;top:0;display:block;width:100%;height:100svh;opacity:.45}
+/* The shimmer gradient (light Hauszy palette) fills one screen height and stays put behind the listing as you scroll. */
+.projects-page:has(.listing-background){position:relative;isolation:isolate;background:transparent}
+.listing-background{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:clip;background:var(--surface-soft)}
+.listing-background-viewport{position:sticky;top:0;width:100%;height:100svh}
 
 /* Let the listing mesh show through the navigation at the top of the page. */
 body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
-.projects-page .listing-mesh-background{top:-100px}
-@media(max-width:800px){.projects-page .listing-mesh-background{top:-80px}}
+.projects-page .listing-background{top:-100px}
+@media(max-width:800px){.projects-page .listing-background{top:-80px}}
 
 .projects-page .all-projects-heading{display:block;text-align:center}
 .projects-page .all-projects-heading #project-listing-title{max-width:none;width:100%;margin-inline:auto;font-weight:800;text-align:center}
@@ -189,98 +206,58 @@ body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transpare
 .projects-page #project-listing-title .listing-title-lead{font-size:clamp(24px,3vw,40px);line-height:1.25;letter-spacing:-.035em;margin-bottom:8px}
 .projects-page #project-listing-title .listing-title-place{font-size:clamp(48px,8vw,108px);line-height:1.08;letter-spacing:-.055em}
 
-/* Ticket card: cut-corner panel with a framed photo, a detachable stub, and a terracotta flip on hover. */
-.project-catalog.catalog-view-grid .cards{gap:26px 18px;counter-reset:ticket}
+/* Grid view uses the plain full-photo card (base .property-tile styles), at 3:4 with four columns on wide screens. */
+.project-catalog.catalog-view-grid .cards{gap:22px 18px}
 @media(min-width:1201px){.project-catalog.catalog-top.catalog-view-grid .cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.ticket-card{
- --ease-out:cubic-bezier(.22,1,.36,1);--cut:14px;--stub-h:120px;--tint:var(--primary);--face:#f3eadd;--face-ink:var(--ink);--mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
- position:relative;min-width:0;container-type:inline-size;counter-increment:ticket;color:var(--face-ink);
-}
-.ticket-card[data-category="Landed"]{--tint:#8a5a2b}
-.ticket-card[data-category="Commercial"]{--tint:var(--ink)}
-.ticket-card-link{display:grid;gap:7px;color:inherit;filter:drop-shadow(0 1px 1px #352a251f) drop-shadow(0 14px 18px #352a251f);transition:filter .5s var(--ease-out)}
-.ticket-card-link:focus-visible{outline:3px solid var(--primary);outline-offset:4px;border-radius:6px}
-
-/* Both pieces share the chamfered silhouette; colour flips together on hover. */
-.ticket-card-main,.ticket-card-stub{
- position:relative;background:var(--face);color:var(--face-ink);
- clip-path:polygon(var(--cut) 0,calc(100% - var(--cut)) 0,100% var(--cut),100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,var(--cut) 100%,0 calc(100% - var(--cut)),0 var(--cut));
- transition:background .45s var(--ease-out),color .45s var(--ease-out),translate .6s var(--ease-out);
-}
-.ticket-card-main{padding:14px 14px 16px}
-.ticket-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin:2px 4px 12px}
-.ticket-card-head h3{margin:0;font-family:var(--font-site);font-size:clamp(17px,7cqi,22px);font-weight:600;line-height:1.15;letter-spacing:-.03em;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:2.3em}
-.ticket-card-no{flex:none;font:500 10px/1.6 var(--mono);letter-spacing:.06em;opacity:.55}
-.ticket-card-no::before{content:'0' counter(ticket,decimal-leading-zero)}
-
-/* Framed photo: dot-grid mat with corner brackets. */
-.ticket-card-frame{
- position:relative;aspect-ratio:4/3;padding:9px;
- background:radial-gradient(circle,color-mix(in srgb,currentColor 28%,transparent) .8px,transparent 1.1px) 0 0/7px 7px;
-}
-.ticket-card-frame::after{
- content:'';position:absolute;inset:0;pointer-events:none;--b:currentColor;
- background:
-  linear-gradient(var(--b),var(--b)) 0 0/12px 1px,linear-gradient(var(--b),var(--b)) 0 0/1px 12px,
-  linear-gradient(var(--b),var(--b)) 100% 0/12px 1px,linear-gradient(var(--b),var(--b)) 100% 0/1px 12px,
-  linear-gradient(var(--b),var(--b)) 0 100%/12px 1px,linear-gradient(var(--b),var(--b)) 0 100%/1px 12px,
-  linear-gradient(var(--b),var(--b)) 100% 100%/12px 1px,linear-gradient(var(--b),var(--b)) 100% 100%/1px 12px;
- background-repeat:no-repeat;opacity:.7;transition:inset .6s var(--ease-out)
-}
-.ticket-card-photo{position:relative;height:100%;overflow:hidden;background:#e7d8c7}
-.ticket-card-photo img{display:block;width:100%;height:100%;object-fit:cover;filter:sepia(.18) saturate(.92);transition:scale 1.2s var(--ease-out),filter .6s ease}
-.ticket-card-photo::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#352a2526 .7px,transparent 1px) 0 0/5px 5px;mix-blend-mode:multiply;transition:opacity .6s ease}
-
-/* Stub. */
-.ticket-card-stub{display:grid;gap:3px;align-content:start;height:var(--stub-h);padding:13px 52px 14px 18px}
-.ticket-card-type{font:500 10px/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ticket-card-type::before{content:'◇ '}
-.ticket-card-stub p{color:inherit}
-.ticket-card-location,.ticket-card-facts{margin:0;font-size:clamp(11.5px,4.5cqi,13px);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ticket-card-facts{opacity:.7}
-.ticket-card-price{display:flex;align-items:baseline;gap:6px;margin:6px 0 0;white-space:nowrap}
-.ticket-card-price span{font-size:11px;opacity:.7}
-.ticket-card-price strong{font-size:clamp(15px,6cqi,18px);font-weight:600;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis}
-.ticket-card-price .icon{flex:none;align-self:center;width:15px;height:15px;margin-left:auto;transition:translate .5s var(--ease-out)}
-
-/* Save sits where the stub's menu dots would be. */
-.ticket-card-save{
- position:absolute;right:10px;bottom:calc(var(--stub-h) - 46px);z-index:2;display:grid;place-items:center;width:36px;height:36px;padding:0;
- border:0;border-radius:50%;background:transparent;color:var(--ink);opacity:.7;cursor:pointer;transition:background .3s ease,color .3s ease,opacity .3s ease,scale .4s var(--ease-out)
-}
-.ticket-card-save .icon{width:18px;height:18px}
-.ticket-card-save:hover{opacity:1;scale:1.1}
-.ticket-card-save.is-saved{opacity:1;color:var(--primary)}
-.ticket-card-save.is-saved .icon{animation:tile-heart-pop .5s var(--ease-out)}
-@keyframes tile-heart-pop{0%{scale:.6}45%{scale:1.3}100%{scale:1}}
-
-/* Hover: flip to the category colour, tear the stub away and zoom the photo. */
-.ticket-card:hover{--face:var(--tint);--face-ink:var(--paper)}
-.ticket-card:hover .ticket-card-save{color:var(--paper)}
-.ticket-card:hover .ticket-card-photo img{scale:1.06;filter:none}
-.ticket-card:hover .ticket-card-photo::after{opacity:.4}
-.ticket-card:hover .ticket-card-frame::after{inset:-3px}
-.ticket-card:hover .ticket-card-price .icon{translate:3px -3px}
-@media(hover:hover) and (pointer:fine){
- .ticket-card:hover .ticket-card-main{translate:0 -4px}
- .ticket-card:hover .ticket-card-stub{translate:0 4px}
- .ticket-card:hover .ticket-card-link{filter:drop-shadow(0 2px 2px #352a2526) drop-shadow(0 22px 26px #352a2533)}
-}
-.ticket-card:has(.ticket-card-link:active) .ticket-card-main{translate:0 -1px}
-
-/* Tickets rise into view as they scroll in, staggered across a row. */
-@keyframes ticket-rise{from{opacity:0;translate:0 56px;rotate:-2deg}to{opacity:1;translate:0 0;rotate:0deg}}
+.project-catalog.catalog-view-grid .property-tile{aspect-ratio:3/4;min-height:0;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+@media(max-width:560px){.project-catalog.catalog-view-grid .property-tile{width:100%;max-width:340px;justify-self:center}}
+/* Press: shrink with a slight tilt (after SteveBloX on Uiverse.io); not triggered by the save button. */
+.project-catalog.catalog-view-grid .property-tile:has(.property-tile-link:active){transform:scale(.95) rotateZ(1.7deg)}
+/* Cards fade up as they scroll into view, staggered across each row of four. Uses translate/opacity so it
+   doesn't clash with the press transform. Browsers without scroll-driven animations just show the cards. */
+@keyframes grid-tile-fade-up{from{opacity:0;translate:0 48px}to{opacity:1;translate:0 0}}
 @supports (animation-timeline:view()){
  @media(prefers-reduced-motion:no-preference){
-  .ticket-card{animation:ticket-rise linear both;animation-timeline:view();animation-range:entry 0% entry 60%}
-  .ticket-card:nth-child(4n+2){animation-range:entry 6% entry 66%}
-  .ticket-card:nth-child(4n+3){animation-range:entry 12% entry 72%}
-  .ticket-card:nth-child(4n){animation-range:entry 18% entry 78%}
+  .project-catalog.catalog-view-grid .property-tile{animation:grid-tile-fade-up linear both;animation-timeline:view();animation-range:entry 0% entry 55%}
+  .project-catalog.catalog-view-grid .property-tile:nth-child(4n+2){animation-range:entry 5% entry 60%}
+  .project-catalog.catalog-view-grid .property-tile:nth-child(4n+3){animation-range:entry 10% entry 65%}
+  .project-catalog.catalog-view-grid .property-tile:nth-child(4n){animation-range:entry 15% entry 70%}
  }
 }
+@media(prefers-reduced-motion:reduce){.project-catalog.catalog-view-grid .property-tile{transition:none}.project-catalog.catalog-view-grid .property-tile:has(.property-tile-link:active){transform:none}}
 
-@media(max-width:560px){.ticket-card{width:100%;max-width:340px;justify-self:center}.ticket-card-save{width:44px;height:44px;right:6px}}
-@media(prefers-reduced-motion:reduce){
- .ticket-card *,.ticket-card *::before,.ticket-card *::after{transition:none!important;animation:none!important}
- .ticket-card:hover .ticket-card-photo img{scale:1}
-}
+/* Grid "tour" card (after the uploaded building-tour card): photo with a progressively blurred, darkened lower
+   half carrying the name, location, a divider, three stats and a white price button; a soft warm glow bleeds
+   out underneath. Sizes use container units so the card scales as one piece. */
+.project-catalog.catalog-view-grid .tour-card{overflow:visible;background:transparent;border-radius:0;isolation:isolate}
+.tour-card::before{content:'';position:absolute;left:6%;right:6%;top:18%;bottom:-4%;z-index:-1;border-radius:40px;pointer-events:none;
+ background:linear-gradient(180deg,color-mix(in srgb,var(--muted) 45%,var(--paper)) 0%,var(--secondary) 55%,var(--primary) 100%);filter:blur(34px);opacity:.5}
+.tour-card-frame{position:absolute;inset:0;container-type:inline-size;border-radius:34px;overflow:hidden;isolation:isolate;color:white;background:var(--ink);
+ box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 12%,transparent),0 20px 40px color-mix(in srgb,var(--ink) 18%,transparent)}
+.tour-card .property-tile-photo img{object-position:50% 30%}
+.tour-card-blur{position:absolute;inset:0;pointer-events:none;-webkit-mask-image:linear-gradient(180deg,transparent 38%,#000 62%);mask-image:linear-gradient(180deg,transparent 38%,#000 62%)}
+/* Scaled up so the blur has no soft edges (Next Image sets its own inset/size inline). */
+.tour-card-blur img{object-fit:cover;object-position:50% 30%;filter:blur(14px) saturate(1.1);transform:scale(1.12);transition:transform .6s cubic-bezier(.22,1,.36,1)}
+.tour-card:hover .tour-card-blur img{transform:scale(1.16)}
+.tour-card-blur>span{display:none}
+.tour-card-tint{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,
+ transparent 40%,color-mix(in srgb,var(--ink) 38%,transparent) 55%,color-mix(in srgb,var(--ink) 74%,transparent) 74%,color-mix(in srgb,var(--ink) 90%,transparent) 100%)}
+/* The link covers the card; its content sits at the bottom. */
+.tour-card .tour-card-body{justify-content:flex-end;gap:0;padding:0 7.5cqw 7.5cqw;color:white;text-decoration:none}
+.tour-card .tour-card-body::before{display:none}
+.tour-card-name{margin:0;font-size:5.6cqw;font-weight:600;line-height:1.2;letter-spacing:-.01em;overflow-wrap:anywhere}
+.tour-card-addr{margin:1.2cqw 0 0;font-size:3.6cqw;line-height:1.35;color:color-mix(in srgb,white 72%,transparent)}
+.tour-card-rule{display:block;height:1px;margin:4cqw 0 4.4cqw;background:color-mix(in srgb,white 35%,transparent)}
+.tour-card-stats{display:flex;justify-content:space-between;gap:2cqw;margin:0;padding:0 1cqw}
+.tour-card-stat{display:flex;flex-direction:column-reverse;align-items:center;min-width:14cqw;text-align:center}
+.tour-card-stat dd{margin:0;font-size:5cqw;font-weight:600;line-height:1;white-space:nowrap}
+.tour-card-stat dd small{margin-left:.6cqw;font-size:3cqw;font-weight:600}
+.tour-card-stat.is-text dd{font-size:3.6cqw;line-height:1.25;white-space:normal}
+.tour-card-stat dt{margin-top:1.4cqw;font-size:2.9cqw;color:color-mix(in srgb,white 62%,transparent)}
+.tour-card-cta{display:block;margin-top:5.6cqw;padding:4.4cqw 3cqw;border-radius:4.4cqw;background:var(--paper);color:var(--ink);text-align:center;font-size:4.6cqw;font-weight:700;line-height:1;
+ box-shadow:0 4px 14px color-mix(in srgb,var(--ink) 25%,transparent);transition:transform .15s ease,box-shadow .2s ease}
+.tour-card-cta span{font-weight:500;color:var(--muted)}
+.tour-card:hover .tour-card-cta{transform:translateY(-1px);box-shadow:0 8px 20px color-mix(in srgb,var(--ink) 30%,transparent)}
+.tour-card .tour-card-body:focus-visible{outline:2px solid white;outline-offset:-6px;border-radius:34px}
+.tour-card .property-tile-save{top:5cqw;right:5cqw;border-radius:50%}
+@media(prefers-reduced-motion:reduce){.tour-card-cta{transition:none}}

@@ -1,5 +1,5 @@
 /* A light, outlined specification gallery with a quiet botanical wash of brand color. */
-.project-story .project-details{background:#fcfcfa;padding:32px clamp(20px,4vw,72px) 76px;color:#1f1c19}
+.project-story .project-details{background:var(--paper);padding:32px clamp(20px,4vw,72px) 76px;color:var(--ink)}
 .project-details-inner{position:relative;isolation:isolate;max-width:1640px;margin-inline:auto;display:grid;grid-template-rows:auto auto;gap:28px}
 .project-story .project-details-intro{display:flex;justify-content:space-between;align-items:end;gap:32px;margin:0;position:relative;z-index:1}
 .project-story .project-details-intro .eyebrow{color:var(--primary);font-size:11px}
@@ -9,7 +9,7 @@
 .project-story .project-details-intro p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
 .project-details-summary{margin-top:12px;color:var(--primary);font-size:11px;line-height:1.4}
 .project-details-summary span{display:none}
-.project-details-aura{position:absolute;z-index:-1;pointer-events:none;inset:20% 32% 10%;background:radial-gradient(ellipse at 46% 25%,#e89466a0,transparent 45%),radial-gradient(ellipse at 65% 42%,#bb492565,transparent 42%),radial-gradient(ellipse at 36% 57%,#dbb98f80,transparent 45%);filter:blur(20px);opacity:.7}
+.project-details-aura{position:absolute;z-index:-1;pointer-events:none;inset:20% 32% 10%;background:radial-gradient(ellipse at 46% 25%,color-mix(in srgb,var(--secondary) 62.7%,transparent),transparent 45%),radial-gradient(ellipse at 65% 42%,color-mix(in srgb,var(--primary) 39.6%,transparent),transparent 42%),radial-gradient(ellipse at 36% 57%,color-mix(in srgb,var(--secondary) 50.2%,transparent),transparent 45%);filter:blur(20px);opacity:.7}
 @media(min-width:1200px) and (min-height:700px){.project-story .project-details{padding-top:48px;padding-bottom:88px}.project-details-inner{gap:36px}}
 @media(max-width:700px){.project-story .project-details{padding:32px 20px 64px}.project-story .project-details-intro{display:block}.project-details-intro-note{text-align:left;margin-top:18px}.project-details-aura{inset:20% 10% 20%}}
 @media(prefers-reduced-transparency:reduce),(forced-colors:active){.project-details-aura{display:none}}

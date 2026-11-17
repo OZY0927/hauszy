@@ -5,10 +5,10 @@
   z-index: 2;
   max-width: calc(100% - 76px);
   padding: 7px 11px;
-  border: 1px solid #96351e20;
+  border: 1px solid color-mix(in srgb,var(--primary) 12.5%,transparent);
   border-radius: 999px;
-  background: #fcf8f2ed;
-  color: #6b4b37;
+  background: color-mix(in srgb,var(--paper) 92.9%,transparent);
+  color: var(--muted);
   font-size: 10px;
   font-weight: 600;
   line-height: 1.35;

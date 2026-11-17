@@ -1,0 +1,237 @@
+/* Home page: playful, scroll-driven sections (hero wordmark, place picker, photo arc, stacking moments, tool fan,
+   closing call to action). Colours come only from the five palette tokens; motion is driven by CSS variables set
+   from PenangHome's single scroll/pointer loop and is switched off for reduced motion. */
+/* Full-bleed page: override the global main{max-width:1200px;padding} and the muted global paragraph colour. */
+main.hh-home{--hh-ease:cubic-bezier(.22,1,.36,1);max-width:none;width:100%;margin:0;padding:0;overflow-x:clip;background:var(--paper);color:var(--ink)}
+.hh-home p{color:inherit}
+/* Over the hero photo the unscrolled header is see-through with light links. (A .01px blur rather than none or 0: the CSS
+   optimiser drops "none" and rewrites blur(0) to an invalid blur(), either way restoring the 18px blur.) */
+body:has(.hh-home)>header.hz-header:not(.is-scrolled){background:transparent;border-color:transparent;box-shadow:none;-webkit-backdrop-filter:blur(.01px);backdrop-filter:blur(.01px)}
+body:has(.hh-home)>header.hz-header:not(.is-scrolled) :is(.hz-primary>.hz-nav-link,.hz-tools>summary,.hz-menu-button,.hz-brand,.hz-compact-logo){color:var(--paper);text-shadow:0 1px 10px color-mix(in srgb,var(--ink) 40%,transparent)}
+.hh-home h1,.hh-home h2,.hh-home h3{font-family:var(--font-site);margin:0}
+
+/* Shared pill button. */
+.hh-pill{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:12px 24px;border:1.5px solid currentColor;border-radius:999px;color:inherit;font-weight:600;font-size:var(--text-control);text-decoration:none;transition:background .3s,color .3s,translate .3s var(--hh-ease)}
+.hh-pill .icon{width:16px;height:16px;transition:translate .3s var(--hh-ease)}
+.hh-pill:hover{translate:0 -2px}.hh-pill:hover .icon{translate:3px 0}
+.hh-pill-solid{background:var(--primary);border-color:var(--primary);color:var(--paper)}
+.hh-pill-solid:hover{background:var(--primary-strong);border-color:var(--primary-strong)}
+.hh-pill-light{background:var(--paper);border-color:var(--paper);color:var(--ink);cursor:pointer;font:inherit;font-weight:600}
+.hh-section-title{font-weight:800;text-transform:uppercase;letter-spacing:-.045em;line-height:.95;font-size:clamp(2.2rem,5.4vw,4.75rem);text-align:center}
+.hh-section-title em{font-style:normal;color:var(--primary)}
+
+/* 1. Hero ---------------------------------------------------------------------------------------------------- */
+.hh-hero{--hh-mx:0;--hh-my:0;--hh-hero-p:0;position:relative;height:220svh;margin-top:-100px}
+.hh-hero-stage{position:sticky;top:0;isolation:isolate;height:100svh;min-height:640px;overflow:hidden}
+/* The Penang skyline photo, slowly pushing in as the hero scrolls away, under an ink shade that keeps the light
+   wordmark and copy readable (heavier at the top and bottom where the header and tagline sit). */
+.hh-hero-photo{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;object-position:50% 60%;transform:scale(calc(1.04 + var(--hh-hero-p)*.14))}
+.hh-hero-shade{position:absolute;inset:0;z-index:-1;pointer-events:none;background:
+ linear-gradient(180deg,color-mix(in srgb,var(--ink) 50%,transparent),color-mix(in srgb,var(--ink) 18%,transparent) 35%,color-mix(in srgb,var(--ink) 22%,transparent) 62%,color-mix(in srgb,var(--ink) 62%,transparent))}
+@keyframes hh-glow{to{transform:rotate(14deg) scale(1.12)}}
+.hh-hero-title{position:absolute;left:50%;top:50%;z-index:2;display:grid;justify-items:center;width:100%;text-align:center;
+ transform:translate(-50%,-50%) scale(calc(1 + var(--hh-hero-p)*.35));opacity:calc(1 - var(--hh-hero-p)*1.6);filter:blur(calc(var(--hh-hero-p)*22px))}
+.hh-hero-kicker{font-weight:600;font-size:clamp(.85rem,1.3vw,1.15rem);letter-spacing:.24em;text-transform:uppercase;color:var(--paper);margin-bottom:.4em;text-shadow:0 2px 16px color-mix(in srgb,var(--ink) 45%,transparent)}
+.hh-wordmark{display:block;font-weight:800;text-transform:uppercase;font-size:clamp(5rem,23vw,24rem);line-height:.8;letter-spacing:-.075em;color:var(--paper);text-shadow:0 10px 60px color-mix(in srgb,var(--ink) 18%,transparent);padding-right:.075em}
+.hh-float{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:auto;z-index:1;pointer-events:none;
+ --s:0;filter:drop-shadow(0 28px 34px color-mix(in srgb,var(--ink) 28%,transparent));
+ /* Scrolling away, each landmark tumbles outward and grows as if flying past the viewer. */
+ transform:translate3d(calc(var(--hh-mx)*(10px + var(--d)*7px) + var(--hh-hero-p)*var(--dx)*62vw),calc(var(--hh-my)*(8px + var(--d)*5px) + var(--hh-hero-p)*var(--dy)*55vh),0) rotate(calc(var(--r) + var(--hh-hero-p)*var(--r)*4)) scale(calc(1 + var(--hh-hero-p)*var(--hh-hero-p)*2.2));
+ animation:hh-bob calc(5s + var(--d)*.7s) ease-in-out calc(var(--d)*-.9s) infinite alternate}
+.hh-float-front{z-index:3}
+@keyframes hh-bob{from{translate:0 -10px}to{translate:0 12px}}
+.hh-hero .hh-hero-tagline{position:absolute;left:50%;bottom:9%;z-index:4;translate:-50% 0;width:min(90%,30ch);margin:0;text-align:center;opacity:calc(1 - var(--hh-hero-p)*3);filter:blur(calc(var(--hh-hero-p)*10px));font-weight:600;font-size:clamp(1rem,1.35vw,1.25rem);line-height:1.45;color:var(--paper);text-shadow:0 2px 16px color-mix(in srgb,var(--ink) 45%,transparent)}
+.hh-hero-scroll{position:absolute;right:clamp(16px,4vw,48px);bottom:clamp(20px,4vh,40px);z-index:4;display:inline-flex;align-items:center;gap:10px;color:var(--paper);font-size:var(--text-caption);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;opacity:calc(1 - var(--hh-hero-p)*3)}
+.hh-hero-scroll .icon{width:34px;height:34px;padding:9px;border:1.5px solid currentColor;border-radius:50%}
+
+/* 2. Choose your Penang --------------------------------------------------------------------------------------- */
+/* Overlaps the hero's last screen so its stage rises over it as a dome, then stays pinned for one half-screen per place
+   plus one screen for the next section to rise over it. */
+.hh-places{--hh-bg:var(--primary);--hh-fg:var(--paper);--hh-step:.5;position:relative;z-index:1;height:calc(100svh + 5*50svh + 100svh);margin-top:-100svh}
+.hh-places-stage{position:sticky;top:0;isolation:isolate;overflow:hidden;height:100svh;display:flex;flex-direction:column;justify-content:center;padding:clamp(80px,11vh,120px) clamp(20px,6vw,100px) clamp(24px,5vh,50px);background:var(--hh-bg);color:var(--hh-fg);transition:background-color .7s var(--hh-ease),color .7s var(--hh-ease)}
+.hh-places[data-tone=secondary]{--hh-bg:var(--secondary);--hh-fg:var(--ink)}
+.hh-places[data-tone=ink]{--hh-bg:var(--ink);--hh-fg:var(--paper)}
+.hh-places[data-tone=paper]{--hh-bg:var(--surface-soft);--hh-fg:var(--ink)}
+.hh-places[data-tone=muted]{--hh-bg:var(--muted);--hh-fg:var(--paper)}
+.hh-blobs i{position:absolute;z-index:-1;border-radius:50%;background:color-mix(in srgb,var(--hh-fg) 8%,transparent);animation:hh-drift 18s ease-in-out infinite alternate}
+.hh-blobs i:nth-child(1){width:46vw;height:46vw;left:-12vw;top:-14vw}
+.hh-blobs i:nth-child(2){width:34vw;height:34vw;right:-8vw;top:30%;animation-delay:-6s}
+.hh-blobs i:nth-child(3){width:26vw;height:26vw;left:30%;bottom:-12vw;animation-delay:-11s}
+@keyframes hh-drift{to{transform:translate(4vw,3vw) scale(1.08)}}
+.hh-place{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(24px,4vw,64px);width:100%;max-width:1320px;margin:0 auto}
+.hh-place-copy{max-width:560px;animation:hh-copy-in .7s var(--hh-ease) both}
+.hh-place-areas{display:block;font-size:var(--text-caption);font-weight:600;letter-spacing:.18em;opacity:.75;margin-bottom:18px}
+.hh-place-copy h2{font-weight:800;text-transform:uppercase;font-size:clamp(2.6rem,5.6vw,5.25rem);line-height:.92;letter-spacing:-.05em;margin-bottom:24px}
+.hh-place-copy p{font-size:var(--text-body);line-height:1.65;max-width:46ch;margin:0 0 30px;opacity:.9}
+.hh-places .hh-pill{background:var(--hh-fg);border-color:var(--hh-fg);color:var(--hh-bg)}
+.hh-place-hero{justify-self:center;width:min(44vw,620px);height:auto;filter:drop-shadow(0 40px 50px color-mix(in srgb,var(--ink) 35%,transparent));animation:hh-place-in .9s var(--hh-ease) both}
+@keyframes hh-copy-in{from{opacity:0;translate:0 24px}}
+@keyframes hh-place-in{from{opacity:0;scale:.78;rotate:-16deg;translate:6vw 4vh}to{rotate:-6deg}}
+/* Within each step the render drifts and turns with scroll, so the pinned section never feels frozen. */
+.hh-place-hero{rotate:-6deg;max-height:58svh;object-fit:contain;transform:translateY(calc((var(--hh-step) - .5)*-60px)) rotate(calc((var(--hh-step) - .5)*14deg)) scale(calc(.96 + var(--hh-step)*.08))}
+.hh-place-copy{transform:translateY(calc((var(--hh-step) - .5)*-24px))}
+.hh-place-progress{position:absolute;right:clamp(14px,2.5vw,36px);top:50%;translate:0 -50%;display:grid;gap:8px}
+.hh-place-progress i{width:6px;height:6px;border-radius:6px;background:color-mix(in srgb,var(--hh-fg) 30%,transparent);transition:height .5s var(--hh-ease),background .5s}
+.hh-place-progress i.is-done{background:color-mix(in srgb,var(--hh-fg) 65%,transparent)}
+.hh-place-progress i.is-current{height:30px;background:var(--hh-fg)}
+.hh-place-picker{width:100%;max-width:1320px;margin:clamp(28px,5vh,56px) auto 0}
+.hh-place-label{display:block;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:var(--text-small);margin-bottom:14px}
+.hh-place-tabs{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.hh-place-tabs button{flex:none;display:grid;justify-items:center;gap:6px;width:104px;padding:10px 8px 12px;border:0;border-radius:20px;background:transparent;color:inherit;font:inherit;font-size:var(--text-caption);font-weight:600;cursor:pointer;transition:background .3s,translate .3s var(--hh-ease)}
+.hh-place-tabs button img{width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 8px 10px color-mix(in srgb,var(--ink) 25%,transparent));transition:scale .3s var(--hh-ease)}
+.hh-place-tabs button:hover img{scale:1.08}
+.hh-place-tabs button[aria-selected=true]{background:color-mix(in srgb,var(--hh-fg) 16%,transparent)}
+.hh-place-tabs button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+
+/* 3. Hot projects on the turning arc ---------------------------------------------------------------------------- */
+/* Pinned for a third of a screen per card on top of the screen it takes to rise over the places. */
+.hh-arc{--hh-arc-in:1;--hh-out:0;--hh-card-w:clamp(220px,min(20.2vw,44svh),440px);--hh-card-h:calc(var(--hh-card-w)*274/382);position:relative;z-index:2;height:calc(200svh + var(--n,8)*34svh);margin-top:-100svh}
+.hh-arc-stage{position:sticky;top:0;isolation:isolate;height:100svh;display:grid;grid-template-columns:100%;grid-template-rows:auto auto auto;align-content:center;justify-items:center;gap:calc(var(--hh-card-h)*.3);padding:clamp(90px,12vh,120px) 20px clamp(24px,4vh,44px);overflow:hidden;background:var(--paper)}
+.hh-arc-stage>:not(.hh-penang-outline,.hh-arc-ring){opacity:calc(clamp(0,calc(var(--hh-arc-in)*1.6 - .6),1)*(1 - var(--hh-out)));}
+.hh-arc-ring{opacity:clamp(0,calc(var(--hh-arc-in)*1.6 - .6),1)}
+.hh-arc-stage>:not(.hh-penang-outline){translate:0 calc((1 - var(--hh-arc-in))*80px)}
+.hh-statement{max-width:30ch;margin:0 auto;text-align:center;font-weight:800;text-transform:uppercase;font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.045em}
+.hh-statement em{font-style:normal;color:var(--primary)}
+/* The traced Penang outline (moved from the old hot projects showcase) sits behind the ring. */
+.hh-penang-outline{position:absolute;left:50%;top:54%;z-index:-1;width:min(96vw,760px);height:92%;translate:-50% -50%;pointer-events:none;overflow:visible;color:var(--primary);opacity:calc(var(--hh-arc-in)*(1 - var(--hh-out)))}
+.hh-penang-base{stroke:currentColor;stroke-width:1;opacity:.16}
+.hh-penang-glow{stroke:var(--secondary);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:130 870;opacity:.95;filter:drop-shadow(0 0 3px var(--secondary)) drop-shadow(0 0 9px color-mix(in srgb,var(--secondary) 80%,transparent)) drop-shadow(0 0 20px color-mix(in srgb,var(--primary) 50%,transparent))}
+.hh-penang-glow path{animation:hh-trace 12s linear infinite;animation-play-state:paused}
+.hh-arc[data-in-view=true] .hh-penang-glow path{animation-play-state:running}
+@keyframes hh-trace{from{stroke-dashoffset:0}to{stroke-dashoffset:-1000}}
+.hh-arc-ring{position:relative;width:100%;height:var(--hh-card-h);perspective:1100px;perspective-origin:50% 50%;transform-style:preserve-3d}
+/* Landscape photo cards with a small radius and no frame; perspective alone gives them depth. */
+.hh-arc-card{position:absolute;left:50%;top:0;width:var(--hh-card-w);height:100%;margin:0 0 0 calc(var(--hh-card-w) / -2);border-radius:20px;overflow:hidden;background:var(--surface-soft);transition:opacity .4s;backface-visibility:hidden}
+.hh-arc-card>img{width:100%;height:100%;object-fit:cover;display:block}
+.hh-arc-link{position:absolute;inset:0;display:block;color:var(--paper);text-decoration:none;background:var(--ink)}
+.hh-arc-photo{position:absolute;inset:0;overflow:hidden}
+.hh-arc-photo img{width:100%;height:100%;object-fit:cover;transition:scale .7s var(--hh-ease)}
+.hh-arc-link::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,color-mix(in srgb,var(--ink) 70%,transparent));opacity:.85;transition:opacity .4s;pointer-events:none}
+.hh-arc-link:hover::after,.hh-arc-link:focus-visible::after{opacity:1}
+.hh-arc-link:hover .hh-arc-photo img,.hh-arc-link:focus-visible .hh-arc-photo img{scale:1.06}
+.hh-arc-link:focus-visible{outline:3px solid var(--primary);outline-offset:-3px}
+.hh-arc-name{position:absolute;left:18px;right:18px;bottom:16px;z-index:1;display:grid;gap:4px;font-weight:800;text-transform:uppercase;font-size:clamp(1rem,1.3vw,1.25rem);line-height:1;letter-spacing:-.03em}
+.hh-arc-name small{font-weight:500;text-transform:none;letter-spacing:0;font-size:var(--text-small);opacity:.85}
+.hh-arc-foot{display:grid;justify-items:center;gap:16px;width:min(100%,560px);text-align:center}
+.hh-arc-note{margin:0;text-align:center;font-weight:600;font-size:clamp(1rem,1.3vw,1.2rem);line-height:1.45}
+.hh-arc-note span{display:block;font-weight:500;color:var(--muted)}
+
+/* Handoff: the copy that flies from the ring's centre card to the first moment card; it matches that card's
+   ink base and bottom gradient so the swap to the real card is seamless. */
+.hh-handoff{--hh-hand:0;position:fixed;z-index:5;overflow:hidden;pointer-events:none;background:var(--ink);box-shadow:0 30px 60px color-mix(in srgb,var(--ink) 22%,transparent)}
+.hh-handoff[hidden]{display:none}
+.hh-handoff img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hh-handoff-to{opacity:var(--hh-hand)}
+.hh-handoff::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,color-mix(in srgb,var(--ink) 75%,transparent));opacity:var(--hh-hand)}
+
+/* 4. Stacking moments ----------------------------------------------------------------------------------------- */
+/* Pulled up under the pinned arc so the first card reaches its sticky top (110px) exactly as the arc releases. */
+/* Pulled up under the pinned arc so the deck's stage pins (first card centred) exactly as the arc
+   releases; then pinned for 90% of a screen per swipe, a short hold on the last card, and one more screen while the
+   tools section rises over it. */
+.hh-moments{--hh-pad:clamp(8px,1.5vw,30px);position:relative;z-index:3;height:calc(100svh + (var(--n) - 1)*90svh + 30svh + 100svh);margin-top:-100svh}
+.hh-moments-stage{position:sticky;top:0;height:100svh;overflow:hidden}
+.hh-moments-title{position:absolute;left:clamp(20px,3vw,40px);top:clamp(20px,4vh,40px);z-index:1;color:var(--paper);font-weight:800;text-transform:uppercase;letter-spacing:-.045em;line-height:.95;font-size:clamp(2rem,4.6vw,4.25rem);text-shadow:0 4px 30px color-mix(in srgb,var(--ink) 40%,transparent)}
+.hh-moments-title em{font-style:normal;color:var(--secondary)}
+/* After the handoff lands, the first card's text fades in over the photo the flying copy just became. */
+.hh-moment .hh-moments-title,.hh-moment .hh-moment-copy{transition:opacity .6s var(--hh-ease),translate .6s var(--hh-ease)}
+.hh-moment[data-landed=false] .hh-moments-title,.hh-moment[data-landed=false] .hh-moment-copy{opacity:0;translate:0 14px}
+.hh-moment:first-of-type::before{content:'';position:absolute;inset:0 0 50% 0;z-index:1;background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 58%,transparent),transparent);pointer-events:none}
+/* Every card shares one spot. The top card swipes up and off at its own random tilt; the card beneath grows from 94%
+   and brightens as it is uncovered. */
+.hh-moment{--hh-swipe:0;--hh-under:0;position:absolute;top:50%;left:0;right:0;margin:0 auto;width:min(calc(100% - 2*var(--hh-pad)),calc((100svh - 120px)*1665/810));aspect-ratio:1665/810;border-radius:20px;overflow:hidden;background:var(--ink);color:var(--paper);
+ /* Tilt, drift, pivot and lift come from per-card random values (set in PenangHome) so every swipe differs. */
+ transform-origin:var(--hh-ox,30%) 100%;transform:translate(calc(var(--hh-swipe)*var(--hh-dx,0vw)),calc(-50% + var(--hh-swipe)*var(--hh-lift,-118svh))) rotate(calc(var(--hh-swipe)*var(--hh-rot,-7deg))) scale(calc(.94 + var(--hh-under)*.06));filter:brightness(calc(.55 + var(--hh-under)*.45));
+ box-shadow:0 calc(10px + var(--hh-swipe)*30px) calc(30px + var(--hh-swipe)*40px) color-mix(in srgb,var(--ink) calc(14% + var(--hh-swipe)*16%),transparent)}
+.hh-moment>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hh-moment::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,color-mix(in srgb,var(--ink) 75%,transparent));pointer-events:none}
+.hh-moment-copy{position:absolute;left:clamp(20px,3vw,40px);right:clamp(20px,3vw,40px);bottom:clamp(20px,4vh,40px);z-index:1}
+.hh-moment-copy h3{font-weight:800;text-transform:uppercase;font-size:clamp(1.6rem,3.6vw,3.1rem);line-height:.95;letter-spacing:-.04em;margin-bottom:10px;max-width:20ch}
+.hh-moment-copy p{margin:0 0 18px;font-size:var(--text-body);opacity:.9}
+.hh-moment-copy p:last-child{margin-bottom:0}
+.hh-moment-film{position:absolute;inset:0}
+.hh-moment-film iframe{width:100%;height:100%;border:0}
+.hh-film-close{position:absolute;top:16px;right:16px;z-index:2;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:var(--paper);color:var(--ink);cursor:pointer}
+.hh-film-close .icon{width:18px;height:18px}
+
+/* 5. Plan the move ---------------------------------------------------------------------------------------------- */
+/* Overlaps the moments' final hold so its stage rises over the last card as a dome; then pinned while scroll slides
+   the tool cards through the centre (60% of a screen per card) with a short hold at the end. */
+.hh-tools{--n:4;position:relative;z-index:4;height:calc(100svh + (var(--n) - 1)*60svh + 40svh);margin-top:-100svh}
+.hh-tools-stage{position:sticky;top:0;isolation:isolate;overflow:hidden;height:100svh;display:grid;grid-template-rows:auto 1fr;justify-items:center;padding:clamp(90px,12vh,130px) 16px clamp(16px,4vh,40px);background:var(--primary)}
+/* Vivid warm gradient mixed only from the palette, drifting slowly. */
+.hh-tools-glow{position:absolute;inset:-20%;z-index:-1;filter:blur(40px);animation:hh-glow 22s ease-in-out infinite alternate;
+ background:
+  radial-gradient(40% 45% at 15% 18%,color-mix(in srgb,var(--secondary) 70%,var(--paper)),transparent 70%),
+  radial-gradient(45% 50% at 85% 12%,var(--primary),transparent 70%),
+  radial-gradient(42% 46% at 82% 88%,var(--secondary),transparent 70%),
+  radial-gradient(46% 50% at 18% 86%,color-mix(in srgb,var(--primary) 55%,var(--secondary)),transparent 72%),
+  radial-gradient(30% 34% at 50% 55%,color-mix(in srgb,var(--secondary) 45%,var(--paper)),transparent 70%),
+  color-mix(in srgb,var(--primary) 60%,var(--secondary))}
+.hh-tools-title{max-width:22ch;text-align:center;font-weight:800;text-transform:uppercase;letter-spacing:-.045em;line-height:.95;font-size:clamp(2rem,4.4vw,4.25rem);color:var(--paper);text-shadow:0 4px 30px color-mix(in srgb,var(--ink) 25%,transparent)}
+.hh-tool-deck{position:relative;width:100%;align-self:stretch}
+/* --rel is each card's signed distance from the centre slot: side cards tilt away, drop and fade toward cream. */
+.hh-tool{--rel:0;--abs:0;--tw:clamp(250px,min(29vw,calc((100svh - 330px)*.96)),550px);position:absolute;left:50%;top:50%;isolation:isolate;width:var(--tw);aspect-ratio:550/570;display:flex;flex-direction:column;padding:clamp(24px,2.6vw,40px);border-radius:20px;overflow:hidden;color:var(--ink);text-decoration:none;background:var(--paper);
+ transform:translate(calc(-50% + var(--rel)*(var(--tw) + clamp(16px,3.5vw,70px))),calc(-50% + var(--abs)*34px)) rotate(calc(var(--rel)*9deg)) scale(calc(1 - var(--abs)*.04));
+ opacity:calc(1 - var(--abs)*.12);box-shadow:0 24px 50px color-mix(in srgb,var(--ink) 16%,transparent);transition:translate .4s var(--hh-ease),box-shadow .4s}
+.hh-tool::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(165deg,color-mix(in srgb,var(--primary) 18%,var(--paper)),color-mix(in srgb,var(--secondary) 55%,var(--paper)));opacity:min(1,var(--abs))}
+.hh-tool:nth-child(4n+1){--hh-accent:var(--primary)}.hh-tool:nth-child(4n+2){--hh-accent:var(--muted)}.hh-tool:nth-child(4n+3){--hh-accent:var(--sand-deep)}.hh-tool:nth-child(4n){--hh-accent:var(--ink)}
+.hh-tool-no{font-weight:800;font-size:clamp(3rem,6vw,5.5rem);line-height:.9;letter-spacing:-.06em;color:var(--hh-accent)}
+.hh-tool h3{font-weight:800;text-transform:uppercase;font-size:clamp(1.3rem,2.3vw,2.1rem);letter-spacing:-.03em;line-height:1;margin:clamp(10px,2vh,22px) 0 auto;color:var(--hh-accent)}
+.hh-tool p{margin:20px 0 0;padding-right:44px;font-size:var(--text-body);font-weight:600;line-height:1.4}
+.hh-tool>.icon{position:absolute;right:clamp(22px,2.4vw,36px);bottom:clamp(22px,2.6vw,38px);width:24px;height:24px;color:var(--hh-accent);transition:translate .3s var(--hh-ease)}
+.hh-tool:hover,.hh-tool:focus-visible{translate:0 -10px;box-shadow:0 34px 64px color-mix(in srgb,var(--ink) 24%,transparent)}
+.hh-tool:hover>.icon{translate:3px -3px}
+.hh-tool:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
+
+/* 6. Closing call to action ----------------------------------------------------------------------------------- */
+.hh-final{--hh-final:0;position:relative;isolation:isolate;overflow:hidden;min-height:100svh;display:grid;place-items:center;padding:120px 20px}
+.hh-final-mark{position:absolute;left:50%;top:50%;z-index:-1;translate:-50% -50%;font-weight:800;font-size:clamp(7rem,30vw,30rem);letter-spacing:-.08em;line-height:.8;color:color-mix(in srgb,var(--secondary) 22%,transparent);white-space:nowrap}
+.hh-final-float{position:absolute;width:clamp(110px,14vw,220px);height:auto;filter:drop-shadow(0 22px 26px color-mix(in srgb,var(--ink) 25%,transparent));
+ transform:translate(calc(var(--fx)*(1 - var(--hh-final))*60vw),calc(var(--fy)*(1 - var(--hh-final))*40vh)) rotate(calc(var(--fr) * (1 - var(--hh-final)*.6)))}
+.hh-final-float:nth-child(2){--fx:-1;--fy:-.4;--fr:-18deg;left:6%;top:14%}
+.hh-final-float:nth-child(3){--fx:1;--fy:-.5;--fr:16deg;right:7%;top:10%}
+.hh-final-float:nth-child(4){--fx:-1;--fy:.5;--fr:12deg;left:10%;bottom:10%}
+.hh-final-float:nth-child(5){--fx:1;--fy:.6;--fr:-14deg;right:9%;bottom:12%}
+.hh-final-float:nth-child(6){--fx:0;--fy:1;--fr:8deg;left:46%;bottom:-2%}
+.hh-final-copy{position:relative;z-index:1;max-width:760px;text-align:center;filter:blur(calc((1 - var(--hh-final))*16px));opacity:calc(.2 + var(--hh-final)*.8)}
+.hh-final-copy h2{display:grid;font-weight:800;text-transform:uppercase;font-size:clamp(2.6rem,6.4vw,5.75rem);line-height:.92;letter-spacing:-.05em}
+.hh-final-copy h2 em{font-style:normal;color:var(--primary)}
+.hh-final-copy p{max-width:48ch;margin:26px auto 30px;font-size:var(--text-body);line-height:1.6}
+.hh-final-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.hh-credits{margin:0 auto;max-width:1240px;padding:0 20px 40px}
+
+/* Responsive ------------------------------------------------------------------------------------------------- */
+@media(max-width:800px){
+ .hh-moment{aspect-ratio:auto;width:calc(100% - 16px);height:min(82svh,760px)}
+ .hh-hero{margin-top:-80px}
+ .hh-float{width:calc(var(--w)*1.7)}
+ .hh-place{grid-template-columns:1fr}
+ .hh-places-stage{padding-top:86px}
+ .hh-place{gap:14px}
+ .hh-place-hero{order:-1;width:min(56vw,300px);max-height:30svh}
+ .hh-place-copy h2{margin-bottom:12px}.hh-place-copy p{margin-bottom:18px;line-height:1.5}
+ .hh-place-picker{margin-top:16px}
+ .hh-tool{--tw:min(80vw,calc((100svh - 300px)*.96))}
+ .hh-tool p{padding-right:34px}
+ .hh-final-float{width:clamp(80px,22vw,140px)}
+}
+@media(prefers-reduced-motion:reduce){
+ .hh-float,.hh-blobs i,.hh-place-copy,.hh-place-hero{animation:none}
+ .hh-final-copy{filter:none;opacity:1}
+ .hh-final-float{transform:rotate(var(--fr))}
+ .hh-hero{height:auto}.hh-hero-stage{position:relative}
+ .hh-places{height:auto;margin-top:0}.hh-places-stage{position:relative;height:auto;min-height:100svh}.hh-place-progress{display:none}
+ .hh-place-hero,.hh-place-copy{transform:none}
+ .hh-arc{height:auto;margin-top:0}.hh-arc-stage{position:relative;height:auto;gap:40px}
+ .hh-penang-glow path{animation:none;stroke-dasharray:none}.hh-penang-glow{opacity:.14;filter:none}
+ /* Without the turning ring the projects become a swipeable row. */
+ .hh-arc-ring{display:flex;gap:16px;height:auto;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 4px 16px;perspective:none}
+ .hh-arc-card{position:relative;left:auto;flex:none;height:var(--hh-card-h);margin:0;scroll-snap-align:center;transform:none!important;opacity:1!important}
+ .hh-moments{height:auto;margin-top:0;padding:clamp(80px,12vh,140px) 0 40px}.hh-moments-stage{position:relative;height:auto;overflow:visible;display:grid;gap:24px}
+ .hh-moment{position:relative;top:auto;transform:none;filter:none;visibility:visible!important}
+ .hh-tools-glow{animation:none}
+ .hh-tools{height:auto;margin-top:0}.hh-tools-stage{position:relative;height:auto;gap:40px}
+ .hh-tool-deck{display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+ .hh-tool{position:relative;left:auto;top:auto;transform:none;opacity:1;visibility:visible!important}.hh-tool::before{opacity:0}
+}

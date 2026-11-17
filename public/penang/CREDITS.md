@@ -17,6 +17,7 @@ on 2026-11-10.
 | `tropical-beach.webp` | `Tropical Beach with Boats and Hills.png` | Coast and calm |
 | `vintage-rickshaw.webp` | `Vintage Rickshaw and Tropical Plant.png` | About: opening scene |
 | `colonial-corner.webp` | `Colonial Corner with Malaysian Motorcyclist.png` | About: first journey step |
+| `semiconductor-cleanroom.webp` | Cleanroom engineer at a workstation (PNG supplied 2026-11-17) | Home: Silicon Island card |
 
 ## State outline
 

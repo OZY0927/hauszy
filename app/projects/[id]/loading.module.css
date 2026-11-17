@@ -1,10 +1,10 @@
-.loading{position:fixed;inset:0;z-index:2100;display:grid;place-items:center;background:var(--paper,#fcf8f2);color:var(--primary,#96351e)}
+.loading{position:fixed;inset:0;z-index:2100;display:grid;place-items:center;background:var(--paper,var(--paper));color:var(--primary,var(--primary))}
 .content{text-align:center;padding:24px}
 .artwork{position:relative;isolation:isolate}
 .fireworks{position:absolute;inset:-65px -85px;pointer-events:none}
 .burst{position:absolute;left:15%;top:28%;width:0;height:0;color:var(--primary)}
-.burst:nth-child(2){left:85%;top:12%;color:#bb8d35}
-.burst:nth-child(3){left:58%;top:65%;color:#b76b40}
+.burst:nth-child(2){left:85%;top:12%;color:var(--secondary)}
+.burst:nth-child(3){left:58%;top:65%;color:var(--primary)}
 .burst i{position:absolute;left:0;top:0;width:7px;height:3px;border-radius:3px;background:currentColor;animation:project-firework  .7s cubic-bezier(.16,1,.3,1) calc(var(--burst)*.08s) both}
 @keyframes project-firework{0%{transform:rotate(var(--angle)) translateX(0) scale(0);opacity:0}15%{opacity:1}75%{opacity:.8}100%{transform:rotate(var(--angle)) translateX(72px) scale(.25);opacity:0}}
 @media(prefers-reduced-motion:reduce){.fireworks{display:none}}
@@ -14,7 +14,7 @@
 @keyframes project-center-reveal{from{--project-reveal-radius:0px}to{--project-reveal-radius:75vmax}}
 @media(prefers-reduced-motion:reduce){.revealing{mask-image:none;animation:project-loading-fade .15s linear forwards}}
 @keyframes project-loading-fade{to{opacity:0}}
-.content p{margin:20px 0 0;color:var(--muted,#796b60);font-family:var(--font-site),sans-serif;font-size:13px;line-height:1.5;letter-spacing:.04em}
+.content p{margin:20px 0 0;color:var(--muted,var(--muted));font-family:var(--font-site),sans-serif;font-size:13px;line-height:1.5;letter-spacing:.04em}
 @media(forced-colors:active){.loading{background:Canvas;color:CanvasText}.content p{color:CanvasText}}
 
 /* The persistent navigation overlay owns the exit; suppress stacked route/brand fallbacks. */

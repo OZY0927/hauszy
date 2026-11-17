@@ -35,7 +35,8 @@ export default function ProjectNavigationLoading(){
     window.scrollTo({top:0,left:0,behavior:'instant'});
     gsap.registerPlugin(ScrollTrigger);
     ScrollTrigger.refresh();ScrollTrigger.update();
-    for(const trigger of ScrollTrigger.getAll())trigger.getTween()?.progress(1);
+    // getTween() returns false (not null) for triggers without a scrub tween, so check before finishing it.
+    for(const trigger of ScrollTrigger.getAll()){const tween=trigger.getTween?.();if(tween&&typeof tween.progress==='function')tween.progress(1)}
    }
    completing=true;clearTimeout(safetyTimer);observer.disconnect();
    timer=setTimeout(()=>{
@@ -76,7 +77,9 @@ export default function ProjectNavigationLoading(){
   };
   document.addEventListener('click',click,true);
   window.addEventListener('popstate',history);
-  return()=>{disposed=true;clearTimeout(warmTimer);clear();observer.disconnect();controller.current=null;document.removeEventListener('click',click,true);window.removeEventListener('popstate',history)};
+  // Forget the destination too: a remounted controller (React dev double-mount) must start it again
+  // rather than only re-check a load this disposed controller was running.
+  return()=>{disposed=true;clearTimeout(warmTimer);clear();observer.disconnect();controller.current=null;destination.current=null;document.removeEventListener('click',click,true);window.removeEventListener('popstate',history)};
  },[]);
  useEffect(()=>{
   const path=cleanPath(pathname);

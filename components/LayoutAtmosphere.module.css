@@ -4,7 +4,7 @@
 .layer{position:absolute;inset:0;pointer-events:none;perspective:1000px}
 .anchor{position:absolute;width:var(--size);height:var(--size);opacity:var(--alpha,.75);filter:blur(var(--blur,0px));transform:rotate(var(--angle,0deg))}
 .parallax{display:block;width:100%;height:100%;transform:translate3d(calc(var(--pointer-x,0) * var(--parallax,3px)),calc(var(--pointer-y,0) * var(--parallax,3px) + var(--scene-progress,0) * var(--scroll-depth,8px)),0)}
-.float{display:block;width:100%;height:100%;filter:drop-shadow(0 12px 10px #60442f25);animation:layout-icon-float var(--duration,8s) var(--delay,0s) ease-in-out infinite;animation-play-state:paused}
+.float{display:block;width:100%;height:100%;filter:drop-shadow(0 12px 10px color-mix(in srgb,var(--muted) 14.5%,transparent));animation:layout-icon-float var(--duration,8s) var(--delay,0s) ease-in-out infinite;animation-play-state:paused}
 .scene[data-visible=true] .float{animation-play-state:running}
 .float img{display:block;width:100%;height:100%;object-fit:contain}
 .bridge{--size:112px;--angle:-9deg;--alpha:.5;--blur:1px;--duration:9s;--delay:-3s;left:29%;top:1%}

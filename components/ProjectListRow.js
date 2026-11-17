@@ -7,20 +7,27 @@ import Icon from './Icon';
 import {listingName,startingPrice,unitMin,unitLeast} from '../lib/project';
 
 export default function ProjectListRow({project,saved,onSave}){
- const surface=useRef(null),frame=useRef(0);
+ // Glass card tilt: rests flat and eases toward the pointer (ry = x*16, rx = -y*12 with x, y in -0.5..0.5,
+ // the reference's ranges), smoothed 6% per frame, and settles back flat on leave.
+ const surface=useRef(null),frame=useRef(0),tilt=useRef({tx:0,ty:0,cx:0,cy:0});
  useEffect(()=>()=>cancelAnimationFrame(frame.current),[]);
+ function step(){
+  const t=tilt.current,el=surface.current;frame.current=0;
+  if(!el)return;
+  t.cx+=(t.tx-t.cx)*.06;t.cy+=(t.ty-t.cy)*.06;
+  el.style.setProperty('--ry',`${(t.cx*16).toFixed(2)}deg`);
+  el.style.setProperty('--rx',`${(-t.cy*12).toFixed(2)}deg`);
+  if(Math.abs(t.tx-t.cx)>.001||Math.abs(t.ty-t.cy)>.001)frame.current=requestAnimationFrame(step);
+ }
+ const run=()=>{if(!frame.current)frame.current=requestAnimationFrame(step)};
  function moveGlass(event){
   if(event.pointerType!=='mouse'||!matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches)return;
   const bounds=event.currentTarget.getBoundingClientRect();
-  const x=Math.max(0,Math.min(1,(event.clientX-bounds.left)/bounds.width)),y=Math.max(0,Math.min(1,(event.clientY-bounds.top)/bounds.height));
-  cancelAnimationFrame(frame.current);
-  frame.current=requestAnimationFrame(()=>{
-   if(!surface.current)return;
-   surface.current.style.setProperty('--glass-x',`${x*100}%`);
-   surface.current.style.setProperty('--glass-y',`${y*100}%`);
-  });
+  tilt.current.tx=Math.max(0,Math.min(1,(event.clientX-bounds.left)/bounds.width))-.5;
+  tilt.current.ty=Math.max(0,Math.min(1,(event.clientY-bounds.top)/bounds.height))-.5;
+  run();
  }
- function resetGlass(){cancelAnimationFrame(frame.current);for(const key of ['--glass-x','--glass-y'])surface.current?.style.removeProperty(key)}
+ function resetGlass(){tilt.current.tx=0;tilt.current.ty=0;run()}
  const name=listingName(project),href='/projects/'+encodeURIComponent(project.id);
  const [lead,amount]=startingPrice(project)||[],size=unitMin(project.units,'size');
  const bedrooms=unitLeast(project.units,'bedrooms'),bathrooms=unitLeast(project.units,'bathrooms');

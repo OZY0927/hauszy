@@ -1,7 +1,7 @@
 /* Warm glass surfaces, scoped to project info pages. Opaque fallback stays legible. */
 .project-story{
  --project-glass-edge:color-mix(in srgb,var(--paper) 80%,white);
- --project-glass-shadow:inset 0 1px 0 #ffffffd9,inset 1px 0 0 #ffffff70,inset 0 -1px 0 #96351e12,0 12px 35px #352a251a;
+ --project-glass-shadow:inset 0 1px 0 #ffffffd9,inset 1px 0 0 #ffffff70,inset 0 -1px 0 color-mix(in srgb,var(--primary) 7.1%,transparent),0 12px 35px color-mix(in srgb,var(--ink) 10.2%,transparent);
 }
 .project-story :is(.project-section-nav,.manual-amenity-results,.enquiry-card){
  border:1px solid var(--project-glass-edge);
@@ -14,11 +14,11 @@
 .project-story .project-photo-open{border:1px solid #ffffff70;box-shadow:inset 0 1px 0 #ffffff80,0 8px 24px #0002}
 @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
  .project-story :is(.project-section-nav,.manual-amenity-results,.enquiry-card,.project-editorial-photo>span){
-  background:linear-gradient(135deg,#ffffff75,transparent 44%,#dbb98f1a),color-mix(in srgb,var(--paper) 83%,transparent);
+  background:linear-gradient(135deg,#ffffff75,transparent 44%,color-mix(in srgb,var(--secondary) 10.2%,transparent)),color-mix(in srgb,var(--paper) 83%,transparent);
   -webkit-backdrop-filter:blur(20px) saturate(140%);
   backdrop-filter:blur(20px) saturate(140%);
  }
- .project-story .project-section-nav{background:linear-gradient(120deg,#ffffff8c,transparent 42%,#dbb98f20),color-mix(in srgb,var(--paper) 78%,transparent)}
+ .project-story .project-section-nav{background:linear-gradient(120deg,#ffffff8c,transparent 42%,color-mix(in srgb,var(--secondary) 12.5%,transparent)),color-mix(in srgb,var(--paper) 78%,transparent)}
  .project-story .project-photo-open{
   background:linear-gradient(135deg,#ffffff30,transparent 65%),color-mix(in srgb,var(--ink) 42%,transparent);
   -webkit-backdrop-filter:blur(14px) saturate(140%);
@@ -27,14 +27,14 @@
  }
 }
 /* Give the Your next move card a more distinct, layered glass finish. */
-.project-story .project-story-contact{position:relative;background:radial-gradient(ellipse at 85% 25%,#dbb98f55,transparent 55%),radial-gradient(ellipse at 65% 85%,#96351e16,transparent 50%),color-mix(in srgb,var(--secondary) 26%,var(--paper))}
-.project-story .enquiry-card#enquiry{position:relative;isolation:isolate;border:1px solid #ffffffcc;border-radius:28px;box-shadow:inset 0 2px 1px #ffffffe6,inset 1px 0 1px #ffffffb3,inset 0 -1px 1px #96351e20,0 24px 64px #352a2520}
-.project-story .enquiry-card#enquiry:before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,#ffffff60,transparent 38%,#dbb98f18 75%,#ffffff45)}
-.project-story .enquiry-card .enquiry-secondary{border:1px solid #ffffffb3;background:color-mix(in srgb,var(--paper) 75%,transparent);box-shadow:inset 0 1px 0 #ffffffb3,0 4px 12px #352a2508;border-radius:16px}
+.project-story .project-story-contact{position:relative;background:radial-gradient(ellipse at 85% 25%,color-mix(in srgb,var(--secondary) 33.3%,transparent),transparent 55%),radial-gradient(ellipse at 65% 85%,color-mix(in srgb,var(--primary) 8.6%,transparent),transparent 50%),color-mix(in srgb,var(--secondary) 26%,var(--paper))}
+.project-story .enquiry-card#enquiry{position:relative;isolation:isolate;border:1px solid #ffffffcc;border-radius:28px;box-shadow:inset 0 2px 1px #ffffffe6,inset 1px 0 1px #ffffffb3,inset 0 -1px 1px color-mix(in srgb,var(--primary) 12.5%,transparent),0 24px 64px color-mix(in srgb,var(--ink) 12.5%,transparent)}
+.project-story .enquiry-card#enquiry:before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,#ffffff60,transparent 38%,color-mix(in srgb,var(--secondary) 9.4%,transparent) 75%,#ffffff45)}
+.project-story .enquiry-card .enquiry-secondary{border:1px solid #ffffffb3;background:color-mix(in srgb,var(--paper) 75%,transparent);box-shadow:inset 0 1px 0 #ffffffb3,0 4px 12px color-mix(in srgb,var(--ink) 3.1%,transparent);border-radius:16px}
 .project-story .enquiry-card .loan-project-cta,
 .project-story .enquiry-card .loan-project-cta:is(:hover,:active,:focus-visible){border:0;border-radius:0;background:transparent;box-shadow:none;translate:none;scale:1;text-underline-offset:4px}
 .project-story .enquiry-card .agent-mini{padding:16px;border:1px solid #ffffff90;border-radius:18px;background:color-mix(in srgb,var(--paper) 60%,transparent)}
-.project-story .enquiry-card .search-btn{border:1px solid #ffffff50;background:linear-gradient(145deg,#ffffff20,transparent 65%),var(--primary);box-shadow:inset 0 1px 0 #ffffff60,0 8px 20px #96351e24}
+.project-story .enquiry-card .search-btn{border:1px solid #ffffff50;background:linear-gradient(145deg,#ffffff20,transparent 65%),var(--primary);box-shadow:inset 0 1px 0 #ffffff60,0 8px 20px color-mix(in srgb,var(--primary) 14.1%,transparent)}
 @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
  .project-story .enquiry-card#enquiry{background:color-mix(in srgb,var(--paper) 67%,transparent);-webkit-backdrop-filter:blur(28px) saturate(150%);backdrop-filter:blur(28px) saturate(150%)}
 }
