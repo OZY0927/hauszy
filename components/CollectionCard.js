@@ -26,7 +26,7 @@ export default function CollectionCard({project:p,saved=false,onSave,titleOnly=f
      {hasRooms&&<div className="property-tile-facts property-tile-rooms">{[['bedrooms','bed','bed','beds'],['bathrooms','bath','bath','baths']].map(([key,icon,singular,plural])=>{const value=unitLeast(p.units,key);return value!=null&&<span className="property-tile-room" key={key} aria-label={`${key==='bedrooms'?'Bedrooms':'Bathrooms'} starting from ${value}`}><Icon name={icon}/>{value}{/^\d/.test(value)?` ${value==='1'?singular:plural}`:''}</span>})}</div>}
     </div></div>
    </div>
-   <div className="property-tile-bottom"><div className="property-tile-price"><span>{amount?lead:'Let’s talk about your next move'}</span><strong>{amount||'Price on enquiry'}</strong></div><span className="property-tile-arrow" data-label="View project"><Icon name="arrowUpRight"/></span></div></>}
+   <div className="property-tile-bottom"><div className="property-tile-price" data-enquiry={amount?undefined:''}><span>{amount?lead:'Let’s talk about your next move'}</span><strong>{amount||'Price on enquiry'}</strong></div><span className="property-tile-arrow" data-label="View project"><Icon name="arrowUpRight"/></span></div></>}
   </Link>
   {onSave&&<button type="button" className={'property-tile-save'+(saved?' is-saved':'')} onClick={()=>onSave(p.id)} aria-label={`${saved?'Unsave':'Save'} ${name}`} aria-pressed={saved}><Icon name="heart" filled={saved}/></button>}
  </article>

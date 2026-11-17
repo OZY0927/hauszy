@@ -189,96 +189,95 @@ body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transpare
 .projects-page #project-listing-title .listing-title-lead{font-size:clamp(24px,3vw,40px);line-height:1.25;letter-spacing:-.035em;margin-bottom:8px}
 .projects-page #project-listing-title .listing-title-place{font-size:clamp(48px,8vw,108px);line-height:1.08;letter-spacing:-.055em}
 
-/* Gallery card: full-bleed photo, pointer-lit edge, scroll-in reveal and expanding call to action. */
+/* Glass-bezel card: photo panel with a warm tinted sky, large title and a glossy price button. */
 .project-catalog.catalog-view-grid .cards{gap:28px 22px}
 .project-catalog.catalog-view-grid .property-tile{
- --ease-out:cubic-bezier(.22,1,.36,1);--accent:#e8b69e;--mx:50%;--my:40%;
- aspect-ratio:3/4;min-height:500px;border-radius:24px;background:var(--ink);color:var(--paper);
- box-shadow:0 1px 2px #352a251f,0 18px 36px -24px #352a2599;
+ --ease-out:cubic-bezier(.22,1,.36,1);--tint:#96351e;--mx:50%;--my:40%;
+ aspect-ratio:3/4;min-height:500px;padding:0;border-radius:34px;overflow:hidden;color:var(--paper);
+ background:linear-gradient(160deg,#fffdf9b3,#f3eadd66);
+ border:1px solid #fffdf9cc;-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
+ box-shadow:inset 0 1px 0 #ffffffb3,0 1px 2px #352a251a,0 24px 48px -30px #352a2580;
  transition:transform .6s var(--ease-out),box-shadow .6s var(--ease-out);
 }
-.project-catalog.catalog-view-grid .property-tile[data-category="Landed"]{--accent:#dbb98f}
-.project-catalog.catalog-view-grid .property-tile[data-category="Commercial"]{--accent:#cbb7a6}
+.project-catalog.catalog-view-grid .property-tile[data-category="Landed"]{--tint:#8a5a2b}
+.project-catalog.catalog-view-grid .property-tile[data-category="Commercial"]{--tint:#352a25}
 
-/* Photo: rests slightly zoomed, settles on hover and drifts against the pointer. */
-.project-catalog.catalog-view-grid .property-tile-photo{inset:0;overflow:hidden;border-radius:inherit;z-index:0}
+/* Inner photo panel sits inside the glass bezel. */
+.project-catalog.catalog-view-grid .property-tile-photo{inset:9px;overflow:hidden;border-radius:26px;z-index:0;background:var(--tint)}
 .project-catalog.catalog-view-grid .property-tile-photo img{
- scale:1.12;transform:none;filter:saturate(.9);
- translate:calc((var(--mx) - 50%) * -.05) calc((var(--my) - 40%) * -.05);
- transition:scale 1.4s var(--ease-out),translate .7s var(--ease-out),filter .8s ease;
+ scale:1.1;transform:none;
+ translate:calc((var(--mx) - 50%) * -.04) calc((var(--my) - 40%) * -.04);
+ transition:scale 1.4s var(--ease-out),translate .7s var(--ease-out);
 }
-.project-catalog.catalog-view-grid .property-tile:hover .property-tile-photo img{transform:none;scale:1.04;filter:saturate(1.05)}
-.project-catalog.catalog-view-grid .property-tile-photo::before,
-.project-catalog.catalog-view-grid .property-tile-photo::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+.project-catalog.catalog-view-grid .property-tile:hover .property-tile-photo img{transform:none;scale:1.02}
 .project-catalog.catalog-view-grid .property-tile-photo::after{
- background:linear-gradient(180deg,#352a2566 0%,#352a2500 26%,#352a2500 42%,#352a25c7 76%,#352a25f5 100%);
- box-shadow:inset 0 0 0 1px #fcf8f21a;
+ content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+ background:
+  linear-gradient(180deg,var(--tint) 0%,color-mix(in srgb,var(--tint) 82%,transparent) 22%,color-mix(in srgb,var(--tint) 30%,transparent) 44%,transparent 60%),
+  linear-gradient(0deg,#352a2566 0%,transparent 28%);
+ box-shadow:inset 0 0 0 1px #fcf8f21f;
 }
-.project-catalog.catalog-view-grid .property-tile-photo::before{z-index:1;background:linear-gradient(0deg,#96351e8c,#96351e00 60%);opacity:0;transition:opacity .7s var(--ease-out)}
-.project-catalog.catalog-view-grid .property-tile:hover .property-tile-photo::before{opacity:1}
 
-/* Soft spotlight and a lit edge that follow the pointer. */
-.project-catalog.catalog-view-grid .property-tile::before,
-.project-catalog.catalog-view-grid .property-tile::after{content:'';position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .5s ease}
-.project-catalog.catalog-view-grid .property-tile::before{background:radial-gradient(420px circle at var(--mx) var(--my),#fcf8f22e,transparent 60%);mix-blend-mode:soft-light}
+/* Pointer-lit edge on the glass bezel. */
+.project-catalog.catalog-view-grid .property-tile::before{content:none}
 .project-catalog.catalog-view-grid .property-tile::after{
- padding:1.5px;background:radial-gradient(240px circle at var(--mx) var(--my),var(--accent),transparent 70%);
+ content:'';position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .5s ease;
+ padding:1.5px;background:radial-gradient(220px circle at var(--mx) var(--my),#fffdf9,transparent 70%);
  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
 }
-.project-catalog.catalog-view-grid .property-tile:hover::before,
 .project-catalog.catalog-view-grid .property-tile:hover::after{opacity:1}
 
-/* Content. */
-.project-catalog.catalog-view-grid .property-tile-link{z-index:2;padding:22px 24px 24px;justify-content:flex-end;gap:18px;color:var(--paper)}
+/* Content sits over the inner panel: title block at the top, price button at the bottom. */
+.project-catalog.catalog-view-grid .property-tile-link{inset:9px;z-index:2;padding:18px 18px 16px;justify-content:space-between;gap:16px;border-radius:26px;color:var(--paper)}
 .project-catalog.catalog-view-grid .property-tile-link::before{display:none}
-.project-catalog.catalog-view-grid .property-tile-link:focus-visible{outline:3px solid var(--paper);outline-offset:-6px;border-radius:24px}
+.project-catalog.catalog-view-grid .property-tile-link:focus-visible{outline:3px solid var(--paper);outline-offset:-5px}
 .project-catalog.catalog-view-grid .property-tile-info{padding:0}
 .project-catalog.catalog-view-grid .property-tile-type{
- position:absolute;top:18px;left:18px;display:inline-flex;align-items:center;gap:8px;max-width:calc(100% - 90px);margin:0;padding:7px 13px 7px 11px;
- border:1px solid #fcf8f233;border-radius:999px;background:#352a2533;-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
- color:var(--paper);font-size:10px;font-weight:600;letter-spacing:.14em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ display:inline-flex;align-items:center;gap:6px;margin:0 0 16px;padding:5px 11px;max-width:calc(100% - 52px);
+ border-radius:999px;background:#fcf8f233;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+ color:var(--paper);font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.project-catalog.catalog-view-grid .property-tile-type::before{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 35%,transparent)}
-.project-catalog.catalog-view-grid .property-tile-info h3{font-family:var(--font-site);font-size:clamp(22px,1.9vw,28px);font-weight:500;line-height:1.15;letter-spacing:-.03em;margin:0 0 6px;text-wrap:balance;transition:translate .6s var(--ease-out)}
-.project-catalog.catalog-view-grid .property-tile-info p{font-size:13px;line-height:1.5;color:#fcf8f2d9;transition:translate .6s var(--ease-out) .03s}
-.project-catalog.catalog-view-grid .property-tile:hover .property-tile-info :is(h3,p){translate:0 -4px}
-
-/* Size, tag and rooms unfold on hover; always shown on touch screens. */
-.project-catalog.catalog-view-grid .property-tile-details{display:grid;grid-template-rows:1fr;transition:grid-template-rows .6s var(--ease-out),opacity .5s ease}
-.project-catalog.catalog-view-grid .property-tile-details>div{min-height:0;overflow:hidden}
-.project-catalog.catalog-view-grid .property-tile-facts{font-size:12px;gap:6px 12px;margin-top:10px;color:#fcf8f2e6}
-@media(hover:hover) and (pointer:fine){
- .project-catalog.catalog-view-grid .property-tile:not(:hover):not(:focus-within) .property-tile-details{grid-template-rows:0fr;opacity:0}
+.project-catalog.catalog-view-grid .property-tile-type::before{content:'✦';font-size:10px;line-height:1}
+.project-catalog.catalog-view-grid .property-tile-info h3{
+ font-family:var(--font-site);font-size:clamp(30px,2.8vw,40px);font-weight:400;line-height:1.02;letter-spacing:-.045em;margin:0 0 14px;
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;text-wrap:balance;
+ background:linear-gradient(180deg,#fffdf9 30%,#f6dcc8);-webkit-background-clip:text;background-clip:text;color:transparent;
+ transition:translate .6s var(--ease-out);
 }
+.project-catalog.catalog-view-grid .property-tile-info p{font-size:13px;line-height:1.5;color:#fcf8f2e6;max-width:30ch}
+.project-catalog.catalog-view-grid .property-tile-facts{font-size:12px;gap:4px 10px;margin-top:4px;color:#fcf8f2cc}
+.project-catalog.catalog-view-grid .property-tile:hover .property-tile-info h3{translate:0 -3px}
 
-/* Price row with a line that draws across on hover. */
-.project-catalog.catalog-view-grid .property-tile-bottom{position:relative;padding:16px 0 0;border-top:1px solid #fcf8f233;align-items:flex-end;gap:14px}
-.project-catalog.catalog-view-grid .property-tile-bottom::before{content:'';position:absolute;top:-1px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease-out)}
-.project-catalog.catalog-view-grid .property-tile:hover .property-tile-bottom::before{transform:scaleX(1)}
-.project-catalog.catalog-view-grid .property-tile-price{gap:4px}
-.project-catalog.catalog-view-grid .property-tile-price>span{font-size:11px;color:#fcf8f2bf;letter-spacing:.02em}
-.project-catalog.catalog-view-grid .property-tile-price strong{font-size:clamp(22px,2vw,30px);font-weight:500;letter-spacing:-.03em;line-height:1.1}
-
-/* Arrow grows into a "View project" pill. */
-.project-catalog.catalog-view-grid .property-tile-arrow{
- display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:44px;height:44px;padding:0 13px;
- border:1px solid #fcf8f259;background:#fcf8f214;color:var(--paper);
- transition:background .45s var(--ease-out),color .45s var(--ease-out),border-color .45s var(--ease-out),padding .6s var(--ease-out);
+/* Glossy price button. */
+.project-catalog.catalog-view-grid .property-tile-bottom{
+ position:relative;overflow:hidden;justify-content:center;align-items:center;gap:12px;min-height:56px;padding:9px 18px;border-radius:18px;
+ border:1px solid #fcf8f266;
+ background:linear-gradient(180deg,color-mix(in srgb,#c0583b 88%,transparent),color-mix(in srgb,var(--primary) 92%,transparent));
+ -webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);
+ box-shadow:inset 0 1px 0 #ffffff66,inset 0 -8px 16px #7a291466,0 12px 26px -12px #7a2914cc;
+ transition:box-shadow .5s var(--ease-out),translate .5s var(--ease-out);
 }
-.project-catalog.catalog-view-grid .property-tile-arrow::before{content:attr(data-label);max-width:0;overflow:hidden;white-space:nowrap;opacity:0;font-size:13px;font-weight:500;transition:max-width .6s var(--ease-out),margin .6s var(--ease-out),opacity .35s ease}
-.project-catalog.catalog-view-grid .property-tile-arrow .icon{transition:rotate .6s var(--ease-out)}
-.project-catalog.catalog-view-grid .property-tile:hover .property-tile-arrow{padding:0 15px 0 18px;border-color:var(--paper);background:var(--paper);color:var(--primary)}
-.project-catalog.catalog-view-grid .property-tile:hover .property-tile-arrow::before{max-width:110px;margin-right:8px;opacity:1;transition-delay:0s,0s,.12s}
-.project-catalog.catalog-view-grid .property-tile:hover .property-tile-arrow .icon{rotate:45deg}
+.project-catalog.catalog-view-grid .property-tile-bottom::after{
+ content:'';position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(105deg,transparent 30%,#ffffff55 48%,transparent 66%);translate:-120% 0;
+}
+.project-catalog.catalog-view-grid .property-tile:hover .property-tile-bottom{translate:0 -2px;box-shadow:inset 0 1px 0 #ffffff80,inset 0 -8px 16px #7a291466,0 18px 32px -12px #7a2914e6}
+.project-catalog.catalog-view-grid .property-tile:hover .property-tile-bottom::after{translate:120% 0;transition:translate .9s var(--ease-out)}
+.project-catalog.catalog-view-grid .property-tile-price{display:flex;align-items:baseline;gap:7px;min-width:0}
+.project-catalog.catalog-view-grid .property-tile-price>span{font-size:13px;color:#fcf8f2d9;white-space:nowrap}
+.project-catalog.catalog-view-grid .property-tile-price[data-enquiry]>span{display:none}
+.project-catalog.catalog-view-grid .property-tile-price strong{font-size:clamp(17px,1.5vw,20px);font-weight:600;letter-spacing:-.02em;line-height:1.2;white-space:nowrap}
+.project-catalog.catalog-view-grid .property-tile-arrow{display:grid;place-items:center;width:22px;height:22px;border:0;background:none;color:var(--paper);transition:translate .5s var(--ease-out)}
+.project-catalog.catalog-view-grid .property-tile:hover .property-tile-arrow{background:none;color:var(--paper);translate:3px -3px}
 
 /* Glass save button with a pop and ring burst when saved. */
 .project-catalog.catalog-view-grid .property-tile-save{
- z-index:3;top:16px;right:16px;bottom:auto;width:42px;height:42px;border-radius:50%;border:1px solid #fcf8f233;
- background:#352a2533;-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);color:var(--paper);
+ z-index:3;top:25px;right:25px;bottom:auto;width:38px;height:38px;border-radius:50%;border:1px solid #fcf8f240;
+ background:#fcf8f233;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--paper);
  transition:background .3s ease,color .3s ease,scale .4s var(--ease-out);
 }
-.project-catalog.catalog-view-grid .property-tile-save .icon{width:19px;height:19px}
+.project-catalog.catalog-view-grid .property-tile-save .icon{width:18px;height:18px}
 .project-catalog.catalog-view-grid .property-tile-save:hover{scale:1.08}
 .project-catalog.catalog-view-grid .property-tile-save:hover,
 .project-catalog.catalog-view-grid .property-tile-save.is-saved{background:var(--paper);color:var(--primary)}
@@ -290,15 +289,15 @@ body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transpare
 
 /* Hover lift and press. */
 @media(hover:hover) and (pointer:fine){
- .project-catalog.catalog-view-grid .property-tile:hover{z-index:4;transform:translateY(-8px);box-shadow:0 2px 6px #352a2526,0 34px 56px -30px #352a25b3}
+ .project-catalog.catalog-view-grid .property-tile:hover{z-index:4;transform:translateY(-6px);box-shadow:inset 0 1px 0 #ffffffb3,0 2px 6px #352a251f,0 34px 56px -30px #352a25a6}
 }
-.project-catalog.catalog-view-grid .property-tile:active:not(:has(button:active)){transform:translateY(-4px) scale(.98)}
+.project-catalog.catalog-view-grid .property-tile:active:not(:has(button:active)){transform:translateY(-3px) scale(.985)}
 
 /* Cards rise and unmask as they scroll into view, staggered across a row. */
 @keyframes tile-rise{
- from{opacity:0;translate:0 64px;scale:.94;clip-path:inset(14% 6% 0 6% round 24px)}
+ from{opacity:0;translate:0 64px;scale:.94;clip-path:inset(14% 6% 0 6% round 34px)}
  /* Ends well outside the card so the settled clip never trims the hover shadow. */
- to{opacity:1;translate:0 0;scale:1;clip-path:inset(-120px round 24px)}
+ to{opacity:1;translate:0 0;scale:1;clip-path:inset(-120px round 34px)}
 }
 @supports (animation-timeline:view()){
  @media(prefers-reduced-motion:no-preference){
@@ -310,8 +309,8 @@ body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transpare
 
 @media(max-width:640px){
  .project-catalog.catalog-view-grid .property-tile{min-height:520px}
- .project-catalog.catalog-view-grid .property-tile-info h3{font-size:26px}
- .project-catalog.catalog-view-grid .property-tile-save{width:44px;height:44px}
+ .project-catalog.catalog-view-grid .property-tile-info h3{font-size:36px}
+ .project-catalog.catalog-view-grid .property-tile-save{width:44px;height:44px;top:22px;right:22px}
 }
 @media(prefers-reduced-motion:reduce){
  .project-catalog.catalog-view-grid .property-tile,
