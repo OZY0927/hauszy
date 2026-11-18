@@ -3,7 +3,7 @@ import {money,formatRange,pricePerSqft,vpQuarter} from '../lib/project';
 import ProjectDetailsCards from './ProjectDetailsCards';
 
 export default function ProjectDetails({project:p}){
- const price=pricePerSqft(p);
+ const price='displayPricePerSqft' in p?p.displayPricePerSqft:pricePerSqft(p);
  const facts=visibleFacts([
   ['Project name',p.name],['Developer',p.developer],['Project location',p.location],['Property type',p.type],
   ['Price per sqft',price?money(price)+' / sqft':null],['Tenure',p.tag],['Title',p.titleType],

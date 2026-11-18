@@ -2,6 +2,7 @@
 import {useRef} from 'react';
 import PreviewImage from '../PreviewImage';
 import Icon from '../Icon';
+import {IMAGE_UNAVAILABLE} from '../../lib/project';
 import styles from './image-gallery.module.css';
 
 // Expanding photo panels adapted from the supplied gallery example.
@@ -15,7 +16,7 @@ export default function ImageGallery({photos=[],name,activeIndex=0,onActiveChang
  }}>
   <div className={styles.mobileGallery}>
    <button type="button" className={styles.mobilePhoto} onClick={onOpen} aria-label={`Open ${name} photo ${activeIndex+1} of ${photos.length}`}>
-    <PreviewImage key={photos[activeIndex]} src={photos[activeIndex]} alt={`${name} — project photo ${activeIndex+1}`} loading="lazy" onError={event=>{event.currentTarget.src='/project-placeholder.svg'}}/>
+    <PreviewImage key={photos[activeIndex]} src={photos[activeIndex]} alt={`${name} — project photo ${activeIndex+1}`} loading="lazy" fallback={IMAGE_UNAVAILABLE}/>
    </button>
    <div className={styles.mobileControls}>
     <button type="button" onClick={onPrevious} disabled={photos.length<2} aria-label="Previous project photo"><Icon name="arrowLeft"/><span>Previous</span></button>
@@ -31,7 +32,7 @@ export default function ImageGallery({photos=[],name,activeIndex=0,onActiveChang
      if(event.nativeEvent.pointerType==='touch'&&!touchWasActive.current)onActiveChange(photoIndex);
      else{onActiveChange(photoIndex);onOpen()}
     }}>
-     <PreviewImage src={src} alt={`${name} — project photo ${photoIndex+1}`} loading="lazy" onError={event=>{event.currentTarget.src='/project-placeholder.svg'}}/>
+     <PreviewImage src={src} alt={`${name} — project photo ${photoIndex+1}`} loading="lazy" fallback={IMAGE_UNAVAILABLE}/>
      <span className={styles.number} aria-hidden="true">{String(photoIndex+1).padStart(2,'0')}</span>
     </button>;
    })}

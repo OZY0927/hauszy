@@ -3,6 +3,7 @@ import {useLayoutEffect,useRef} from 'react';
 import {gsap} from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import PreviewImage from './PreviewImage';
+import {IMAGE_UNAVAILABLE} from '../lib/project';
 
 // ScrollTrigger scrubs the native sticky scene and its painted color wipe.
 export default function ProjectScrollIntroduction({photos=[],children}){
@@ -36,7 +37,7 @@ export default function ProjectScrollIntroduction({photos=[],children}){
   <div className="project-journey-stage">
   <div className="project-journey-paint" aria-hidden="true"/>
   <div className="project-journey-content">{children}</div>
-  {images.length>0&&<div className="project-journey-photos" aria-hidden="true">{images.map(src=><figure key={src}><div className="project-journey-photo-float"><PreviewImage src={src} alt="" loading="lazy" decoding="async" onError={event=>{const image=event?.currentTarget;if(image&&!image.src.endsWith('/project-placeholder.svg'))image.src='/project-placeholder.svg'}}/></div></figure>)}</div>}
+  {images.length>0&&<div className="project-journey-photos" aria-hidden="true">{images.map(src=><figure key={src}><div className="project-journey-photo-float"><PreviewImage src={src} alt="" loading="lazy" decoding="async" fallback={IMAGE_UNAVAILABLE}/></div></figure>)}</div>}
   </div>
  </section>;
 }

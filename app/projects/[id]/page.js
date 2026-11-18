@@ -7,8 +7,8 @@ import Link from 'next/link';
 import {notFound} from 'next/navigation';
 import {getProfile,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
 import {whatsappNumber,whatsappLink,projectMessage} from '../../../lib/whatsapp';
-import {hasProjectInfo,visibleFacts,projectSections} from '../../../lib/project-visibility';
-import {sinkingFundText,maintenanceText,money,unitCountRange,safeUrl,startingPrice,cardProject,listingName} from '../../../lib/project';
+import {hasProjectInfo,visibleFacts,projectSections,applyFieldVisibility} from '../../../lib/project-visibility';
+import {sinkingFundText,maintenanceText,money,unitCountRange,safeUrl,startingPrice,cardProject,listingName,publicImages} from '../../../lib/project';
 import ProjectGallery from '../../../components/ProjectGallery';
 import ProjectSectionNav,{ProjectStory} from '../../../components/ProjectSectionNav';
 import ShowroomGallery from '../../../components/ShowroomGallery';
@@ -23,7 +23,7 @@ import ProjectScrollIntroduction from '../../../components/ProjectScrollIntroduc
 import ProjectDetails from '../../../components/ProjectDetails';
 
 export async function generateStaticParams(){return []}
-export async function generateMetadata({params}){const {id}=await params;const p=await getPublishedProject(id);if(!p)return {title:'Project unavailable',robots:{index:false,follow:false}};return pageMetadata(listingName(p),`${listingName(p)} in ${p.location}. Explore layouts, facilities and project details.`,`/projects/${encodeURIComponent(id)}/`,p.images.slice(0,1))}
+export async function generateMetadata({params}){const {id}=await params;const project=await getPublishedProject(id);if(!project)return {title:'Project unavailable',robots:{index:false,follow:false}};const p=applyFieldVisibility(project);return pageMetadata(listingName(p),`${listingName(p)}${hasProjectInfo(p.location)?` in ${p.location}`:''}. Explore layouts, facilities and project details.`,`/projects/${encodeURIComponent(id)}/`,publicImages(p).slice(0,1))}
 function Facts({rows}){return <dl className="property-facts">{visibleFacts(rows).map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
 function SectionHeading({label,title,children}){return <div className="project-story-section-heading"><div><span className="eyebrow">{label}</span><h2>{title}</h2></div>{children&&<div className="project-story-section-note">{children}</div>}</div>}
 
@@ -31,7 +31,7 @@ export default async function Project({params}){
  const {id}=await params;
  const [project,all,profile]=await Promise.all([getPublishedProject(id),getPublishedProjects().catch(()=>null),getProfile().catch(()=>null)]);
  if(!project)notFound();
- const p={...project,name:listingName(project)};
+ const p=applyFieldVisibility({...project,name:listingName(project)});
  const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
  const sections=[...(visibility.overview||visibility.photos?[['overview','The project']]:[]),...(visibility.photos&&p.images.length?[['project-photos','Gallery']]:[]),...(visibility.details?[['details','Details']]:[]),...(visibility.units.length?[['units','Layouts']]:[]),...(visibility.facilities.length?[['amenities','Facilities']]:[]),...(visibility.location?[['location','Neighbourhood']]:[]),...(visibility.maintenance?[['maintenance','Charges']]:[]),...(visibility.showroom.length?[['showroom','Showroom']]:[])];
  return <ProjectStory key={id} previewImages={[...(visibility.photos?p.images:[]),...visibility.units.flatMap(unit=>unit.floorPlanUrls),...visibility.showroom]}>
