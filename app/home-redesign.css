@@ -17,8 +17,6 @@ body:has(.hh-home)>header.hz-header:not(.is-scrolled) :is(.hz-primary>.hz-nav-li
 .hh-pill-solid{background:var(--primary);border-color:var(--primary);color:var(--paper)}
 .hh-pill-solid:hover{background:var(--primary-strong);border-color:var(--primary-strong)}
 .hh-pill-light{background:var(--paper);border-color:var(--paper);color:var(--ink);cursor:pointer;font:inherit;font-weight:600}
-.hh-section-title{font-weight:800;text-transform:uppercase;letter-spacing:-.045em;line-height:.95;font-size:clamp(2.2rem,5.4vw,4.75rem);text-align:center}
-.hh-section-title em{font-style:normal;color:var(--primary)}
 
 /* 1. Hero ---------------------------------------------------------------------------------------------------- */
 .hh-hero{--hh-mx:0;--hh-my:0;--hh-hero-p:0;position:relative;height:220svh;margin-top:-100px}
@@ -118,7 +116,7 @@ body:has(.hh-home)>header.hz-header:not(.is-scrolled) :is(.hz-primary>.hz-nav-li
 
 /* Handoff: the copy that flies from the ring's centre card to the first moment card; it matches that card's
    ink base and bottom gradient so the swap to the real card is seamless. */
-.hh-handoff{--hh-hand:0;position:fixed;z-index:5;overflow:hidden;pointer-events:none;background:var(--ink);box-shadow:0 30px 60px color-mix(in srgb,var(--ink) 22%,transparent)}
+.hh-handoff{--hh-hand:0;position:fixed;z-index:5;overflow:hidden;border-radius:20px;pointer-events:none;background:var(--ink);box-shadow:0 30px 60px color-mix(in srgb,var(--ink) 22%,transparent)}
 .hh-handoff[hidden]{display:none}
 .hh-handoff img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hh-handoff-to{opacity:var(--hh-hand)}
@@ -215,6 +213,22 @@ body:has(.hh-home)>header.hz-header:not(.is-scrolled) :is(.hz-primary>.hz-nav-li
  .hh-tool{--tw:min(80vw,calc((100svh - 300px)*.96))}
  .hh-tool p{padding-right:34px}
  .hh-final-float{width:clamp(80px,22vw,140px)}
+ /* Scroll performance on phones: keep every scroll-linked change to transform and opacity, which the GPU composites
+    without repainting. Blur and brightness filters, animated shadows and live backdrop blurs repaint large areas
+    every frame, so they give way to cheaper look-alikes here. */
+ body:has(.hh-home)>header.hz-header{-webkit-backdrop-filter:initial;backdrop-filter:initial;background:color-mix(in srgb,var(--paper) 96%,transparent)}
+ body:has(.hh-home)>header.hz-header:not(.is-scrolled){background:transparent;-webkit-backdrop-filter:initial;backdrop-filter:initial}
+ .hh-hero-title{filter:initial;will-change:transform,opacity}
+ .hh-hero .hh-hero-tagline{filter:initial}
+ .hh-hero-photo,.hh-float,.hh-place-hero,.hh-final-float{will-change:transform}
+ .hh-penang-glow{filter:drop-shadow(0 0 4px var(--secondary))}
+ /* Cards dim by fading the photo over the card's ink base rather than with a brightness filter; the shadow stays put. */
+ .hh-moment{filter:initial;box-shadow:0 18px 40px color-mix(in srgb,var(--ink) 20%,transparent);will-change:transform}
+ .hh-moment>img{opacity:calc(.55 + var(--hh-under)*.45);will-change:opacity}
+ /* The radial gradients are soft already; a 40px blur over a 140% layer was the heaviest paint on the page. */
+ .hh-tools-glow{inset:0;filter:initial;animation:none}
+ .hh-tool{will-change:transform}
+ .hh-final-copy{filter:initial}
 }
 @media(prefers-reduced-motion:reduce){
  .hh-float,.hh-blobs i,.hh-place-copy,.hh-place-hero{animation:none}

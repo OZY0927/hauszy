@@ -96,97 +96,120 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
    card.style.setProperty('--hh-lift',(-(108+r()*24)).toFixed(0)+'svh');
   });
   let frame=0;
+  // Every style write goes through set(), which skips values that haven't changed since the last frame, so a frame
+  // only touches what actually moved (sections far off screen settle and cost nothing).
+  const written=new Map();
+  const set=(el,key,value)=>{
+   let seen=written.get(el);if(!seen)written.set(el,seen={});
+   if(seen[key]===value)return;seen[key]=value;
+   if(key.startsWith('--'))el.style.setProperty(key,value);else el.style[key]=value;
+  };
+  const setInert=(el,value)=>{if(el.inert!==value)el.inert=value};
   // A rising dome: the next section's stage enters as a curved panel that flattens as it reaches the top.
   const dome=(el,p)=>{
-   if(p>=1){el.style.clipPath='none';return}
-   const k=p*p*260;el.style.clipPath=`ellipse(${(55+p*150).toFixed(1)}% ${(100+k).toFixed(1)}% at 50% ${(100+k).toFixed(1)}%)`;
+   if(p>=1||p<=0){set(el,'clipPath',p>=1?'none':'inset(100% 0 0 0)');return}
+   const k=p*p*260;set(el,'clipPath',`ellipse(${(55+p*150).toFixed(1)}% ${(100+k).toFixed(1)}% at 50% ${(100+k).toFixed(1)}%)`);
   };
+  // The layout is sized in svh, so the loop measures the small viewport too, and only on a real resize. Mobile
+  // browsers change innerHeight as the address bar slides away mid-scroll, which made every scroll-linked value jump.
+  const probe=document.createElement('div');probe.style.cssText='position:fixed;top:0;left:-9999px;width:1px;height:100svh;visibility:hidden;pointer-events:none';
+  page.appendChild(probe);
+  let vh=0,cardW=300;
+  const measure=()=>{vh=probe.offsetHeight||innerHeight;cardW=arcCards[0]?.offsetWidth||300};
+  measure();
   const update=()=>{
-   frame=0;const reduced=media.matches,vh=innerHeight;
+   frame=0;const reduced=media.matches;
+   // Read every box first, then write: mixing the two forced a fresh layout several times per frame.
+   const heroTop=hero.getBoundingClientRect().top,placesTop=places.getBoundingClientRect().top,arcBox=arc.getBoundingClientRect();
+   const mBox=firstMoment?.getBoundingClientRect(),deckTop=momentsSection.getBoundingClientRect().top;
+   const toolsTop=tools.getBoundingClientRect().top,finalTop=final.getBoundingClientRect().top;
+   const n=arcCards.length,last=n-1,limit=2.45,loop=n/2-1>limit;
+   const arcP=clamp(-arcBox.top/Math.max(1,arcBox.height-2*vh)),pos=arcP*last;
+   const hRaw=clamp(1-(arcBox.bottom-vh)/vh),h=hRaw>.995?1:hRaw,centre=loop?((Math.round(pos)%n)+n)%n:Math.round(pos);
+   const flying=!reduced&&h>0&&h<1&&!!mBox,cb=flying?arcCards[centre].getBoundingClientRect():null;
    // Hero: pinned while the wordmark blurs away and the landmarks fly toward the viewer.
-   hero.style.setProperty('--hh-hero-p',reduced?0:clamp(-hero.getBoundingClientRect().top/vh).toFixed(3));
+   set(hero,'--hh-hero-p',reduced?'0':clamp(-heroTop/vh).toFixed(3));
    // Places: rises over the hero, then stays pinned while each half-screen of scroll steps to the next place.
-   const placesTop=places.getBoundingClientRect().top;
    dome(placesStage,reduced?1:clamp((vh-placesTop)/vh));
    if(!reduced){
     const raw=-placesTop/(vh*.5),idx=Math.min(PLACES.length-1,Math.max(0,Math.floor(raw)));
-    places.style.setProperty('--hh-step',clamp(raw-idx).toFixed(3));
+    set(places,'--hh-step',clamp(raw-idx).toFixed(3));
     if(idx!==placeRef.current&&performance.now()>lockUntil.current){placeRef.current=idx;setPlace(idx)}
-   }else places.style.setProperty('--hh-step',.5);
+   }else set(places,'--hh-step','.5');
    // Arc: rises over the pinned places, then the sticky stage turns the ring of photos.
-   const arcBox=arc.getBoundingClientRect(),arcIn=reduced?1:clamp((vh-arcBox.top)/vh);
-   dome(arcStage,arcIn);arc.style.setProperty('--hh-arc-in',arcIn.toFixed(3));
-   arc.dataset.inView=String(arcBox.top<vh&&arcBox.bottom>0);
-   if(reduced){arcRing.style.perspective='';handoff.hidden=true;if(firstMoment){firstMoment.style.opacity='';firstMoment.dataset.landed='true'}arcCards.forEach(card=>{card.style.transform='';card.style.opacity='';card.inert=false})}
-   else{
+   const arcIn=reduced?1:clamp((vh-arcBox.top)/vh);
+   dome(arcStage,arcIn);set(arc,'--hh-arc-in',arcIn.toFixed(3));
+   const arcVisible=arcBox.top<vh&&arcBox.bottom>0;
+   if(arc.dataset.inView!==String(arcVisible))arc.dataset.inView=String(arcVisible);
+   if(reduced){set(arcRing,'perspective','');handoff.hidden=true;if(firstMoment){set(firstMoment,'opacity','');firstMoment.dataset.landed='true'}arcCards.forEach(card=>{set(card,'transform','');set(card,'opacity','');setInert(card,false)})}
+   else if(arcVisible||flying){
     // Concave carousel with three measured slots (from the reference layout): the centre card sits flat; the preview
     // on each side is pulled toward the viewer and turned inward so its edges read ~1.15× and ~1.35× the centre's
     // height; the further preview starts ~1.6× tall and runs off screen. Cards glide between the slots with scroll.
     // Every value is a multiple of the card width, so the look holds at any screen size.
-    const arcP=clamp(-arcBox.top/Math.max(1,arcBox.height-2*vh)),last=arcCards.length-1;
-    const cardW=arcCards[0]?.offsetWidth||300;
-    arcRing.style.perspective=(cardW*ARC_PERSPECTIVE).toFixed(0)+'px';
+    set(arcRing,'perspective',(cardW*ARC_PERSPECTIVE).toFixed(0)+'px');
     // The ring loops: each card's distance from the centre wraps around the card count, so the first project
     // always has the last one peeking in on its left (and vice versa). The wrap seam sits opposite the centre,
     // where cards are hidden, so nothing visibly jumps.
     // With too few cards to keep the seam out of view, the ring simply doesn't loop.
-    const n=arcCards.length,pos=arcP*last,limit=2.45,loop=n/2-1>limit;
     // Handoff to the moments: the arc stays pinned one extra screen after the ring finishes. Over that screen
     // (h 0→1) the moments section, pulled up underneath, brings its first card to its sticky top exactly as the pin
     // releases, while a copy of the centre card flies straight to where that card will rest (it rides up with the
     // section until then, so its resting top is its current top minus the section's remaining offset).
-    const hRaw=clamp(1-(arcBox.bottom-vh)/vh),h=hRaw>.995?1:hRaw,mBox=firstMoment?.getBoundingClientRect(),centre=loop?((Math.round(pos)%n)+n)%n:Math.round(pos);
-    arc.style.setProperty('--hh-out',clamp(h*2).toFixed(3));
+    set(arc,'--hh-out',clamp(h*2).toFixed(3));
     arcCards.forEach((card,i)=>{
-     const rel=loop?((i-pos)%n+n*1.5)%n-n/2:i-pos,visible=Math.abs(rel)<limit&&h<.4,side=Math.sign(rel),[x,z,turn]=arcSlot(rel);
-     card.style.transform=`translate3d(${(side*x*cardW).toFixed(1)}px,0,${(z*cardW).toFixed(1)}px) rotateY(${(-side*turn).toFixed(2)}deg)`;
-     card.style.opacity=!visible||(i===centre&&h>0)?0:(1-h*2.5).toFixed(3);card.inert=!visible;
+     const rel=loop?((i-pos)%n+n*1.5)%n-n/2:i-pos,visible=Math.abs(rel)<limit&&h<.4,side=Math.sign(rel);
+     // Hidden cards keep their last transform: no point moving what can't be seen.
+     if(visible){const [x,z,turn]=arcSlot(rel);set(card,'transform',`translate3d(${(side*x*cardW).toFixed(1)}px,0,${(z*cardW).toFixed(1)}px) rotateY(${(-side*turn).toFixed(2)}deg)`)}
+     set(card,'opacity',!visible||(i===centre&&h>0)?'0':(1-h*2.5).toFixed(3));setInert(card,!visible);
     });
+   }
+   if(!reduced){
     // A fixed copy of the centre card flies from where the card sat while pinned to the first moment card,
     // growing to its size and cross-fading to its photo; the real moment card shows once the copy lands.
-    const flying=h>0&&h<1&&!!mBox;handoff.hidden=!flying;
-    if(firstMoment){firstMoment.style.opacity=flying?0:'';firstMoment.dataset.landed=String(h>=1)}
+    if(handoff.hidden!==!flying)handoff.hidden=!flying;
+    if(firstMoment){set(firstMoment,'opacity',flying?'0':'');const landed=String(h>=1);if(firstMoment.dataset.landed!==landed)firstMoment.dataset.landed=landed}
     if(flying){
-     const cb=arcCards[centre].getBoundingClientRect(),e=h*h*(3-2*h),mix=(a,b)=>(a+(b-a)*e).toFixed(1)+'px';
+     const e=h*h*(3-2*h),mix=(a,b)=>(a+(b-a)*e).toFixed(1)+'px';
      const from=arcCards[centre].querySelector('img'),src=from?.currentSrc||from?.src;
      if(src&&handoffFrom.src!==src)handoffFrom.src=src;
-     Object.assign(handoff.style,{left:mix(cb.left,mBox.left),top:mix(cb.top,mBox.top-momentsSection.getBoundingClientRect().top),width:mix(cb.width,mBox.width),height:mix(cb.height,mBox.height),borderRadius:mix(20,20)});
-     handoff.style.setProperty('--hh-hand',clamp(h*1.6).toFixed(3));
+     set(handoff,'left',mix(cb.left,mBox.left));set(handoff,'top',mix(cb.top,mBox.top-deckTop));
+     set(handoff,'width',mix(cb.width,mBox.width));set(handoff,'height',mix(cb.height,mBox.height));
+     set(handoff,'--hh-hand',clamp(h*1.6).toFixed(3));
     }
    }
    // Moments deck: after the handoff lands, each further 90% of a screen swipes the top card up and off with a
    // slight tilt, uncovering the next card, which brightens and settles to full size underneath it.
-   const deckTop=momentsSection.getBoundingClientRect().top,deck=reduced?0:clamp(-deckTop/(vh*.9),0,moments.length-1);
+   const deck=reduced?0:clamp(-deckTop/(vh*.9),0,moments.length-1);
    moments.forEach((card,i)=>{
     const t=clamp(deck-i),swipe=t*t*(3-2*t),under=clamp(deck-i+1);
-    card.style.setProperty('--hh-swipe',i<moments.length-1?swipe.toFixed(4):0);
-    card.style.setProperty('--hh-under',i===0?1:under.toFixed(4));
+    set(card,'--hh-swipe',i<moments.length-1?swipe.toFixed(4):'0');
+    set(card,'--hh-under',i===0?'1':under.toFixed(4));
     // Until the deck pins, only the first card exists (the handoff copy is flying into it).
-    card.style.visibility=!reduced&&((i>0&&deckTop>.5)||i>Math.floor(deck)+1||(i<moments.length-1&&t>=1))?'hidden':'';
+    set(card,'visibility',!reduced&&((i>0&&deckTop>.5)||i>Math.floor(deck)+1||(i<moments.length-1&&t>=1))?'hidden':'');
    });
    // Plan the move: rises over the last moment as a dome, then each 60% of a screen slides the next tool card into
    // the centre; cards about two slots away or more are hidden and taken out of the tab order.
-   const toolsTop=tools.getBoundingClientRect().top;
    dome(toolsStage,reduced?1:clamp((vh-toolsTop)/vh));
    const toolPos=clamp(-toolsTop/(vh*.6),0,toolCards.length-1);
    toolCards.forEach((card,i)=>{
-    if(reduced){card.style.removeProperty('--rel');card.style.removeProperty('--abs');card.style.zIndex='';card.style.visibility='';card.inert=false;return}
+    if(reduced){set(card,'--rel','');set(card,'--abs','');set(card,'zIndex','');set(card,'visibility','');setInert(card,false);return}
     const rel=i-toolPos,away=Math.abs(rel),visible=away<1.9;
-    card.style.setProperty('--rel',rel.toFixed(4));card.style.setProperty('--abs',away.toFixed(4));
-    card.style.zIndex=String(10-Math.round(away*2));card.style.visibility=visible?'':'hidden';card.inert=!visible;
+    set(card,'--rel',rel.toFixed(4));set(card,'--abs',away.toFixed(4));
+    set(card,'zIndex',String(10-Math.round(away*2)));set(card,'visibility',visible?'':'hidden');setInert(card,!visible);
    });
-   const finalBox=final.getBoundingClientRect();
-   final.style.setProperty('--hh-final',reduced?1:clamp((vh-finalBox.top)/(vh*.85)).toFixed(3));
+   set(final,'--hh-final',reduced?'1':clamp((vh-finalTop)/(vh*.85)).toFixed(3));
   };
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(update)};
+  const resize=()=>{measure();schedule()};
   const pointer=event=>{
    if(event.pointerType!=='mouse'||media.matches)return;
    hero.style.setProperty('--hh-mx',((event.clientX/innerWidth)*2-1).toFixed(3));
    hero.style.setProperty('--hh-my',((event.clientY/innerHeight)*2-1).toFixed(3));
   };
   update();
-  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);media.addEventListener('change',schedule);hero.addEventListener('pointermove',pointer);
-  return()=>{cancelAnimationFrame(frame);removeEventListener('scroll',schedule);removeEventListener('resize',schedule);media.removeEventListener('change',schedule);hero.removeEventListener('pointermove',pointer)};
+  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',resize);media.addEventListener('change',schedule);hero.addEventListener('pointermove',pointer);
+  return()=>{cancelAnimationFrame(frame);probe.remove();removeEventListener('scroll',schedule);removeEventListener('resize',resize);media.removeEventListener('change',schedule);hero.removeEventListener('pointermove',pointer)};
  },[]);
 
  // Tabs stay usable: picking one scrolls the pinned section to that place's step.

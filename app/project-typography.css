@@ -30,12 +30,7 @@
 .project-story .project-story-pill,.project-story .facilities-see-all,
 .project-story .location-atlas-categories button{font-size:var(--project-type-small);line-height:1.6;letter-spacing:normal}
 .project-story .eyebrow{font-size:var(--project-type-caption);font-weight:600;line-height:1.5;letter-spacing:.12em}
-.project-story .property-facts dt,.project-story .layout-studio-facts dt,
-.project-story .project-story-fine-print,.project-story .project-section-links>a,
-.project-story .project-section-enquire,.project-story .project-gallery-caption>p>span,
-.project-story .location-atlas-address p,.project-story .location-atlas-address a,
-.project-story .facility-vision-top>span:last-child,.project-story .facility-vision-controls,
-.project-story .facility-vision-hint{font-size:var(--project-type-caption);font-weight:400;line-height:1.6;letter-spacing:normal}
+.project-story .property-facts dt,.project-story .layout-studio-facts dt,.project-story .project-story-fine-print,.project-story .project-section-links>a,.project-story .project-section-enquire,.project-story .location-atlas-address p,.project-story .location-atlas-address a,.project-story .facility-vision-top>span:last-child,.project-story .facility-vision-controls,.project-story .facility-vision-hint{font-size:var(--project-type-caption);font-weight:400;line-height:1.6;letter-spacing:normal}
 .project-story .manual-amenity-results li strong,.project-story .nearby-map-results-heading strong{font-size:var(--project-type-small);font-weight:500;line-height:1.5}
 .project-story .manual-amenity-meta,.project-story .nearby-map-note,
 .project-story .manual-amenity-results li>span{font-size:.75rem;line-height:1.5;letter-spacing:normal}

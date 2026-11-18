@@ -1,7 +1,6 @@
 import './globals.css';
 import 'leaflet/dist/leaflet.css';
 import './typography.css';
-import './home-motion.css';
 import './home-redesign.css';
 import './project-listing.css';
 import './catalog-controls.css';

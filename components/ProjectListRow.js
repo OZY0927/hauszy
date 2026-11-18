@@ -4,7 +4,7 @@ import Link from 'next/link';
 import {preloadProjectImages} from '../lib/project-image-preload';
 import CardPhoto from './ProjectCardPhoto';
 import Icon from './Icon';
-import {listingName,startingPrice,unitMin,unitLeast} from '../lib/project';
+import {listingName,startingPrice,unitMin,unitLeast,wholeRooms} from '../lib/project';
 
 export default function ProjectListRow({project,saved,onSave}){
  // Glass card tilt: rests flat and eases toward the pointer (ry = x*16, rx = -y*12 with x, y in -0.5..0.5,
@@ -30,7 +30,7 @@ export default function ProjectListRow({project,saved,onSave}){
  function resetGlass(){tilt.current.tx=0;tilt.current.ty=0;run()}
  const name=listingName(project),href='/projects/'+encodeURIComponent(project.id);
  const [lead,amount]=startingPrice(project)||[],size=unitMin(project.units,'size');
- const bedrooms=unitLeast(project.units,'bedrooms'),bathrooms=unitLeast(project.units,'bathrooms');
+ const bedrooms=wholeRooms(unitLeast(project.units,'bedrooms')),bathrooms=wholeRooms(unitLeast(project.units,'bathrooms'));
  const facts=[['ruler',size!=null?size.toLocaleString('en-MY')+' sqft':null,'Built-up size'],['bed',bedrooms,'Bedrooms'],['bath',bathrooms,'Bathrooms']].filter(([,value])=>value!==null&&value!==undefined&&value!=='');
  return <article ref={surface} className="catalog-list-row" onPointerMove={moveGlass} onPointerLeave={resetGlass} onPointerCancel={resetGlass}>
   <Link className="catalog-list-photo" href={href} onNavigate={()=>preloadProjectImages(project)} aria-label={'View '+name}><CardPhoto src={project.images?.[0]} alt={name}/></Link>

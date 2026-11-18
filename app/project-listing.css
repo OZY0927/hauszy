@@ -4,10 +4,6 @@
 .project-catalog.catalog-top{display:block}
 .catalog-top.project-catalog .catalog-filters{position:static;top:auto;max-height:none;overflow:visible;padding:0;margin:0 0 18px;background:transparent;border:0;border-radius:0;box-shadow:none}
 .catalog-top .catalog-filter-heading{min-height:58px;padding:7px 18px;border:1px solid var(--line);background:color-mix(in srgb,var(--secondary) 28%,var(--paper));color:var(--ink);gap:20px}
-.catalog-top .catalog-filter-heading .catalog-browse{position:relative;display:flex;align-items:center;gap:10px;flex:none;width:auto;border:0;letter-spacing:0}
-.catalog-browse select{appearance:none;min-width:130px;max-width:220px;width:auto;margin:0;padding:10px 24px 10px 0;font-family:var(--font-site);font-size:var(--text-control);font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);cursor:pointer}
-.catalog-browse select option{background:var(--paper);color:var(--ink)}
-.catalog-browse>.icon{position:absolute;right:0;width:13px;height:13px;pointer-events:none}
 .catalog-top .catalog-bar-count{font-size:var(--text-caption);color:var(--muted);white-space:nowrap}
 .catalog-bar-actions{display:flex;align-items:center;gap:22px;margin-left:auto}
 .catalog-top .catalog-filter-heading .catalog-filter-toggle{display:flex;align-items:center;gap:9px;min-height:42px;margin:0;padding:4px 0;border:0;background:transparent;color:var(--primary);font-family:var(--font-site);font-size:var(--text-control);text-decoration:none;white-space:nowrap}
@@ -20,9 +16,6 @@
 .catalog-screen-reader{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
 .catalog-top.project-catalog .catalog-filters form{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:20px 32px;padding:28px;border:1px solid var(--line);border-top:0;background:var(--surface-soft)}
-.catalog-top .catalog-sort-field{grid-column:1;grid-row:1}
-.catalog-sort-field>span{display:flex;align-items:center;gap:7px}
-.catalog-top .catalog-sort-field select{width:100%;margin-top:10px;padding:13px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);font-family:var(--font-site);font-size:var(--text-body);letter-spacing:0}
 .catalog-top .catalog-filters .location{grid-column:1;grid-row:2}
 .catalog-top .catalog-types{grid-column:2;grid-row:1/span 2;align-self:center}
 .catalog-top.project-catalog .price-filter{grid-column:3;grid-row:1/span 2;align-self:center;padding:0;border:0}
@@ -64,7 +57,6 @@
 .catalog-list-save[aria-pressed=true]{color:var(--primary)}
 .catalog-list-save .icon{width:16px;height:16px}
 
-@media(max-width:1200px){.project-catalog.catalog-top.catalog-view-grid .cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 @media(max-width:1000px){
  .project-catalog.catalog-view-list .cards{grid-template-columns:minmax(0,1fr)}
@@ -92,7 +84,6 @@
  .projects-page:has(.catalog-top){padding-inline:14px}
  .project-catalog.catalog-top.catalog-view-grid .cards{grid-template-columns:minmax(0,1fr)}
  .catalog-top .catalog-filter-heading{padding:8px 12px;gap:8px;flex-wrap:wrap}
- .catalog-browse select{min-width:115px;max-width:155px;font-size:var(--text-caption)}
  .catalog-top .catalog-filter-heading .catalog-filter-toggle{font-size:var(--text-caption);gap:5px}
  .catalog-filter-toggle>.icon:first-child{display:none}
  .catalog-bar-actions{gap:8px}
@@ -206,22 +197,57 @@ body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transpare
 .projects-page #project-listing-title .listing-title-lead{font-size:clamp(24px,3vw,40px);line-height:1.25;letter-spacing:-.035em;margin-bottom:8px}
 .projects-page #project-listing-title .listing-title-place{font-size:clamp(48px,8vw,108px);line-height:1.08;letter-spacing:-.055em}
 
-/* Grid view uses the plain full-photo card (base .property-tile styles), at 3:4 with four columns on wide screens. */
-.project-catalog.catalog-view-grid .cards{gap:22px 18px}
-@media(min-width:1201px){.project-catalog.catalog-top.catalog-view-grid .cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* Grid view: 3:4 cards, three to a row from tablet width up, inset from the page edges with extra side space
+   (about 86px a side at 1440px) so the larger cards sit in a centred column. */
+.project-catalog.catalog-view-grid .cards{gap:28px 24px}
+/* The filter bar and the results line share the card row's inset, so all three line up edge to edge. */
+@media(min-width:801px){
+ .project-catalog.catalog-top.catalog-view-grid{--grid-inset:clamp(8px,2.5vw,64px)}
+ .project-catalog.catalog-top.catalog-view-grid .cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 24px;padding-inline:var(--grid-inset)}
+ .project-catalog.catalog-top.catalog-view-grid>.catalog-filters{margin-inline:var(--grid-inset)}
+ .project-catalog.catalog-top.catalog-view-grid .catalog-summary-bar{margin-inline:calc(var(--grid-inset) + 4px)}
+}
 .project-catalog.catalog-view-grid .property-tile{aspect-ratio:3/4;min-height:0;transition:transform .5s cubic-bezier(.22,1,.36,1)}
 @media(max-width:560px){.project-catalog.catalog-view-grid .property-tile{width:100%;max-width:340px;justify-self:center}}
 /* Press: shrink with a slight tilt (after SteveBloX on Uiverse.io); not triggered by the save button. */
 .project-catalog.catalog-view-grid .property-tile:has(.property-tile-link:active){transform:scale(.95) rotateZ(1.7deg)}
-/* Cards fade up as they scroll into view, staggered across each row of four. Uses translate/opacity so it
-   doesn't clash with the press transform. Browsers without scroll-driven animations just show the cards. */
-@keyframes grid-tile-fade-up{from{opacity:0;translate:0 48px}to{opacity:1;translate:0 0}}
+/* Scroll animation, driven by scroll position (no JS), using only transform-type properties and opacity so it
+   stays smooth on phones. Browsers without scroll-driven animations, and reduced motion, just show everything.
+   - Title: "YOUR NEXT MOVE / IN PENANG" drifts up, shrinks and fades as the page scrolls past it.
+   - Grid cards rise, grow from 88% and untwist from a slight tilt (alternating per column), staggered across the
+     row; inside, the photo settles from a zoom and keeps a gentle parallax drift while the card is on screen, and
+     the name, stats and price slide up just behind the card.
+   - List rows slide in from the side, alternating left and right.
+   The individual translate/scale/rotate properties leave `transform` free for the press tilt. */
+@keyframes listing-title-out{to{opacity:.15;translate:0 -60px;scale:.92}}
+@keyframes grid-tile-rise{from{opacity:0;translate:0 90px;scale:.88;rotate:var(--tilt,0deg)}60%{opacity:1}to{opacity:1;translate:0 0;scale:1;rotate:0deg}}
+/* Phones: the same rise and untwist without the scale-up, which made the blurred layers re-render at every size. */
+@keyframes grid-tile-rise-phone{from{opacity:0;translate:0 70px;rotate:var(--tilt,0deg)}60%{opacity:1}to{opacity:1;translate:0 0;rotate:0deg}}
+@keyframes tour-photo-drift{from{translate:0 -4%;scale:1.22}30%{scale:1.1}to{translate:0 4%;scale:1.1}}
+@keyframes tour-body-rise{from{opacity:0;translate:0 28px}to{opacity:1;translate:0 0}}
+@keyframes list-row-in{from{opacity:0;translate:var(--from-x,-60px) 30px}to{opacity:1;translate:0 0}}
 @supports (animation-timeline:view()){
  @media(prefers-reduced-motion:no-preference){
-  .project-catalog.catalog-view-grid .property-tile{animation:grid-tile-fade-up linear both;animation-timeline:view();animation-range:entry 0% entry 55%}
-  .project-catalog.catalog-view-grid .property-tile:nth-child(4n+2){animation-range:entry 5% entry 60%}
-  .project-catalog.catalog-view-grid .property-tile:nth-child(4n+3){animation-range:entry 10% entry 65%}
-  .project-catalog.catalog-view-grid .property-tile:nth-child(4n){animation-range:entry 15% entry 70%}
+  .projects-page .all-projects-heading #project-listing-title{animation:listing-title-out linear both;animation-timeline:view();animation-range:exit 0% exit 100%}
+  .project-catalog.catalog-view-grid .property-tile{--tilt:-3deg;--lag:0%;view-timeline:--tile block;animation:grid-tile-rise linear both;animation-timeline:--tile;animation-range:entry calc(var(--lag)) entry calc(70% + var(--lag))}
+  /* Photo layers (the sharp photo and its blurred copies move together) and the text ride the card's own timeline.
+     The photo drift re-renders the blurred copies every frame, so phones skip it. */
+  @media(min-width:801px){.project-catalog.catalog-view-grid .tour-card-frame img{animation:tour-photo-drift linear both;animation-timeline:--tile;animation-range:cover 0% cover 100%}}
+  .project-catalog.catalog-view-grid .tour-card-body>*{animation:tour-body-rise linear both;animation-timeline:--tile;animation-range:entry calc(35% + var(--lag)) entry calc(95% + var(--lag))}
+  .project-catalog.catalog-view-grid .tour-card-body>:nth-child(2){animation-range:entry calc(42% + var(--lag)) entry calc(100% + var(--lag))}
+  .project-catalog.catalog-view-grid .tour-card-body>:nth-child(n+3){animation-range:entry calc(50% + var(--lag)) entry calc(105% + var(--lag))}
+  /* Stagger and tilt by column, per breakpoint (3, 2 and 1 columns). */
+  .project-catalog.catalog-view-grid .property-tile:nth-child(3n+1){--tilt:-2.5deg}
+  .project-catalog.catalog-view-grid .property-tile:nth-child(3n+2){--tilt:0deg;--lag:8%}
+  .project-catalog.catalog-view-grid .property-tile:nth-child(3n){--tilt:2.5deg;--lag:16%}
+  @media(max-width:800px){
+   .project-catalog.catalog-view-grid .property-tile:nth-child(n){--tilt:-2deg;--lag:0%;animation-name:grid-tile-rise-phone}
+   .project-catalog.catalog-view-grid .property-tile:nth-child(2n){--tilt:2deg;--lag:10%}
+  }
+  @media(max-width:560px){.project-catalog.catalog-view-grid .property-tile:nth-child(2n){--lag:0%}}
+  .project-catalog.catalog-view-list .catalog-list-row{animation:list-row-in linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
+  .project-catalog.catalog-view-list .catalog-list-row:nth-child(even){--from-x:60px}
+  @media(min-width:1001px){.project-catalog.catalog-view-list .catalog-list-row:nth-child(even){animation-range:entry 8% entry 78%}}
  }
 }
 @media(prefers-reduced-motion:reduce){.project-catalog.catalog-view-grid .property-tile{transition:none}.project-catalog.catalog-view-grid .property-tile:has(.property-tile-link:active){transform:none}}
@@ -235,10 +261,11 @@ body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transpare
 .tour-card-frame{position:absolute;inset:0;container-type:inline-size;border-radius:34px;overflow:hidden;isolation:isolate;color:white;background:var(--ink);
  box-shadow:0 1px 2px color-mix(in srgb,var(--ink) 12%,transparent),0 20px 40px color-mix(in srgb,var(--ink) 18%,transparent)}
 .tour-card .property-tile-photo img{object-position:50% 30%}
-.tour-card-blur{position:absolute;inset:0;pointer-events:none;-webkit-mask-image:linear-gradient(180deg,transparent 38%,#000 62%);mask-image:linear-gradient(180deg,transparent 38%,#000 62%)}
-/* Scaled up so the blur has no soft edges (Next Image sets its own inset/size inline). */
-.tour-card-blur img{object-fit:cover;object-position:50% 30%;filter:blur(14px) saturate(1.1);transform:scale(1.12);transition:transform .6s cubic-bezier(.22,1,.36,1)}
-.tour-card:hover .tour-card-blur img{transform:scale(1.16)}
+/* Each layer fades in over 16% of the card from its own start (--s), so the stack deepens the blur steadily to the bottom. */
+.tour-card-blur{position:absolute;inset:0;pointer-events:none;-webkit-mask-image:linear-gradient(180deg,transparent var(--s),#000 calc(var(--s) + 16%));mask-image:linear-gradient(180deg,transparent var(--s),#000 calc(var(--s) + 16%))}
+/* Same size as the photo, so the layers line up with it exactly (a soft blurred edge just shows the same photo beneath). */
+.tour-card-blur img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:blur(var(--b)) saturate(1.1);transition:transform .6s cubic-bezier(.22,1,.36,1)}
+.tour-card:hover .tour-card-blur img{transform:scale(1.035)}
 .tour-card-blur>span{display:none}
 .tour-card-tint{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,
  transparent 40%,color-mix(in srgb,var(--ink) 38%,transparent) 55%,color-mix(in srgb,var(--ink) 74%,transparent) 74%,color-mix(in srgb,var(--ink) 90%,transparent) 100%)}
@@ -246,12 +273,14 @@ body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transpare
 .tour-card .tour-card-body{justify-content:flex-end;gap:0;padding:0 7.5cqw 7.5cqw;color:white;text-decoration:none}
 .tour-card .tour-card-body::before{display:none}
 .tour-card-name{margin:0;font-size:5.6cqw;font-weight:600;line-height:1.2;letter-spacing:-.01em;overflow-wrap:anywhere}
-.tour-card-addr{margin:1.2cqw 0 0;font-size:3.6cqw;line-height:1.35;color:color-mix(in srgb,white 72%,transparent)}
+/* Location on the left, project type on the right of the same row (the type sits flush right even without a location). */
+.tour-card-meta{display:flex;align-items:baseline;justify-content:space-between;gap:3cqw;margin-top:1.2cqw}
+.tour-card-addr{min-width:0;margin:0;font-size:3.6cqw;line-height:1.35;color:color-mix(in srgb,white 72%,transparent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tour-card-type{flex:none;margin-left:auto;font-size:3.4cqw;font-weight:600;line-height:1.35;letter-spacing:.02em;color:color-mix(in srgb,white 88%,transparent);white-space:nowrap}
 .tour-card-rule{display:block;height:1px;margin:4cqw 0 4.4cqw;background:color-mix(in srgb,white 35%,transparent)}
 .tour-card-stats{display:flex;justify-content:space-between;gap:2cqw;margin:0;padding:0 1cqw}
 .tour-card-stat{display:flex;flex-direction:column-reverse;align-items:center;min-width:14cqw;text-align:center}
 .tour-card-stat dd{margin:0;font-size:5cqw;font-weight:600;line-height:1;white-space:nowrap}
-.tour-card-stat dd small{margin-left:.6cqw;font-size:3cqw;font-weight:600}
 .tour-card-stat.is-text dd{font-size:3.6cqw;line-height:1.25;white-space:normal}
 .tour-card-stat dt{margin-top:1.4cqw;font-size:2.9cqw;color:color-mix(in srgb,white 62%,transparent)}
 .tour-card-cta{display:block;margin-top:5.6cqw;padding:4.4cqw 3cqw;border-radius:4.4cqw;background:var(--paper);color:var(--ink);text-align:center;font-size:4.6cqw;font-weight:700;line-height:1;

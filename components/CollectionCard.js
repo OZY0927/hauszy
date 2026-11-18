@@ -2,17 +2,19 @@
 import Link from 'next/link';
 import {propertyCategory} from '../lib/property-category';
 import {preloadProjectImages} from '../lib/project-image-preload';
-import {listingName,startingPrice,unitMin,unitLeast} from '../lib/project';
+import {listingName,startingPrice,unitMin,unitLeast,wholeRooms} from '../lib/project';
 import CardPhoto from './ProjectCardPhoto';
 import Icon from './Icon';
+// Progressive-blur layers for the tour card: [blur in px, % down the card where the layer starts fading in].
+const TOUR_BLUR=[[3,40],[6,54],[10,68],[16,82]];
+
 // Up to three headline stats for the tour card, in order of usefulness, skipping any the project lacks.
 function tourStats(p,size){
- const beds=unitLeast(p.units,'bedrooms'),baths=unitLeast(p.units,'bathrooms');
+ const beds=wholeRooms(unitLeast(p.units,'bedrooms')),baths=wholeRooms(unitLeast(p.units,'bathrooms'));
  return [
   beds!=null&&{value:beds,label:'Bedrooms'},
   baths!=null&&{value:baths,label:'Bathrooms'},
-  size!=null&&{value:size.toLocaleString('en-MY'),unit:'sqft',label:'From'},
-  p.type&&{value:p.type,label:'Type',text:true},
+  size!=null&&{value:size.toLocaleString('en-MY'),label:'sqft'},
   p.tag&&{value:p.tag,label:'Status',text:true},
  ].filter(Boolean).slice(0,3);
 }
@@ -27,14 +29,15 @@ export default function CollectionCard({project:p,saved=false,onSave,titleOnly=f
   return <article data-category={propertyCategory(p)} className="property-tile tour-card">
    <div className="tour-card-frame">
     <div className="property-tile-photo"><CardPhoto src={p.images[0]} alt={name}/></div>
-    {/* A blurred copy of the photo, masked to fade in down the card (steadier than backdrop-filter under the press tilt). */}
-    <div className="tour-card-blur" aria-hidden="true"><CardPhoto src={p.images[0]} alt=""/></div>
+    {/* Progressive blur: copies of the photo blurred more and more strongly, each masked to fade in a little lower,
+        so the blur builds steadily to the bottom (steadier than backdrop-filter under the press tilt). */}
+    {TOUR_BLUR.map(([blur,start])=><div key={blur} className="tour-card-blur" aria-hidden="true" style={{'--b':blur+'px','--s':start+'%'}}><CardPhoto src={p.images[0]} alt=""/></div>)}
     <div className="tour-card-tint" aria-hidden="true"/>
     <Link onNavigate={()=>preloadProjectImages(p)} className="property-tile-link tour-card-body" href={'/projects/'+encodeURIComponent(p.id)} aria-label={`Explore ${name}`}>
      <h3 className="tour-card-name">{name}</h3>
-     {p.location&&<p className="tour-card-addr">{p.location}</p>}
+     {(p.location||p.type)&&<div className="tour-card-meta">{p.location&&<p className="tour-card-addr">{p.location}</p>}{p.type&&<span className="tour-card-type">{p.type}</span>}</div>}
      {stats.length>0&&<><span className="tour-card-rule" aria-hidden="true"/>
-      <dl className="tour-card-stats">{stats.map(s=><div key={s.label} className={'tour-card-stat'+(s.text?' is-text':'')}><dt>{s.label}</dt><dd>{s.value}{s.unit&&<small>{s.unit}</small>}</dd></div>)}</dl></>}
+      <dl className="tour-card-stats">{stats.map(s=><div key={s.label} className={'tour-card-stat'+(s.text?' is-text':'')}><dt>{s.label}</dt><dd>{s.value}</dd></div>)}</dl></>}
      <span className="tour-card-cta">{amount?<><span>{lead}</span> {amount}</>:'Price on enquiry'}</span>
     </Link>
     {onSave&&<button type="button" className={'property-tile-save'+(saved?' is-saved':'')} onClick={()=>onSave(p.id)} aria-label={`${saved?'Unsave':'Save'} ${name}`} aria-pressed={saved}><Icon name="heart" filled={saved}/></button>}
