@@ -23,13 +23,14 @@ export default function ProjectScrollIntroduction({photos=[],children}){
    colorLayer.append(copy);stage.append(colorLayer);
    const measure=()=>{el.style.setProperty('--journey-stage-height',stage.clientHeight+'px');el.style.setProperty('--journey-stage-width',stage.clientWidth+'px')};
    measure();
-   // Both masks share one phase so the moving wave and text stay pixel-aligned.
-   const wave=gsap.fromTo(el,{'--journey-wave-phase':0},{'--journey-wave-phase':-2,duration:14,repeat:-1,ease:'none',paused:true});
+   // Both masks share one phase so the moving wave and text stay pixel-aligned. The endless wave is written onto the
+   // two masked layers only: writing it on the section restyled the whole intro (and its copy) every frame.
+   const wave=gsap.fromTo([el.querySelector('.project-journey-paint'),colorLayer],{'--journey-wave-phase':0},{'--journey-wave-phase':-2,duration:14,repeat:-1,ease:'none',paused:true});
    const timeline=gsap.timeline({scrollTrigger:{trigger:el,start:'top top',end:'bottom bottom',scrub:.7,invalidateOnRefresh:true,onRefresh:measure,onToggle:self=>{el.classList.toggle('is-journey-visible',self.isActive);wave.paused(!self.isActive)}}});
    wave.paused(!timeline.scrollTrigger.isActive);
    timeline.fromTo(el,{'--journey-progress':0},{'--journey-progress':1,duration:1,ease:'none'},0);
    timeline.fromTo(el,{'--journey-wipe':0},{'--journey-wipe':1,duration:.44,ease:'none'},.06);
-   return()=>{colorLayer.remove();el.style.removeProperty('--journey-stage-height');el.style.removeProperty('--journey-stage-width');el.classList.remove('journey-motion','is-journey-visible')};
+   return()=>{colorLayer.remove();el.querySelector('.project-journey-paint')?.style.removeProperty('--journey-wave-phase');el.style.removeProperty('--journey-stage-height');el.style.removeProperty('--journey-stage-width');el.classList.remove('journey-motion','is-journey-visible')};
   },el);
   return()=>media.revert();
  },[]);

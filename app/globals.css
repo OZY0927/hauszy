@@ -1019,3 +1019,6 @@ footer.site-footer.footer-editorial,body:has(.penang-home) .site-footer.footer-e
 /* Shared supporting colors for warm surfaces and readable interaction states. */
 :root{--overlay-rgb:53,42,37;--success:#2f7d4f;--danger:#a12d1a}
 ::selection{background:var(--secondary);color:var(--ink)}
+
+/* Endless decorative loops rest while their element is scrolled out of view (Motion marks it data-offscreen). */
+[data-offscreen],[data-offscreen]::before,[data-offscreen]::after{animation-play-state:paused!important}

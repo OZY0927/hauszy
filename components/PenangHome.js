@@ -105,6 +105,7 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
    if(key.startsWith('--'))el.style.setProperty(key,value);else el.style[key]=value;
   };
   const setInert=(el,value)=>{if(el.inert!==value)el.inert=value};
+  const flag=(el,value)=>{value=String(value);if(el.dataset.inView!==value)el.dataset.inView=value};
   // A rising dome: the next section's stage enters as a curved panel that flattens as it reaches the top.
   const dome=(el,p)=>{
    if(p>=1||p<=0){set(el,'clipPath',p>=1?'none':'inset(100% 0 0 0)');return}
@@ -140,7 +141,9 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
    const arcIn=reduced?1:clamp((vh-arcBox.top)/vh);
    dome(arcStage,arcIn);set(arc,'--hh-arc-in',arcIn.toFixed(3));
    const arcVisible=arcBox.top<vh&&arcBox.bottom>0;
-   if(arc.dataset.inView!==String(arcVisible))arc.dataset.inView=String(arcVisible);
+   // Decorative loops (bobbing landmarks, drifting blobs, the tools glow, the outline trace) only run while their
+   // stage can be seen; a stage is hidden once the next one has risen fully over it.
+   flag(arc,arcVisible);flag(hero,placesTop>0);flag(places,placesTop<vh&&arcBox.top>0);flag(tools,toolsTop<vh&&finalTop>0);
    if(reduced){set(arcRing,'perspective','');handoff.hidden=true;if(firstMoment){set(firstMoment,'opacity','');firstMoment.dataset.landed='true'}arcCards.forEach(card=>{set(card,'transform','');set(card,'opacity','');setInert(card,false)})}
    else if(arcVisible||flying){
     // Concave carousel with three measured slots (from the reference layout): the centre card sits flat; the preview
@@ -208,8 +211,18 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
    hero.style.setProperty('--hh-my',((event.clientY/innerHeight)*2-1).toFixed(3));
   };
   update();
+  // Decode the photos further down while the browser is idle, so the first scroll through each section doesn't stall
+  // on fetching and decoding them mid-frame. One image per idle slot keeps the main thread free.
+  const idle=window.requestIdleCallback?cb=>requestIdleCallback(cb,{timeout:1500}):cb=>setTimeout(cb,200);
+  let warmCancelled=false;
+  const warm=()=>{
+   const queue=[...page.querySelectorAll('img')].filter(img=>img.getBoundingClientRect().top>innerHeight);
+   const next=()=>{if(warmCancelled)return;const img=queue.shift();if(!img)return;if(img.loading==='lazy')img.loading='eager';(img.decode?img.decode():Promise.resolve()).catch(()=>{}).finally(()=>idle(next))};
+   idle(next);
+  };
+  if(document.readyState==='complete')warm();else addEventListener('load',warm,{once:true});
   addEventListener('scroll',schedule,{passive:true});addEventListener('resize',resize);media.addEventListener('change',schedule);hero.addEventListener('pointermove',pointer);
-  return()=>{cancelAnimationFrame(frame);probe.remove();removeEventListener('scroll',schedule);removeEventListener('resize',resize);media.removeEventListener('change',schedule);hero.removeEventListener('pointermove',pointer)};
+  return()=>{warmCancelled=true;removeEventListener('load',warm);cancelAnimationFrame(frame);probe.remove();removeEventListener('scroll',schedule);removeEventListener('resize',resize);media.removeEventListener('change',schedule);hero.removeEventListener('pointermove',pointer)};
  },[]);
 
  // Tabs stay usable: picking one scrolls the pinned section to that place's step.

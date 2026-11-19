@@ -96,6 +96,9 @@ body:has(.hh-home)>header.hz-header:not(.is-scrolled) :is(.hz-primary>.hz-nav-li
 .hh-penang-glow{stroke:var(--secondary);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:130 870;opacity:.95;filter:drop-shadow(0 0 3px var(--secondary)) drop-shadow(0 0 9px color-mix(in srgb,var(--secondary) 80%,transparent)) drop-shadow(0 0 20px color-mix(in srgb,var(--primary) 50%,transparent))}
 .hh-penang-glow path{animation:hh-trace 12s linear infinite;animation-play-state:paused}
 .hh-arc[data-in-view=true] .hh-penang-glow path{animation-play-state:running}
+/* The other endless loops also rest while their section is out of sight (PenangHome sets data-in-view), so scrolling
+   one section never pays for animating the others. */
+.hh-hero:not([data-in-view=true]) .hh-float,.hh-places:not([data-in-view=true]) .hh-blobs i,.hh-tools:not([data-in-view=true]) .hh-tools-glow{animation-play-state:paused}
 @keyframes hh-trace{from{stroke-dashoffset:0}to{stroke-dashoffset:-1000}}
 .hh-arc-ring{position:relative;width:100%;height:var(--hh-card-h);perspective:1100px;perspective-origin:50% 50%;transform-style:preserve-3d}
 /* Landscape photo cards with a small radius and no frame; perspective alone gives them depth. */
