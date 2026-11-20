@@ -3,8 +3,8 @@ import {notFound} from 'next/navigation';
 import GuideArticle from '../../../components/GuideArticle';
 import JsonLd from '../../../components/JsonLd';
 import Icon from '../../../components/Icon';
-import {getPublishedGuide,getPublishedProject} from '../../../lib/firestore-server';
-import {guideCoverAllowed,guidePath,validGuideSlug} from '../../../lib/guides';
+import {getPublishedGuide,getPublishedProjects} from '../../../lib/firestore-server';
+import {guideCoverAllowed,guidePath,guideProjectIds,relatedGuideProjects,validGuideSlug} from '../../../lib/guides';
 import {absoluteUrl,pageMetadata} from '../../../lib/seo';
 
 export function generateStaticParams(){return []}
@@ -23,7 +23,7 @@ export default async function GuidePage({params}){
  if(!validGuideSlug(slug))notFound();
  const guide=await getPublishedGuide(slug);
  if(!guide)notFound();
- const project=guide.projectId?await getPublishedProject(guide.projectId).catch(()=>null):null;
+ const projects=guideProjectIds(guide).length?relatedGuideProjects(guide,await getPublishedProjects().catch(()=>[])):[];
  const url=absoluteUrl(guidePath(slug)),home=absoluteUrl('/');
  const data=url&&{
   '@context':'https://schema.org','@type':'Article','@id':url+'#article',
@@ -36,6 +36,6 @@ export default async function GuidePage({params}){
  return <main className="guides-shell guide-reading">
   <JsonLd data={data}/>
   <Link href="/guides/" className="guide-back"><Icon name="arrowLeft"/>Penang property guides</Link>
-  <GuideArticle guide={guide} project={project?{id:project.id,name:project.name}:null}/>
+  <GuideArticle guide={guide} projects={projects}/>
  </main>;
 }

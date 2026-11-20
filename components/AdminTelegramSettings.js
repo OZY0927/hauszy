@@ -1,7 +1,9 @@
 'use client';
-import {useEffect,useState} from 'react';
+import {useEffect,useId,useState} from 'react';
+import {Checkbox} from './ui/checkbox';
 import Icon from './Icon';
 export default function AdminTelegramSettings({user}){
+ const enabledId=useId();
  const [token,setToken]=useState(''),[chatId,setChatId]=useState(''),[enabled,setEnabled]=useState(false),[configured,setConfigured]=useState(false),[busy,setBusy]=useState(true),[status,setStatus]=useState(''),[ready,setReady]=useState(false);
  useEffect(()=>{let active=true;(async()=>{try{
   const response=await fetch('/api/admin/telegram/',{headers:{Authorization:'Bearer '+await user.getIdToken()}}),data=await response.json();
@@ -17,7 +19,10 @@ export default function AdminTelegramSettings({user}){
  <p className="st-note">Create a bot with <a href="https://t.me/BotFather" target="_blank" rel="noopener noreferrer">@BotFather</a>, then start a conversation with your bot or add it to your group. Enter that destination’s numeric chat ID below.</p>
  <label className="st-field">Bot token<input type="password" autoComplete="new-password" value={token} onChange={event=>setToken(event.target.value)} placeholder={configured?'Token saved — leave blank to keep it':'Paste bot token'} required={!configured} maxLength={128} disabled={busy||!ready}/></label>
  <label className="st-field">Destination chat ID<input value={chatId} onChange={event=>setChatId(event.target.value)} placeholder="e.g. -1001234567890" required maxLength={21} disabled={busy||!ready}/></label>
- <label className="st-field"><span><input type="checkbox" checked={enabled} onChange={event=>setEnabled(event.target.checked)} disabled={busy||!ready}/> Enable Telegram delivery</span></label>
+ <div className="st-checkbox-row st-telegram-checkbox">
+  <Checkbox id={enabledId} checked={enabled} onCheckedChange={value=>setEnabled(value===true)} disabled={busy||!ready}/>
+  <label htmlFor={enabledId}>Enable Telegram delivery</label>
+ </div>
  <button className="st-btn primary" disabled={busy||!ready}>{busy?'Loading…':'Save Telegram settings'}</button><p className="st-status" role="status">{status}</p>
  </div></form>;
 }

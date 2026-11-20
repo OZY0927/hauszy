@@ -1,0 +1,16 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../components/**/*.tsx";
+@source "./**/*.tsx";
+
+/* Keep Hauszy's base CSS and generate utilities for shared TSX controls. */
+@theme inline {
+  --color-background: var(--st-surface, var(--paper));
+  --color-foreground: var(--st-ink, var(--ink));
+  --color-input: var(--st-muted, var(--muted));
+  --color-ring: var(--st-accent, var(--primary));
+  --color-primary: var(--st-accent, var(--primary));
+  --color-primary-foreground: var(--paper);
+  --color-destructive: var(--st-bad, var(--primary-strong));
+}

@@ -1,20 +1,21 @@
 'use client';
 
-import {useCallback,useEffect,useRef,useState} from 'react';
+import {useCallback,useEffect,useId,useRef,useState} from 'react';
 import Link from 'next/link';
 import {collection,doc,getDocsFromServer,runTransaction} from 'firebase/firestore';
 import {getFirebase,refreshSite,uploadPhoto} from '../lib/firebase-client';
 import {authErrorMessage} from '../lib/auth-errors';
 import {isAdminToken} from '../lib/admin-access';
 import {isPublicProject} from '../lib/publication';
-import {GUIDE_CATEGORIES,GUIDE_TOOLS,guideContent,guideHref,guidePath,guideRecords,suggestGuideSlug,validGuideSlug} from '../lib/guides';
+import {GUIDE_CATEGORIES,GUIDE_TOOLS,guideContent,guideHref,guidePath,guideProjectIds,guideRecords,relatedGuideProjects,suggestGuideSlug,validGuideSlug} from '../lib/guides';
 import {STARTER_GUIDES} from '../lib/starter-guides';
 import GuideArticle from './GuideArticle';
 import PhotoPicker from './PhotoPicker';
+import {Checkbox} from './ui/checkbox';
 import Icon from './Icon';
 
 const starterDrafts=STARTER_GUIDES.map(guide=>({...guide,isPublished:true,revision:0}));
-const blankGuide={title:'',slug:'',category:GUIDE_CATEGORIES[0],summary:'',body:'',author:'Hauszy',seoTitle:'',seoDescription:'',coverAlt:'',coverUrl:'',projectId:'',tools:[],sources:[]};
+const blankGuide={title:'',slug:'',category:GUIDE_CATEGORIES[0],summary:'',body:'',author:'Hauszy',seoTitle:'',seoDescription:'',coverAlt:'',coverUrl:'',tools:[],sources:[]};
 const blankSource={label:'',url:'',checkedOn:''};
 const errorText=error=>error.code==='permission-denied'
  ?'Guides require the updated Firestore rules. Deploy firestore.rules before saving or publishing.'
@@ -96,14 +97,17 @@ export default function GuideStudio({projects}){
 }
 
 function GuideEditor({record,projects,onClose,onSave}){
+ const toolCheckboxId=useId();
  const dialog=useRef(null),bodyField=useRef(null),selection=useRef(null);
- const [form,setForm]=useState(()=>({...blankGuide,...record}));
+ const [form,setForm]=useState(()=>({...blankGuide,...record,projectIds:guideProjectIds(record)}));
  const [editedSlug,setEditedSlug]=useState(false),[preview,setPreview]=useState(false),[device,setDevice]=useState('desktop');
  const [photo,setPhoto]=useState(()=>record?.coverUrl?[{url:record.coverUrl}]:[]);
  const [link,setLink]=useState(null),[status,setStatus]=useState(''),[busy,setBusy]=useState(false);
  useEffect(()=>{dialog.current.showModal()},[]);
  const change=(key,value)=>setForm(previous=>({...previous,[key]:value}));
- const project=projects.find(item=>item.id===form.projectId);
+ const selectedProjects=relatedGuideProjects(form,projects);
+ const projectNames=new Map(selectedProjects.map(project=>[project.id,project.name]));
+ const choices=projects.filter(project=>!form.projectIds.includes(project.id));
  function textSelection(){
   const input=bodyField.current;
   return [input.selectionStart,input.selectionEnd];
@@ -153,13 +157,13 @@ function GuideEditor({record,projects,onClose,onSave}){
   }catch(error){setStatus(errorText(error))}
   finally{setBusy(false)}
  }
- return <dialog className="st-sheet" ref={dialog} aria-labelledby="guide-editor-title" onCancel={event=>{event.preventDefault();if(!busy)onClose()}}>
+ return <dialog className="st-sheet st-guide-sheet" ref={dialog} aria-labelledby="guide-editor-title" onCancel={event=>{event.preventDefault();if(!busy)onClose()}}>
   <form onSubmit={event=>event.preventDefault()}>
    <div className="st-sheet-head"><div><div className="st-eyebrow">Guide editor</div><h2 id="guide-editor-title">{record?'Edit article':'New article'}</h2></div><button type="button" className="st-btn ghost icon-only" onClick={onClose} disabled={busy} aria-label="Close article editor"><Icon name="x"/></button></div>
    <div className="st-sheet-scroll st-guide-editor">
     {preview?<div>
      <div className="st-toolbar"><div className="st-segment" aria-label="Preview width">{['desktop','mobile'].map(width=><button key={width} type="button" aria-pressed={device===width} onClick={()=>setDevice(width)}>{width==='desktop'?'Desktop':'Mobile'}</button>)}</div></div>
-     <div className={`st-guide-preview${device==='mobile'?' is-mobile':''}`}><GuideArticle guide={{...form,coverUrl:photo[0]?.url}} project={project} preview/></div>
+     <div className={`st-guide-preview${device==='mobile'?' is-mobile':''}`}><GuideArticle guide={{...form,coverUrl:photo[0]?.url}} projects={selectedProjects} preview/></div>
     </div>:<fieldset disabled={busy}>
      <section className="st-card"><div className="st-card-head"><h3>Article details</h3></div><div className="st-card-body st-grid">
       <label className="st-field st-wide">Title<input maxLength={120} value={form.title} onChange={event=>{const title=event.target.value;setForm(previous=>({...previous,title,...(!record&&!editedSlug&&{slug:suggestGuideSlug(title)})}))}}/></label>
@@ -189,8 +193,23 @@ function GuideEditor({record,projects,onClose,onSave}){
       <label className="st-field st-wide">Describe the image for readers who cannot see it<input maxLength={180} value={form.coverAlt} onChange={event=>change('coverAlt',event.target.value)}/></label>
      </div></section>
      <section className="st-card"><div className="st-card-head"><h3>Related links</h3></div><div className="st-card-body st-grid">
-      <label className="st-field st-wide">Related published project<select value={form.projectId} onChange={event=>change('projectId',event.target.value)}><option value="">None</option>{form.projectId&&!project&&<option value={form.projectId}>Currently unavailable project</option>}{projects.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
-      {GUIDE_TOOLS.map(([path,name])=><label className="st-guide-checkbox" key={path}><input type="checkbox" checked={form.tools.includes(path)} onChange={event=>change('tools',event.target.checked?[...form.tools,path]:form.tools.filter(tool=>tool!==path))}/>{name}</label>)}
+      <div className="st-wide">
+       <label className="st-field">Add a related project<select value="" disabled={choices.length===0} onChange={event=>{if(event.target.value)change('projectIds',[...form.projectIds,event.target.value])}}>
+        <option value="">{choices.length?'Choose a published project':'No more published projects to add'}</option>
+        {choices.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+       </select></label>
+       {form.projectIds.length>0&&<ul className="st-guide-selected" aria-label="Selected related projects">{form.projectIds.map(id=>{
+        const name=projectNames.get(id)||`Unavailable project (${id})`;
+        return <li key={id}><span>{name}</span><button type="button" className="st-btn ghost icon-only small" aria-label={`Remove ${name}`} onClick={()=>change('projectIds',form.projectIds.filter(value=>value!==id))}><Icon name="x"/></button></li>;
+       })}</ul>}
+      </div>
+      {GUIDE_TOOLS.map(([path,name],index)=>{
+       const id=`${toolCheckboxId}-${index}`;
+       return <div className="st-checkbox-row" key={path}>
+        <Checkbox id={id} checked={form.tools.includes(path)} disabled={busy} onCheckedChange={checked=>change('tools',checked===true?[...form.tools,path]:form.tools.filter(tool=>tool!==path))}/>
+        <label htmlFor={id}>{name}</label>
+       </div>;
+      })}
      </div></section>
      <section className="st-card"><div className="st-card-head"><h3>Sources</h3><button type="button" className="st-btn small" disabled={form.sources.length>=12} onClick={()=>change('sources',[...form.sources,blankSource])}><Icon name="plus"/>Add source</button></div><div className="st-card-body st-guide-sources">
       {form.sources.length===0&&<p>Link to a developer announcement, official brochure or other reference that supports the article.</p>}

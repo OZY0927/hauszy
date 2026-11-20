@@ -494,12 +494,20 @@ body:has(.studio){background:var(--surface-soft)}
 .st-guide-row p{font-size:var(--text-caption);color:var(--st-muted)}
 .st-guide-row-actions,.st-guide-format{display:flex;flex-wrap:wrap;gap:8px}
 .st-guide-format{margin-bottom:12px}
+.studio .st-guide-sheet>form{flex-wrap:nowrap}
+.st-guide-editor{flex:1;min-height:0}
 .st-guide-editor fieldset{display:grid;min-width:0;gap:16px;margin:0;padding:0;border:0}
 .st-guide-editor .st-card{min-width:0}
 .st-guide-link,.st-guide-source{padding:12px;border:1px solid var(--st-line);border-radius:12px;margin-bottom:12px}
 .st-guide-source:last-child{margin-bottom:0}
 .st-guide-source>button{justify-self:start;align-self:end}
-.st-guide-checkbox{display:flex;align-items:center;gap:8px}
+.st-checkbox-row{display:flex;align-items:center;gap:10px;min-height:36px}
+.st-checkbox-row label{cursor:pointer}
+.st-checkbox-row [data-slot=checkbox]:disabled~label{cursor:not-allowed}
+.st-telegram-checkbox{margin-block:12px}
+.st-guide-selected{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:12px 0 0}
+.st-guide-selected li{display:inline-flex;align-items:center;gap:4px;max-width:100%;padding-inline:12px 2px;border:1px solid var(--st-line);border-radius:999px;background:var(--st-sunken);overflow-wrap:anywhere}
+.st-guide-selected li button{flex:none}
 .st-guide-preview{max-width:100%;margin:0 auto;padding:clamp(12px,3vw,28px);background:var(--paper)}
 .st-guide-preview.is-mobile{width:min(390px,100%);border:1px solid var(--st-line);border-radius:16px}
 .st-guide-preview.is-mobile .guide-article-heading h1{font-size:34px}

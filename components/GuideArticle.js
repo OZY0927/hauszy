@@ -15,7 +15,7 @@ function ScrollTable({children}){
 
 const markdownComponents={a:MarkdownLink,h1:'h2',table:ScrollTable};
 
-export default function GuideArticle({guide,project,preview=false}){
+export default function GuideArticle({guide,projects=[],preview=false}){
  const tools=GUIDE_TOOLS.filter(([path])=>guide.tools?.includes(path));
  const sources=(guide.sources||[]).filter(source=>source.label&&guideHref(source.url));
  return <article className="guide-article">
@@ -36,10 +36,10 @@ export default function GuideArticle({guide,project,preview=false}){
     <h2 id="guide-sources-title">Sources</h2>
     <ul>{sources.map((source,index)=><li key={source.url+index}><a href={source.url}>{source.label}</a>{source.checkedOn&&<small>Checked <time dateTime={source.checkedOn}>{guideDateLabel(source.checkedOn)}</time></small>}</li>)}</ul>
    </section>}
-   {(project||tools.length>0)&&<section className="guide-article-extra" aria-labelledby="guide-related-title">
+   {(projects.length>0||tools.length>0)&&<section className="guide-article-extra" aria-labelledby="guide-related-title">
     <h2 id="guide-related-title">Keep exploring</h2>
     <div className="guide-related">
-     {project&&<Link className="project-story-pill" href={`/projects/${encodeURIComponent(project.id)}/`}>View {project.name} <Icon name="arrowUpRight"/></Link>}
+     {projects.map(project=><Link key={project.id} className="project-story-pill" href={`/projects/${encodeURIComponent(project.id)}/`}>View {project.name} <Icon name="arrowUpRight"/></Link>)}
      {tools.map(([path,name])=><Link key={path} className="project-story-pill" href={path}>{name} <Icon name="arrowUpRight"/></Link>)}
     </div>
    </section>}

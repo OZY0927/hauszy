@@ -6,7 +6,7 @@ import JsonLd from '../../../components/JsonLd';
 import Link from 'next/link';
 import {notFound} from 'next/navigation';
 import {getProfile,getPublishedGuides,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
-import {guidePath} from '../../../lib/guides';
+import {guidePath,guideProjectIds} from '../../../lib/guides';
 import {whatsappNumber,whatsappLink,projectMessage} from '../../../lib/whatsapp';
 import {hasProjectInfo,visibleFacts,projectSections,applyFieldVisibility} from '../../../lib/project-visibility';
 import {sinkingFundText,maintenanceText,unitCountRange,safeUrl,startingPrice,priceText,wholeMoney,cardProject,listingName,publicImages} from '../../../lib/project';
@@ -56,7 +56,7 @@ export default async function Project({params}){
  const p=applyFieldVisibility({...project,name:listingName(project)});
  const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
  const editorial=visibility.overview&&fieldVisibility(project.fieldVisibility).editorial?projectEditorial(p,visibility):null;
- const guide=guides.find(item=>item.projectId===id);
+ const guide=guides.find(item=>guideProjectIds(item).includes(id));
  const purchaseTool=p.mode==='New launch'&&['Residential','Commercial under HDA'].includes(p.titleType)
   ? ['/tools/upfront-cash-calculator/','Estimate upfront purchase costs']
   : p.titleType==='Residential'?['/tools/loan-calculator/','Estimate monthly loan repayments']:null;

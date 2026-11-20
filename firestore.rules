@@ -16,12 +16,14 @@ service cloud.firestore {
         (request.resource.data.status == 'Published'
           && request.resource.data.keys().hasOnly([
             'status', 'title', 'summary', 'body', 'author', 'seoTitle', 'seoDescription',
-            'category', 'coverUrl', 'coverAlt', 'projectId', 'tools', 'sources', 'publishedAt', 'updatedAt'
+            'category', 'coverUrl', 'coverAlt', 'projectId', 'projectIds', 'tools', 'sources', 'publishedAt', 'updatedAt'
           ])
           && request.resource.data.title is string
           && request.resource.data.summary is string
           && request.resource.data.body is string
           && request.resource.data.author is string
+          && (!('projectId' in request.resource.data) || request.resource.data.projectId is string)
+          && (!('projectIds' in request.resource.data) || request.resource.data.projectIds is list)
           && request.resource.data.publishedAt is string
           && request.resource.data.updatedAt is string)
         || (request.resource.data.status == 'Withdrawn' && request.resource.data.keys().hasOnly(['status']))
