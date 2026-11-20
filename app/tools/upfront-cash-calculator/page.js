@@ -1,14 +1,15 @@
-import {pageMetadata} from '../../../lib/seo';
+import {pageMetadata,toolStructuredData} from '../../../lib/seo';
 import {money} from '../../../lib/project';
 import {purchaseBudget} from '../../../lib/purchase-budget';
 import UpfrontCashCalculator from '../../../components/UpfrontCashCalculator';
+import JsonLd from '../../../components/JsonLd';
 export const metadata=pageMetadata("Malaysia Property Upfront Cash Calculator","Estimate the down payment, legal fees, stamp duty and upfront cash for a Malaysian property purchase. Confirm final costs with your solicitor.","/tools/upfront-cash-calculator/");
 
 const example=purchaseBudget({price:500000,margin:90,buyer:'local',payment:'loan',firstHome:'no'});
 const exampleFees=example.rows.filter(row=>row.payable!==null);
 
 export default function Page(){
- return <main className="calculator-shell upfront-shell">
+ return <><JsonLd data={toolStructuredData(metadata)}/><main className="calculator-shell upfront-shell">
   <div className="tools-intro">
    <div className="eyebrow">PLAN YOUR PURCHASE</div>
    <h1>Your new home.<br/>Your <em>upfront costs.</em></h1>
@@ -41,5 +42,5 @@ export default function Page(){
     </div>
    </details>
   </div>
- </main>
+ </main></>
 }

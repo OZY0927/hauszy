@@ -18,8 +18,8 @@ export default function ProjectDetails({project:p,purchaseTool}){
  return <section className="project-story-section project-details" id="details" aria-labelledby="project-details-title">
   <div className="project-details-inner">
    <div className="project-details-intro project-story-section-heading">
-    <div><span className="eyebrow">THE FINER DETAILS</span><h2 id="project-details-title">Every detail.<br/><em>A clearer picture.</em></h2></div><div className="project-details-intro-note"><p>Get to know your next address.<br/>All the essentials, at a glance.</p>
-     <div className="project-details-summary">{facts.length} project details <span>One complete picture.</span></div>
+    <div><span className="eyebrow">PROPERTY FACTS</span><h2 id="project-details-title">Project details.<br/><em>At a glance.</em></h2></div><div className="project-details-intro-note"><p>Use these listed details to compare projects.<br/>Confirm current information before booking.</p>
+     <div className="project-details-summary">{facts.length} project details <span>Listed information.</span></div>
      {purchaseTool&&<Link className="project-story-pill" href={purchaseTool[0]}>{purchaseTool[1]} <Icon name="arrowUpRight"/></Link>}
     </div>
    </div>

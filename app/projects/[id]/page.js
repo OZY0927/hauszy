@@ -39,7 +39,9 @@ export async function generateMetadata({params}){
  const project=await getPublishedProject(id);
  if(!project)return {title:'Project unavailable',robots:{index:false,follow:false}};
  const p=applyFieldVisibility({...project,name:listingName(project)});
- return pageMetadata(p.name,projectDescription(p),`/projects/${encodeURIComponent(id)}/`,publicImages(p).slice(0,1));
+ const location=hasProjectInfo(p.location)?String(p.location).trim():'';
+ const title=location&&!p.name.toLowerCase().includes(location.toLowerCase())?`${p.name} in ${location}`:p.name;
+ return pageMetadata(title,projectDescription(p),`/projects/${encodeURIComponent(id)}/`,publicImages(p).slice(0,1));
 }
 function Facts({rows}){return <dl className="property-facts">{visibleFacts(rows).map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
 function SectionHeading({label,title,children}){return <div className="project-story-section-heading"><div><span className="eyebrow">{label}</span><h2>{title}</h2></div>{children&&<div className="project-story-section-note">{children}</div>}</div>}
@@ -61,7 +63,7 @@ export default async function Project({params}){
 
   {(visibility.overview||visibility.photos)&&<ProjectScrollIntroduction photos={visibility.photos?p.images:[]}>
    {visibility.overview&&<>
-   <div className="project-story-intro-main"><div className="eyebrow">THE PROJECT</div><h2>{hasProjectInfo(p.title)&&p.title.trim().toLowerCase()!==p.name.trim().toLowerCase()?p.title:<>A closer look.<br/>A place to call yours.</>}</h2>{visibility.enquiry&&<a className="project-story-pill" href="#enquiry">Enquire about this project <Icon name="arrowUpRight"/></a>}</div>
+   <div className="project-story-intro-main"><div className="eyebrow">THE PROJECT</div><h2>{hasProjectInfo(p.title)&&p.title.trim().toLowerCase()!==p.name.trim().toLowerCase()?p.title:<>Project<br/>overview.</>}</h2>{visibility.enquiry&&<a className="project-story-pill" href="#enquiry">Enquire about this project <Icon name="arrowUpRight"/></a>}</div>
 
    </>}
   </ProjectScrollIntroduction>}
@@ -79,7 +81,7 @@ export default async function Project({params}){
   {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates} amenities={visibility.nearby}/>}
 
   {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance">
-   <SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<><span className="charges-heading-line">A clearer view</span><span className="charges-heading-line">of ongoing costs.</span></>}>
+   <SectionHeading label="ONGOING PROPERTY COSTS" title={<><span className="charges-heading-line">Maintenance</span><span className="charges-heading-line">and sinking fund.</span></>}>
     {purchaseTool&&<Link className="project-story-pill" href={purchaseTool[0]}>{purchaseTool[1]} <Icon name="arrowUpRight"/></Link>}
    </SectionHeading>
    <Facts rows={[["Maintenance fee",hasProjectInfo(p.maintenance)?maintenanceText(p):null],["Sinking fund",sinkingFundText(p)]]}/>
@@ -87,7 +89,7 @@ export default async function Project({params}){
 
   {visibility.showroom.length>0&&<section className="project-story-section project-story-showroom" id="showroom"><SectionHeading label="STEP INSIDE" title={<>Picture the<br/>possibilities.</>}><p>A look inside the showroom.</p></SectionHeading><ShowroomGallery photos={visibility.showroom} name={p.name}/><p className="project-story-fine-print">Showroom units are for illustration only and may include furnishings and finishes not included in the sale.</p></section>}
 
-  {visibility.enquiry&&<section className="project-story-contact"><div className="project-story-section project-story-contact-grid"><div className="project-story-contact-copy" data-reveal><span className="eyebrow">YOUR NEXT CHAPTER STARTS HERE</span><h2>Come see<br/>the possibilities.</h2><p>Have a question about {p.name}? Get the latest details, plan your budget, or arrange a viewing with your property contact.</p><span className="project-story-contact-location"><Icon name="mapPin"/>{hasProjectInfo(p.location)?p.location:'Penang'}</span></div><EnquiryCard project={p} agent={{name:String(profile?.name||'').trim(),ren:profile?.ren||'',agency:profile?.agency||'',portrait:safeUrl(profile?.portrait)?profile.portrait:'',whatsapp:whatsappNumber(profile)}}/></div></section>}
+  {visibility.enquiry&&<section className="project-story-contact"><div className="project-story-section project-story-contact-grid"><div className="project-story-contact-copy" data-reveal><span className="eyebrow">PROJECT ENQUIRIES</span><h2>Ask about<br/>a viewing.</h2><p>Contact Hauszy to confirm the latest price and available units for {p.name}, or request a viewing time.</p><span className="project-story-contact-location"><Icon name="mapPin"/>{hasProjectInfo(p.location)?p.location:'Penang'}</span></div><EnquiryCard project={p} agent={{name:String(profile?.name||'').trim(),ren:profile?.ren||'',agency:profile?.agency||'',portrait:safeUrl(profile?.portrait)?profile.portrait:'',whatsapp:whatsappNumber(profile)}}/></div></section>}
   {visibility.video&&videoSource(p.videoUrl)&&<FloatingVideo url={p.videoUrl} name={p.name}/>}
   {visibility.related&&related.length>0&&<section className="project-story-section project-story-related" id="keep-exploring"><SectionHeading label="KEEP EXPLORING" title={<>Another place.<br/>Another possibility.</>}><Link className="project-story-pill" href="/projects">All Penang projects <Icon name="arrowUpRight"/></Link></SectionHeading><RelatedProjectGrid projects={related.map(cardProject)}/></section>}
  </ProjectStory>;

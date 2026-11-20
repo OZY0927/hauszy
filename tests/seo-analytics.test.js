@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {getSiteUrl,pageMetadata,projectStructuredData,serializeJsonLd} from '../lib/seo.js';
+import {aboutStructuredData,getSiteUrl,homeStructuredData,pageMetadata,projectStructuredData,serializeJsonLd,toolStructuredData} from '../lib/seo.js';
 import {analyticsPage} from '../lib/analytics.js';
 import {publicationHold,isPublicProject} from '../lib/publication.js';
 import {buildProject} from '../lib/project-editor.js';
@@ -23,6 +23,25 @@ test('Hauszy uses its verified origin on Vercel production when the site URL is 
  }finally{
   if(previousUrl===undefined)delete process.env.NEXT_PUBLIC_SITE_URL;else process.env.NEXT_PUBLIC_SITE_URL=previousUrl;
   if(previousVercelEnv===undefined)delete process.env.VERCEL_ENV;else process.env.VERCEL_ENV=previousVercelEnv;
+ }
+});
+test('home, profile and tool markup share the site identity and only use supplied profile facts',()=>{
+ const previous=process.env.NEXT_PUBLIC_SITE_URL;
+ process.env.NEXT_PUBLIC_SITE_URL='https://hauszy.example';
+ try{
+  const site=homeStructuredData('Hauszy Penang','Browse Penang property projects.')['@graph'][0];
+  assert.equal(site['@id'],'https://hauszy.example/#website');
+  assert.equal(aboutStructuredData({name:''}),null);
+  const about=aboutStructuredData({name:'Public agent',portrait:'/media/portrait.webp',agency:'Public agency',ren:'REN 12345'});
+  assert.equal(about.isPartOf['@id'],site['@id']);
+  assert.equal(about.mainEntity.image,'https://hauszy.example/media/portrait.webp');
+  assert.equal(about.mainEntity.identifier.value,'REN 12345');
+  assert.equal(aboutStructuredData({name:'Public agent'}).mainEntity.worksFor,undefined);
+  const tool=toolStructuredData(pageMetadata('Loan estimator','Estimate repayments.','/tools/loan-calculator/'));
+  assert.equal(tool.isPartOf['@id'],site['@id']);
+  assert.equal(tool.breadcrumb.itemListElement[1].item,'https://hauszy.example/tools/loan-calculator/');
+ }finally{
+  if(previous===undefined)delete process.env.NEXT_PUBLIC_SITE_URL;else process.env.NEXT_PUBLIC_SITE_URL=previous;
  }
 });
 test('explicit archive instructions prevent publishing and public rendering without blocking ordinary qualifications',()=>{

@@ -18,11 +18,11 @@ const HERO_LANDMARKS=[
 ];
 // "Choose your Penang": one full-colour panel per place, in the five-colour palette.
 const PLACES=[
- {key:'george-town',name:'George Town',title:'Streets with stories',tone:'primary',image:'/images/heritage-house-3d.webp',alt:'Penang heritage shophouse',copy:'Five-foot ways, shophouses and neighbourhood kopitiams. In George Town, old and new share the same street — and everyday life is part of the charm.',areas:'GEORGE TOWN · HERITAGE CORE'},
- {key:'coast',name:'The coast',title:'Where the shore slows down',tone:'secondary',image:'/images/floating-mosque-3d.webp',alt:'The Floating Mosque on the Penang coast',copy:'Trade the city streets for a coastal evening. From seafront neighbourhoods to quieter stretches of shoreline, there’s another side of Penang waiting by the water.',areas:'TANJUNG BUNGAH · BATU FERRINGHI'},
- {key:'hills',name:'Penang Hill',title:'Green all around',tone:'ink',image:'/images/penang-hill-3d-v2.webp',alt:'Penang Hill with its funicular railway',copy:'Head into the hills and the view changes. Forest trails and treetop views offer a green escape, with the energy of the island never far away.',areas:'AIR ITAM · PENANG HILL'},
- {key:'island',name:'City centre',title:'Close to everything',tone:'paper',image:'/images/komtar-3d-v3.webp',alt:'The KOMTAR tower in George Town',copy:'Around KOMTAR, Penang’s 65-storey landmark, the island’s main bus hub, shopping and city living meet — with the airport and the industrial south a short drive away.',areas:'KOMTAR · JELUTONG · PULAU TIKUS'},
- {key:'mainland',name:'The mainland',title:'A different kind of possibility',tone:'muted',image:'/images/penang-bridge-3d.webp',alt:'The Penang Bridge crossing to the mainland',copy:'Across the strait, explore Seberang Perai — from Butterworth and Bukit Mertajam to the growing neighbourhoods of Batu Kawan.',areas:'BUTTERWORTH · BUKIT MERTAJAM · BATU KAWAN'},
+ {key:'george-town',name:'George Town',title:'Living in George Town',tone:'primary',image:'/images/heritage-house-3d.webp',alt:'Penang heritage shophouse',copy:'George Town’s heritage streets mix shophouses, kopitiams and everyday shops. Compare walking routes, parking and building access when you shortlist a home.',areas:'GEORGE TOWN · HERITAGE CORE'},
+ {key:'coast',name:'The coast',title:'Homes along the coast',tone:'secondary',image:'/images/floating-mosque-3d.webp',alt:'The Floating Mosque on the Penang coast',copy:'Comparing Tanjung Bungah and Batu Ferringhi? Check the route to work, walking access to everyday shops and whether the unit itself has the view you want.',areas:'TANJUNG BUNGAH · BATU FERRINGHI'},
+ {key:'hills',name:'Penang Hill',title:'Air Itam and Penang Hill',tone:'ink',image:'/images/penang-hill-3d-v2.webp',alt:'Penang Hill with its funicular railway',copy:'If you want a home near Penang Hill, compare the routes from Air Itam to your workplace, nearby shops and the places you visit most.',areas:'AIR ITAM · PENANG HILL'},
+ {key:'island',name:'City centre',title:'City homes in Penang',tone:'paper',image:'/images/komtar-3d-v3.webp',alt:'The KOMTAR tower in George Town',copy:'Compare homes near KOMTAR, Jelutong and Pulau Tikus by commute, parking and access to the markets, clinics and shops you use regularly.',areas:'KOMTAR · JELUTONG · PULAU TIKUS'},
+ {key:'mainland',name:'The mainland',title:'Property in Seberang Perai',tone:'muted',image:'/images/penang-bridge-3d.webp',alt:'The Penang Bridge crossing to the mainland',copy:'When comparing Butterworth, Bukit Mertajam and Batu Kawan, look at layouts, listed prices and the weekday route to work or school.',areas:'BUTTERWORTH · BUKIT MERTAJAM · BATU KAWAN'},
 ];
 const ARC_PHOTOS=[
  {src:'/penang/george-town-lanterns.webp',alt:'Red lanterns above a George Town heritage street'},
@@ -42,10 +42,10 @@ const MOMENTS=[
  {src:'/penang/coast.jpg',title:'Some places are better felt.',line:'Discover. Indulge. Explore.',film:true},
 ];
 const TOOLS=[
- {href:'/tools/loan-calculator',title:'Loan calculator',copy:'Plan your monthly repayments before you commit.'},
- {href:'/tools/upfront-cash-calculator',title:'Upfront cash',copy:'Understand your starting costs, from deposit to fees.'},
- {href:'/tools/loan-eligibility',title:'Loan eligibility',copy:'Estimate your borrowing range in a few steps.'},
- {href:'/tools/roi-calculator',title:'ROI calculator',copy:'Explore the potential returns on an investment.'},
+ {href:'/tools/loan-calculator',title:'Loan calculator',copy:'Estimate monthly instalments from your loan amount, interest rate and tenure.'},
+ {href:'/tools/upfront-cash-calculator',title:'Upfront cash',copy:'Budget for the down payment, legal fees and stamp duty.'},
+ {href:'/tools/loan-eligibility',title:'Loan eligibility',copy:'Use your income and debts to estimate borrowing room with DSR.'},
+ {href:'/tools/roi-calculator',title:'ROI calculator',copy:'Compare gross rental yield, net yield and cash flow.'},
 ];
 const FINAL_LANDMARKS=['/images/chinese-temple-3d.webp','/images/hindu-temple-3d.webp','/images/penang-church-3d.webp','/images/pinang-tree-3d.webp','/images/penang-dishes-3d.webp'];
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
@@ -241,9 +241,9 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
    <img className="hh-hero-photo" src="/penang/skyline.jpg" alt="Penang’s skyline, green hills and the Penang Bridge at sunrise" fetchPriority="high" width="2200" height="1467"/>
    <div className="hh-hero-shade" aria-hidden="true"/>
    {HERO_LANDMARKS.filter(l=>!l.front).map((l,i)=><img key={l.src} className="hh-float" src={l.src} alt="" aria-hidden="true" width="1254" height="1254" style={floatStyle(l,i)}/>)}
-   <h1 id="hh-hero-title" className="hh-hero-title"><span className="hh-hero-kicker">Find your rhythm. In</span><span className="hh-wordmark">Penang</span></h1>
+   <h1 id="hh-hero-title" className="hh-hero-title"><span className="hh-hero-kicker">Find your rhythm. In</span>{' '}<span className="hh-wordmark">Penang</span></h1>
    {HERO_LANDMARKS.filter(l=>l.front).map((l,i)=><img key={l.src} className="hh-float hh-float-front" src={l.src} alt="" aria-hidden="true" width="1254" height="1254" style={floatStyle(l,i+2)}/>)}
-   <p className="hh-hero-tagline">A little heritage. A little sea air.<br/>A whole new way to feel at home.</p>
+   <p className="hh-hero-tagline">Explore Penang property.<br/>Compare layouts and prices.</p>
    <a className="hh-hero-scroll" href="#hh-places"><Icon name="arrowDown"/><span>Scroll to discover</span></a>
    </div>
   </section>
@@ -257,7 +257,7 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
      <span className="hh-place-areas">{current.areas}</span>
      <h2>{current.title}</h2>
      <p>{current.copy}</p>
-     <Link className="hh-pill" href="/projects">See homes nearby <Icon name="arrowRight"/></Link>
+     <Link className="hh-pill" href="/projects">Browse Penang projects <Icon name="arrowRight"/></Link>
     </div>
     <img className="hh-place-hero" src={current.image} alt={current.alt} width="1254" height="1254"/>
    </div>
@@ -279,7 +279,7 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
      <g className="hh-penang-base">{penangOutline.map((d,i)=><path key={i} d={d}/>)}</g>
      <g className="hh-penang-glow">{penangOutline.map((d,i)=><path key={i} d={d} pathLength="1000"/>)}</g>
     </svg>
-    <h2 id="hh-arc-title" className="hh-statement">{hotProjects.length?<>Places worth <em>staying for.</em></>:<>Penang, <em>up close.</em></>}</h2>
+    <h2 id="hh-arc-title" className="hh-statement">{hotProjects.length?<>Featured Penang <em>projects.</em></>:<>Penang, <em>up close.</em></>}</h2>
     <div className="hh-arc-ring">{hotProjects.length?hotProjects.map((item,i)=><figure key={item.id} className="hh-arc-card hh-arc-project">
      <Link href={'/projects/'+encodeURIComponent(item.id)} className="hh-arc-link">
       <span className="hh-arc-photo"><CardPhoto src={item.images?.[0]} alt={listingName(item)}/></span>
@@ -289,7 +289,7 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
     <div className="hh-arc-foot">
      {hotProjects.length?<>
       <p className="hh-arc-note">{popularProjects?'The most-viewed projects.':'Handpicked by Hauszy.'}<span>{popularProjects?'Based on the last 30 days.':'From the island to the mainland.'}</span></p>
-      <Link className="hh-pill" href="/projects">Explore all projects <Icon name="arrowUpRight"/></Link>
+      <Link className="hh-pill" href="/projects">View all Penang listings <Icon name="arrowUpRight"/></Link>
      </>:<p className="hh-arc-note">Before you find a home,<br/>find a place that feels like you.</p>}
     </div>
    </div>
@@ -314,7 +314,7 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
   <section className="hh-tools" aria-labelledby="hh-tools-title" style={{'--n':TOOLS.length}}>
    <div className="hh-tools-stage">
    <div className="hh-tools-glow" aria-hidden="true"/>
-   <h2 id="hh-tools-title" className="hh-tools-title">Plan the move before you make it.</h2>
+   <h2 id="hh-tools-title" className="hh-tools-title">Plan your property budget.</h2>
    <div className="hh-tool-deck">{TOOLS.map((t,i)=><Link key={t.href} href={t.href} className="hh-tool"><span className="hh-tool-no">0{i+1}</span><h3>{t.title}</h3><p>{t.copy}</p><Icon name="arrowUpRight"/></Link>)}</div>
    </div>
   </section>
@@ -325,8 +325,8 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
    {FINAL_LANDMARKS.map((src,i)=><img key={src} className="hh-final-float" src={src} alt="" aria-hidden="true" width="1254" height="1254" style={{'--i':i}}/>)}
    <div className="hh-final-copy">
     <h2 id="hh-final-title"><span>Like the place?</span><em>Find your space.</em></h2>
-    <p>Tell us what home looks like to you — a heritage shophouse, a sea-view condo or a family home on the mainland — and we’ll help you find it.</p>
-    <div className="hh-final-actions"><Link className="hh-pill hh-pill-solid" href="/projects">Start your search <Icon name="arrowUpRight"/></Link><Link className="hh-pill" href="/about">Meet your property contact <Icon name="arrowUpRight"/></Link></div>
+    <p>Shortlist projects on Penang Island or in Seberang Perai. Ask your Hauszy contact about current prices, available units and viewing times.</p>
+    <div className="hh-final-actions"><Link className="hh-pill hh-pill-solid" href="/projects">Browse property listings <Icon name="arrowUpRight"/></Link><Link className="hh-pill" href="/about">Meet your property contact <Icon name="arrowUpRight"/></Link></div>
    </div>
   </section>
 
