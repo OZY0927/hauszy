@@ -20,6 +20,7 @@ firebase deploy --only firestore:rules,storage --project hauszy
 
 - `projects/{id}` and `adminSettings/projectOptions`: approved owner only.
 - `publicProjects/{id}`: anonymous reads require Published status; owner controls writes. Public project queries must filter by Published status.
+- `projectSlugs/{slug}`: approved owner only. First publication reserves a readable URL and writes the project together. Reservations survive archiving or deleting a project. Deploy the updated Firestore rules before publishing a project without a reserved URL.
 - `guideDrafts/{slug}`: approved owner only. `guidePublications/{slug}` contains the current published article or a withdrawal marker. Saving a draft keeps the existing publication. Publishing or withdrawing updates both records in one transaction.
 - `siteContent/about`: public profile and gallery; approved owner controls writes.
 - Storage `projects/{id}/{file}` and `profile/{file}`: approved owner can upload JPEG/PNG/WebP files up to 5 MB and delete them. Updates and other paths are denied. Download-token URLs remain shareable bearer links; do not upload confidential documents.

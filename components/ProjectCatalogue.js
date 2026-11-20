@@ -11,7 +11,7 @@ const LISTING_GRADIENT={base:'#F5EBDE',stops:['252, 248, 242','245, 235, 222','2
 
 export default function ProjectCatalogue({projects,page=1,error=false}){
  const batch=projectPageItems(sortProjects(projects,DEFAULT_PROJECT_ORDER),page)
-  .map(project=>({id:project.id,name:listingName(project)}));
+  .map(project=>({id:project.id,publicSlug:project.publicSlug,name:listingName(project)}));
 
  return <main className="projects-page">
   <JsonLd data={catalogueStructuredData(projectPagePath(page),batch,(page-1)*PROJECT_BATCH_SIZE)}/>

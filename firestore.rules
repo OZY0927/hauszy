@@ -9,6 +9,13 @@ service cloud.firestore {
     match /siteContent/about { allow read: if true; allow write: if isAdmin(); }
     match /adminSettings/projectOptions { allow read, write: if isAdmin(); }
     match /projects/{id} { allow read, write: if isAdmin(); }
+    match /projectSlugs/{slug} {
+      allow get: if isAdmin();
+      allow create: if isAdmin()
+        && slug.matches('[a-z0-9]+(-[a-z0-9]+)*') && slug.size() <= 120
+        && request.resource.data.keys().hasOnly(['projectId'])
+        && request.resource.data.projectId is string;
+    }
     match /guideDrafts/{slug} { allow read, write: if isAdmin(); }
     match /guidePublications/{slug} {
       allow read: if true;

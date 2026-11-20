@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useRef} from 'react';
 import Link from 'next/link';
+import {projectHref} from '../lib/project-links';
 import {preloadProjectImages} from '../lib/project-image-preload';
 import CardPhoto from './ProjectCardPhoto';
 import Icon from './Icon';
@@ -28,7 +29,7 @@ export default function ProjectListRow({project,saved,onSave}){
   run();
  }
  function resetGlass(){tilt.current.tx=0;tilt.current.ty=0;run()}
- const name=listingName(project),href='/projects/'+encodeURIComponent(project.id);
+ const name=listingName(project),href=projectHref(project);
  const [lead,amount]=startingPrice(project)||[],size=unitMin(project.units,'size');
  const bedrooms=wholeRooms(unitLeast(project.units,'bedrooms')),bathrooms=wholeRooms(unitLeast(project.units,'bathrooms'));
  const facts=[['ruler',size!=null?size.toLocaleString('en-MY')+' sqft':null,'Built-up size'],['bed',bedrooms,'Bedrooms'],['bath',bathrooms,'Bathrooms']].filter(([,value])=>value!==null&&value!==undefined&&value!=='');

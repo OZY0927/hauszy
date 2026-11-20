@@ -2,6 +2,7 @@
 
 import {useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
+import {projectHref} from '../lib/project-links';
 import Icon from './Icon';
 import CardPhoto from './ProjectCardPhoto';
 import {listingName} from '../lib/project';
@@ -281,7 +282,7 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
     </svg>
     <h2 id="hh-arc-title" className="hh-statement">{hotProjects.length?<>Featured Penang <em>projects.</em></>:<>Penang, <em>up close.</em></>}</h2>
     <div className="hh-arc-ring">{hotProjects.length?hotProjects.map((item,i)=><figure key={item.id} className="hh-arc-card hh-arc-project">
-     <Link href={'/projects/'+encodeURIComponent(item.id)} className="hh-arc-link">
+     <Link href={projectHref(item)} className="hh-arc-link">
       <span className="hh-arc-photo"><CardPhoto src={item.images?.[0]} alt={listingName(item)}/></span>
       <span className="hh-arc-name">{listingName(item)}{item.location&&<small>{item.location}</small>}</span>
      </Link>

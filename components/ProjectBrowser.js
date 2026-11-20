@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import Link from 'next/link';
+import {projectHref} from '../lib/project-links';
 import {preloadProjectImages} from '../lib/project-image-preload';
 import CardPhoto from './ProjectCardPhoto';
 import CollectionCard from './CollectionCard';
@@ -11,7 +12,7 @@ import CompareProjects from './CompareProjects';
 import Icon from './Icon';
 import ProjectListRow from './ProjectListRow';
 import {LISTING_SCROLL_KEY,listingReturnSnapshot,isListingReturn} from '../lib/listing-scroll';
-export function ProjectCard({project:p,saved=false,onSave}){const [lead,amount]=startingPrice(p)||[],name=listingName(p);return <article className="card"><div className="card-photo"><CardPhoto src={p.images[0]} alt={name}/><span className="badge">{p.mode}</span>{onSave&&<button className={'save '+(saved?'saved':'')} onClick={()=>onSave(p.id)} aria-label={`${saved?'Unsave':'Save'} ${name}`} aria-pressed={saved}><Icon name="heart" filled={saved}/></button>}</div><div className="card-body"><div className="price">{amount?<>{lead&&<small>{lead} </small>}{amount}</>:'Price on enquiry'}</div><h3>{name}</h3><div className="address"><Icon name="mapPin"/> {p.location}</div><div className="specs">{[['bedrooms','bed','bed','beds'],['bathrooms','bath','bath','baths'],['size','ruler','sqft','sqft']].map(([key,icon,one,many])=>{const v=key==='size'?unitMin(p.units,key)?.toLocaleString('en-MY'):unitLeast(p.units,key);return v!=null&&<span key={key}><Icon name={icon}/> {v}{/^\d/.test(v)&&` ${v==='1'?one:many}`}</span>})}</div><div className="card-bottom"><span>{p.type} · {p.tag}</span><Link className="details" href={'/projects/'+encodeURIComponent(p.id)} onNavigate={()=>preloadProjectImages(p)}>Explore project <Icon name="arrowRight"/></Link></div></div></article>}
+export function ProjectCard({project:p,saved=false,onSave}){const [lead,amount]=startingPrice(p)||[],name=listingName(p);return <article className="card"><div className="card-photo"><CardPhoto src={p.images[0]} alt={name}/><span className="badge">{p.mode}</span>{onSave&&<button className={'save '+(saved?'saved':'')} onClick={()=>onSave(p.id)} aria-label={`${saved?'Unsave':'Save'} ${name}`} aria-pressed={saved}><Icon name="heart" filled={saved}/></button>}</div><div className="card-body"><div className="price">{amount?<>{lead&&<small>{lead} </small>}{amount}</>:'Price on enquiry'}</div><h3>{name}</h3><div className="address"><Icon name="mapPin"/> {p.location}</div><div className="specs">{[['bedrooms','bed','bed','beds'],['bathrooms','bath','bath','baths'],['size','ruler','sqft','sqft']].map(([key,icon,one,many])=>{const v=key==='size'?unitMin(p.units,key)?.toLocaleString('en-MY'):unitLeast(p.units,key);return v!=null&&<span key={key}><Icon name={icon}/> {v}{/^\d/.test(v)&&` ${v==='1'?one:many}`}</span>})}</div><div className="card-bottom"><span>{p.type} · {p.tag}</span><Link className="details" href={projectHref(p)} onNavigate={()=>preloadProjectImages(p)}>Explore project <Icon name="arrowRight"/></Link></div></div></article>}
 const GRID_ROWS_PER_PAGE=3;
 
 function CataloguePagination({page,lastPage,pageSize,shown,total,onPage}){

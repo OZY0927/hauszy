@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import {projectHref} from '../lib/project-links';
 import {propertyCategory} from '../lib/property-category';
 import {preloadProjectImages} from '../lib/project-image-preload';
 import {listingName,startingPrice,unitMin,unitLeast,wholeRooms} from '../lib/project';
@@ -33,7 +34,7 @@ export default function CollectionCard({project:p,saved=false,onSave,titleOnly=f
         so the blur builds steadily to the bottom (steadier than backdrop-filter under the press tilt). */}
     {TOUR_BLUR.map(([blur,start])=><div key={blur} className="tour-card-blur" aria-hidden="true" style={{'--b':blur+'px','--s':start+'%'}}><CardPhoto src={p.images[0]} alt=""/></div>)}
     <div className="tour-card-tint" aria-hidden="true"/>
-    <Link onNavigate={()=>preloadProjectImages(p)} className="property-tile-link tour-card-body" href={'/projects/'+encodeURIComponent(p.id)} aria-label={`Explore ${name}`}>
+    <Link onNavigate={()=>preloadProjectImages(p)} className="property-tile-link tour-card-body" href={projectHref(p)} aria-label={`Explore ${name}`}>
      <h3 className="tour-card-name">{name}</h3>
      {(p.location||p.type)&&<div className="tour-card-meta">{p.location&&<p className="tour-card-addr">{p.location}</p>}{p.type&&<span className="tour-card-type">{p.type}</span>}</div>}
      {stats.length>0&&<><span className="tour-card-rule" aria-hidden="true"/>
@@ -46,7 +47,7 @@ export default function CollectionCard({project:p,saved=false,onSave,titleOnly=f
  }
  return <article data-category={propertyCategory(p)} className={'property-tile'+(titleOnly?' property-tile-title-only':'')}>
   <div className="property-tile-photo"><CardPhoto src={p.images[0]} alt={name}/></div>
-  <Link onNavigate={()=>preloadProjectImages(p)} className="property-tile-link" href={'/projects/'+encodeURIComponent(p.id)} aria-label={`Explore ${name}`}>
+  <Link onNavigate={()=>preloadProjectImages(p)} className="property-tile-link" href={projectHref(p)} aria-label={`Explore ${name}`}>
    {titleOnly?<h3 className="property-tile-centered-name">{name}</h3>:<><div className="property-tile-info"><span className="property-tile-type">{p.type}</span><h3>{name}</h3><p>{p.location}</p>
     <div className="property-tile-facts">{size!=null&&<span>{size.toLocaleString('en-MY')} sqft</span>}{p.tag&&<span>{p.tag}</span>}</div>
     {hasRooms&&<div className="property-tile-facts property-tile-rooms">{[['bedrooms','bed','bed','beds'],['bathrooms','bath','bath','baths']].map(([key,icon,singular,plural])=>{const value=unitLeast(p.units,key);return value!=null&&<span className="property-tile-room" key={key} aria-label={`${key==='bedrooms'?'Bedrooms':'Bathrooms'} starting from ${value}`}><Icon name={icon}/>{value}{/^\d/.test(value)?` ${value==='1'?singular:plural}`:''}</span>})}</div>}

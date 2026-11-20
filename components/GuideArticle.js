@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import {canonicalGuideProjectHref,projectHref} from '../lib/project-links';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {GUIDE_TOOLS,guideDateLabel,guideHref,guideCoverAllowed} from '../lib/guides';
@@ -6,7 +7,8 @@ import Icon from './Icon';
 
 function MarkdownLink({href,children}){
  if(!href)return <span>{children}</span>;
- return href.startsWith('/')?<Link href={href}>{children}</Link>:<a href={href}>{children}</a>;
+ const destination=canonicalGuideProjectHref(href);
+ return destination.startsWith('/')?<Link href={destination}>{children}</Link>:<a href={destination}>{children}</a>;
 }
 
 function ScrollTable({children}){
@@ -39,7 +41,7 @@ export default function GuideArticle({guide,projects=[],preview=false}){
    {(projects.length>0||tools.length>0)&&<section className="guide-article-extra" aria-labelledby="guide-related-title">
     <h2 id="guide-related-title">Keep exploring</h2>
     <div className="guide-related">
-     {projects.map(project=><Link key={project.id} className="project-story-pill" href={`/projects/${encodeURIComponent(project.id)}/`}>View {project.name} <Icon name="arrowUpRight"/></Link>)}
+     {projects.map(project=><Link key={project.id} className="project-story-pill" href={projectHref(project)}>View {project.name} <Icon name="arrowUpRight"/></Link>)}
      {tools.map(([path,name])=><Link key={path} className="project-story-pill" href={path}>{name} <Icon name="arrowUpRight"/></Link>)}
     </div>
    </section>}

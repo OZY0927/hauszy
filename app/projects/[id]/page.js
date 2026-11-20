@@ -4,8 +4,9 @@ import ProjectFacilities from '../../../components/ProjectFacilities';
 import {pageMetadata,projectStructuredData} from '../../../lib/seo';
 import JsonLd from '../../../components/JsonLd';
 import Link from 'next/link';
-import {notFound} from 'next/navigation';
-import {getProfile,getPublishedGuides,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
+import {notFound,permanentRedirect} from 'next/navigation';
+import {getProfile,getPublishedGuides,getPublishedProjectForRoute,getPublishedProjects} from '../../../lib/firestore-server';
+import {projectHref,projectUrlSegment} from '../../../lib/project-links';
 import {guidePath,guideProjectIds} from '../../../lib/guides';
 import {whatsappNumber,whatsappLink,projectMessage} from '../../../lib/whatsapp';
 import {hasProjectInfo,visibleFacts,projectSections,applyFieldVisibility} from '../../../lib/project-visibility';
@@ -39,20 +40,22 @@ function projectDescription(p){
 
 export async function generateMetadata({params}){
  const {id}=await params;
- const project=await getPublishedProject(id);
+ const project=await getPublishedProjectForRoute(id);
  if(!project)return {title:'Project unavailable',robots:{index:false,follow:false}};
  const p=applyFieldVisibility({...project,name:listingName(project)});
  const location=hasProjectInfo(p.location)?String(p.location).trim():'';
  const title=location&&!p.name.toLowerCase().includes(location.toLowerCase())?`${p.name} in ${location}`:p.name;
- return pageMetadata(title,projectDescription(p),`/projects/${encodeURIComponent(id)}/`,publicImages(p).slice(0,1));
+ return pageMetadata(title,projectDescription(p),projectHref(p),publicImages(p).slice(0,1));
 }
 function Facts({rows}){return <dl className="property-facts">{visibleFacts(rows).map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
 function SectionHeading({label,title,children}){return <div className="project-story-section-heading"><div><span className="eyebrow">{label}</span><h2>{title}</h2></div>{children&&<div className="project-story-section-note">{children}</div>}</div>}
 
 export default async function Project({params}){
- const {id}=await params;
- const [project,all,profile,guides]=await Promise.all([getPublishedProject(id),getPublishedProjects().catch(()=>null),getProfile().catch(()=>null),getPublishedGuides().catch(()=>[])]);
+ const {id:segment}=await params;
+ const [project,all,profile,guides]=await Promise.all([getPublishedProjectForRoute(segment),getPublishedProjects().catch(()=>null),getProfile().catch(()=>null),getPublishedGuides().catch(()=>[])]);
  if(!project)notFound();
+ if(projectUrlSegment(project)!==segment)permanentRedirect(projectHref(project));
+ const id=project.id;
  const p=applyFieldVisibility({...project,name:listingName(project)});
  const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
  const editorial=visibility.overview&&fieldVisibility(project.fieldVisibility).editorial?projectEditorial(p,visibility):null;
@@ -95,9 +98,7 @@ export default async function Project({params}){
   {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates} amenities={visibility.nearby}/>}
 
   {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance">
-   <SectionHeading label="ONGOING PROPERTY COSTS" title={<><span className="charges-heading-line">Maintenance</span><span className="charges-heading-line">and sinking fund.</span></>}>
-    {purchaseTool&&<Link className="project-story-pill" href={purchaseTool[0]}>{purchaseTool[1]} <Icon name="arrowUpRight"/></Link>}
-   </SectionHeading>
+   <SectionHeading label="ONGOING PROPERTY COSTS" title={<><span className="charges-heading-line">Maintenance</span><span className="charges-heading-line">and sinking fund.</span></>}/>
    <Facts rows={[["Maintenance fee",hasProjectInfo(p.maintenance)?maintenanceText(p):null],["Sinking fund",sinkingFundText(p)]]}/>
   </section>}
 

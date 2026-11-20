@@ -10,7 +10,8 @@ import {projectChanges} from '../lib/project-changes';
 import {uploadProjectMedia} from '../lib/project-media';
 import {parseProjectJson} from '../lib/project-import';
 import {getFirebase,refreshSite,uploadPhoto} from '../lib/firebase-client';
-import {doc,writeBatch,serverTimestamp,deleteField} from 'firebase/firestore';
+import {doc,serverTimestamp,deleteField} from 'firebase/firestore';
+import {commitProjectWithSlug} from '../lib/project-slug-write';
 import {authErrorMessage} from '../lib/auth-errors';
 import PhotoPicker from './PhotoPicker';
 import Icon from './Icon';
@@ -25,6 +26,7 @@ async function save(e){
   if(!auth.currentUser)throw Error('Your session expired. Sign in again.');
   if(!isAdminToken(await auth.currentUser.getIdTokenResult()))throw Error('Administrator access required. Sign in again.');
   const id=projectId.current,value=buildProject(form,units,amenities,id);
+  if(record?.publicSlug)value.publicSlug=record.publicSlug;
   Object.assign(value,await uploadProjectMedia({units:value.units,floorPlans:floorPlans.map(selection=>selection.photos),photos,showroom:showroom.slice(0,SHOWROOM_LIMIT)},`projects/${id}`,uploadPhoto,{
    cache:uploadedPhotos.current,
    onProgress:(done,total)=>setStatus(total?`Uploading photos (${done}/${total})...`:'Saving project...'),
@@ -39,19 +41,21 @@ async function save(e){
    changes=projectChanges(baseline,value);
    if(!Object.keys(changes.fields).length&&!changes.removed.length){setStatus('No changes to save.');return}
   }
-  const patch={...changes.fields,...Object.fromEntries(changes.removed.map(key=>[key,deleteField()])),updatedAt:serverTimestamp()};
-  const batch=writeBatch(db);
-  if(record)batch.update(doc(db,'projects',id),patch);
-  else batch.set(doc(db,'projects',id),{...value,updatedAt:serverTimestamp()});
-  if(value.status==='Published'){
-   if(record?.status==='Published')batch.set(doc(db,'publicProjects',id),patch,{mergeFields:Object.keys(patch)});
-   else batch.set(doc(db,'publicProjects',id),{...value,updatedAt:serverTimestamp()});
-  }else if(record?.status==='Published')batch.delete(doc(db,'publicProjects',id));
-  await batch.commit();
+  const slug=await commitProjectWithSlug(db,value,(batch,publicSlug)=>{
+   const timestamp=serverTimestamp(),route=publicSlug?{publicSlug}:{};
+   const patch={...changes.fields,...Object.fromEntries(changes.removed.map(key=>[key,deleteField()])),...route,updatedAt:timestamp};
+   if(record)batch.update(doc(db,'projects',id),patch);
+   else batch.set(doc(db,'projects',id),{...value,...route,updatedAt:timestamp});
+   if(value.status==='Published'){
+    if(record?.status==='Published')batch.set(doc(db,'publicProjects',id),patch,{mergeFields:Object.keys(patch)});
+    else batch.set(doc(db,'publicProjects',id),{...value,...route,updatedAt:timestamp});
+   }else if(record?.status==='Published')batch.delete(doc(db,'publicProjects',id));
+  });
+  if(slug)changes.fields.publicSlug=slug;
   // The acknowledged batch confirms persistence; no extra document read is needed.
   value.updatedAt=new Date().toISOString();
   await refreshSite(['projects']);
-  const saved=record?{...record,...changes.fields,updatedAt:value.updatedAt}:value;
+  const saved=record?{...record,...changes.fields,updatedAt:value.updatedAt}:{...value,...(slug?{publicSlug:slug}:{})};
   for(const key of changes.removed)delete saved[key];
   await onSave(saved);
   onClose();

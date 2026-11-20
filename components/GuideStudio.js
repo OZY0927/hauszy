@@ -2,6 +2,7 @@
 
 import {useCallback,useEffect,useId,useRef,useState} from 'react';
 import Link from 'next/link';
+import {projectHref} from '../lib/project-links';
 import {collection,doc,getDocsFromServer,runTransaction} from 'firebase/firestore';
 import {getFirebase,refreshSite,uploadPhoto} from '../lib/firebase-client';
 import {authErrorMessage} from '../lib/auth-errors';
@@ -182,7 +183,7 @@ function GuideEditor({record,projects,onClose,onSave}){
        <label className="st-field st-wide">Choose a Hauszy link<select value="" onChange={event=>{const option=event.target.selectedOptions[0];if(option.value)setLink({...link,url:option.value,text:link.text||option.text})}}>
         <option value="">Choose a project or calculator</option>
         <optgroup label="Calculators">{GUIDE_TOOLS.map(([path,name])=><option key={path} value={path}>{name}</option>)}</optgroup>
-        <optgroup label="Projects">{projects.map(item=><option key={item.id} value={`/projects/${item.id}/`}>{item.name}</option>)}</optgroup>
+        <optgroup label="Projects">{projects.map(item=><option key={item.id} value={projectHref(item)}>{item.name}</option>)}</optgroup>
        </select></label>
        <div className="st-guide-format"><button type="button" className="st-btn small accent" onClick={insertLink}>Add link</button><button type="button" className="st-btn small ghost" onClick={()=>setLink(null)}>Cancel</button></div>
       </div>}

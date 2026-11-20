@@ -25,15 +25,18 @@ async function loadRoute(path,mocks){
  });
  return import('data:text/javascript;base64,'+Buffer.from(source+'\n// '+mocks.join(',')).toString('base64'));
 }
-test('public collection rejects cross-site, invalid and unpublished requests before writing',async()=>{
+test('public collection rejects invalid requests and records readable URLs under the project ID',async()=>{
  let writes=0,published=true;
- globalThis.__activityTest={getPublishedProject:async()=>published?{id:'abc'}:null,getSupabaseUploadServer:()=>({client:{rpc:async()=>{writes++;return {error:null}}}})};
+ globalThis.__activityTest={getPublishedProjectForRoute:async segment=>published&&['abc','sample-project-penang'].includes(segment)?{id:'abc'}:null,getSupabaseUploadServer:()=>({client:{rpc:async(method,args)=>{
+  assert.equal(method,'record_project_activity');assert.equal(args.p_project_id,'abc');writes++;return {error:null};
+ }}})};
  const {POST}=await loadRoute('../app/api/project-activity/route.js',['supabase-server','firestore-server']);
  const request=(body,origin='https://hauszy.com')=>new Request('https://hauszy.com/api/project-activity/',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)});
  assert.equal((await POST(request({projectId:'abc',event:'view'},'https://evil.example'))).status,403);
  assert.equal((await POST(request({projectId:'abc',event:'view',message:'private'}))).status,400);
  published=false;assert.equal((await POST(request({projectId:'abc',event:'view'}))).status,404);assert.equal(writes,0);
  published=true;assert.equal((await POST(request({projectId:'abc',event:'view'}))).status,204);assert.equal(writes,1);
+ assert.equal((await POST(request({projectId:'sample-project-penang',event:'click'}))).status,204);assert.equal(writes,2);
  delete globalThis.__activityTest;
 });
 test('admin reporting authenticates before database access and validates report ranges',async()=>{
