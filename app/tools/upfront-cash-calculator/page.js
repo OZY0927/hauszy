@@ -10,28 +10,29 @@ const exampleFees=example.rows.filter(row=>row.payable!==null);
 export default function Page(){
  return <main className="calculator-shell upfront-shell">
   <div className="tools-intro">
-   <h1>Malaysia Property <em>Upfront Cash Calculator</em></h1>
-   <p>Estimate your down payment, legal fees and stamp duty. Include any confirmed developer contributions and solicitor quotes to refine your budget.</p>
+   <div className="eyebrow">PLAN YOUR PURCHASE</div>
+   <h1>Your new home.<br/>Your <em>upfront costs.</em></h1>
+   <p>Choose your buyer and payment type, then adjust the fees your developer covers.</p>
   </div>
   <div className="tools-workbench">
-   <section className="upfront-example" aria-labelledby="upfront-example-title">
-    <h2 id="upfront-example-title">How much cash do you need for a RM500,000 condo?</h2>
-    <p>With 90% financing, a local buyer would budget <strong>{money(example.total)}</strong> for the down payment and estimated fees below, plus any charges that require a quote. This example assumes a residential developer purchase under the Housing Development Act in Peninsular Malaysia, with no duty relief or developer contributions.</p>
-    <table>
-     <thead><tr><th scope="col">Upfront cost</th><th scope="col">Estimated amount</th></tr></thead>
-     <tbody>
-      <tr><th scope="row">Down payment</th><td>{money(example.contribution)}</td></tr>
-      {exampleFees.map(row=><tr key={row.id}><th scope="row">{row.label}</th><td>{money(row.payable)}</td></tr>)}
-     </tbody>
-     <tfoot><tr><th scope="row">Subtotal before quoted charges</th><td>{money(example.total)}</td></tr></tfoot>
-    </table>
-    <p>Ask your solicitor about disbursements, separate agreement stamping, any applicable consent charges and any transfer legal work billed separately.</p>
-    <a className="outline" href="#purchase-calculator">Estimate my upfront costs</a>
-   </section>
-   <div id="purchase-calculator"><UpfrontCashCalculator/></div>
+   <UpfrontCashCalculator/>
    <details className="calculator-sources">
-    <summary>Calculation notes and sources</summary>
+    <summary>Calculation notes</summary>
     <div className="tools-source-copy">
+     <section aria-labelledby="upfront-example-title">
+      <h2 id="upfront-example-title">How much cash do you need for a RM500,000 condo?</h2>
+      <p>With 90% financing, a local buyer would budget <strong>{money(example.total)}</strong> for the down payment and estimated fees below, plus any charges that require a quote. This example assumes a residential developer purchase under the Housing Development Act in Peninsular Malaysia, with no duty relief or developer contributions.</p>
+      <table className="upfront-example-table">
+       <thead><tr><th scope="col">Upfront cost</th><th scope="col">Estimated amount</th></tr></thead>
+       <tbody>
+        <tr><th scope="row">Down payment</th><td>{money(example.contribution)}</td></tr>
+        {exampleFees.map(row=><tr key={row.id}><th scope="row">{row.label}</th><td>{money(row.payable)}</td></tr>)}
+       </tbody>
+       <tfoot><tr><th scope="row">Subtotal before quoted charges</th><td>{money(example.total)}</td></tr></tfoot>
+      </table>
+      <p>Ask your solicitor about disbursements, separate agreement stamping, any applicable consent charges and any transfer legal work billed separately.</p>
+     </section>
+     <h2>Calculation assumptions and sources</h2>
      <p>For a residential developer purchase under the Housing Development Act in Peninsular Malaysia. Sale and purchase agreement (SPA) and loan legal estimates use the Solicitors’ Remuneration Order 2023 and assume 8% SST. Enter transfer legal fees only if your solicitor quotes them separately. Cash purchases exclude loan fees.</p>
      <p>Standard transfer duty for local buyers and permanent residents uses progressive bands. The estimate for foreign buyers without permanent residency uses 8% for residential property. Duty uses the higher of the purchase price and market value. If market value is higher, enter your solicitor’s confirmed duty amount. Legal fees above RM7.5 million require a quote. The loan duty estimate assumes a standard 0.5% secured housing loan.</p>
      <p>The first-home option models the exemption for qualifying sale and purchase agreements signed from 1 January 2026 through 31 December 2027 under P.U. (A) 448/2025 and 449/2025. Before applying it, confirm citizenship, ownership history, qualifying property type, the RM500,000 threshold and the agreement date. The calculator uses the entered price, so confirm the market value and eligibility with your solicitor.</p>

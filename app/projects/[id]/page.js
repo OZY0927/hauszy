@@ -50,13 +50,6 @@ export default async function Project({params}){
  if(!project)notFound();
  const p=applyFieldVisibility({...project,name:listingName(project)});
  const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
- const listedPrice=priceText(p,wholeMoney);
- const summary=visibleFacts([
-  ['Location',p.location],['Property type',p.type],['Tenure',p.tag],
-  ['Built-up size',hasProjectInfo(p.size)?`${p.size} sqft`:null],
-  ['Listed price',listedPrice],
-  ['Maintenance fee',visibility.maintenance&&hasProjectInfo(p.maintenance)?maintenanceText(p):null],
- ]);
  const purchaseTool=p.mode==='New launch'&&['Residential','Commercial under HDA'].includes(p.titleType)
   ? ['/tools/upfront-cash-calculator/','Estimate upfront purchase costs']
   : p.titleType==='Residential'?['/tools/loan-calculator/','Estimate monthly loan repayments']:null;
@@ -65,12 +58,6 @@ export default async function Project({params}){
   <JsonLd data={projectStructuredData(p,projectDescription(p))}/>
   <ProjectGallery photos={visibility.photos?p.images:[]} name={p.name} hero={{id:p.id,location:hasProjectInfo(p.location)?p.location:null,type:p.type,mode:p.mode,price:startingPrice(p),target:sections[0]?.[0]||(visibility.enquiry?'enquiry':null)}}/>
   <ProjectSectionNav sections={sections} enquiry={visibility.enquiry}/>
-  {visibility.overview&&summary.length>0&&<section className="project-story-section project-cost-overview" aria-labelledby="project-cost-overview-title">
-   <h2 id="project-cost-overview-title">{p.name} at a glance</h2>
-   <Facts rows={summary}/>
-   {listedPrice&&<p>Confirm the current price and availability before making a purchase decision.</p>}
-   {purchaseTool&&<Link className="outline" href={purchaseTool[0]}>{purchaseTool[1]}</Link>}
-  </section>}
 
   {(visibility.overview||visibility.photos)&&<ProjectScrollIntroduction photos={visibility.photos?p.images:[]}>
    {visibility.overview&&<>
@@ -83,7 +70,7 @@ export default async function Project({params}){
 
   {visibility.overview&&[p.beds,p.baths,p.size,p.tag].some(hasProjectInfo)&&<section className="project-story-highlights" aria-label="Project highlights"><div className="project-story-highlights-inner">{[[unitCountRange(p.units,'bedrooms'),'Bedrooms','bed'],[unitCountRange(p.units,'bathrooms'),'Bathrooms','bath'],[p.size,'Built-up · sqft','ruler'],[p.tag,'Tenure','key']].filter(([v])=>hasProjectInfo(v)).map(([value,label,icon])=><div key={label} data-reveal><Icon name={icon}/><HighlightNumber value={value}/><span>{label}</span></div>)}</div></section>}
 
-  {visibility.details&&<ProjectDetails project={p}/>}
+  {visibility.details&&<ProjectDetails project={p} purchaseTool={visibility.maintenance?null:purchaseTool}/>}
 
   {visibility.units.length>0&&<ProjectLayouts units={visibility.units.map(unit=>({...unit,enquiryHref:whatsappNumber(profile)?whatsappLink(whatsappNumber(profile),projectMessage({kind:'enquiry',agent:profile?.name,project:p.name,layout:unit.name||'Unit layout'})):'#enquiry'}))} enquiry={visibility.enquiry}/>}
 
@@ -91,7 +78,12 @@ export default async function Project({params}){
 
   {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates} amenities={visibility.nearby}/>}
 
-  {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<><span className="charges-heading-line">A clearer view</span><span className="charges-heading-line">of ongoing costs.</span></>}/><Facts rows={[["Maintenance fee",hasProjectInfo(p.maintenance)?maintenanceText(p):null],["Sinking fund",sinkingFundText(p)]]}/>{!visibility.overview&&purchaseTool&&<Link className="outline" href={purchaseTool[0]}>{purchaseTool[1]}</Link>}</section>}
+  {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance">
+   <SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<><span className="charges-heading-line">A clearer view</span><span className="charges-heading-line">of ongoing costs.</span></>}>
+    {purchaseTool&&<Link className="project-story-pill" href={purchaseTool[0]}>{purchaseTool[1]} <Icon name="arrowUpRight"/></Link>}
+   </SectionHeading>
+   <Facts rows={[["Maintenance fee",hasProjectInfo(p.maintenance)?maintenanceText(p):null],["Sinking fund",sinkingFundText(p)]]}/>
+  </section>}
 
   {visibility.showroom.length>0&&<section className="project-story-section project-story-showroom" id="showroom"><SectionHeading label="STEP INSIDE" title={<>Picture the<br/>possibilities.</>}><p>A look inside the showroom.</p></SectionHeading><ShowroomGallery photos={visibility.showroom} name={p.name}/><p className="project-story-fine-print">Showroom units are for illustration only and may include furnishings and finishes not included in the sale.</p></section>}
 
