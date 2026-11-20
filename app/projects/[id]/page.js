@@ -5,7 +5,8 @@ import {pageMetadata,projectStructuredData} from '../../../lib/seo';
 import JsonLd from '../../../components/JsonLd';
 import Link from 'next/link';
 import {notFound} from 'next/navigation';
-import {getProfile,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
+import {getProfile,getPublishedGuides,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
+import {guidePath} from '../../../lib/guides';
 import {whatsappNumber,whatsappLink,projectMessage} from '../../../lib/whatsapp';
 import {hasProjectInfo,visibleFacts,projectSections,applyFieldVisibility} from '../../../lib/project-visibility';
 import {sinkingFundText,maintenanceText,unitCountRange,safeUrl,startingPrice,priceText,wholeMoney,cardProject,listingName,publicImages} from '../../../lib/project';
@@ -21,6 +22,8 @@ import RelatedProjectGrid from '../../../components/RelatedProjectGrid';
 import Icon from '../../../components/Icon';
 import ProjectScrollIntroduction from '../../../components/ProjectScrollIntroduction';
 import ProjectDetails from '../../../components/ProjectDetails';
+import {fieldVisibility} from '../../../lib/project-sections';
+import {projectEditorial} from '../../../lib/project-editorial';
 
 export async function generateStaticParams(){return []}
 function projectDescription(p){
@@ -48,10 +51,12 @@ function SectionHeading({label,title,children}){return <div className="project-s
 
 export default async function Project({params}){
  const {id}=await params;
- const [project,all,profile]=await Promise.all([getPublishedProject(id),getPublishedProjects().catch(()=>null),getProfile().catch(()=>null)]);
+ const [project,all,profile,guides]=await Promise.all([getPublishedProject(id),getPublishedProjects().catch(()=>null),getProfile().catch(()=>null),getPublishedGuides().catch(()=>[])]);
  if(!project)notFound();
  const p=applyFieldVisibility({...project,name:listingName(project)});
  const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
+ const editorial=visibility.overview&&fieldVisibility(project.fieldVisibility).editorial?projectEditorial(p,visibility):null;
+ const guide=guides.find(item=>item.projectId===id);
  const purchaseTool=p.mode==='New launch'&&['Residential','Commercial under HDA'].includes(p.titleType)
   ? ['/tools/upfront-cash-calculator/','Estimate upfront purchase costs']
   : p.titleType==='Residential'?['/tools/loan-calculator/','Estimate monthly loan repayments']:null;
@@ -62,10 +67,19 @@ export default async function Project({params}){
   <ProjectSectionNav sections={sections} enquiry={visibility.enquiry}/>
 
   {(visibility.overview||visibility.photos)&&<ProjectScrollIntroduction photos={visibility.photos?p.images:[]}>
-   {visibility.overview&&<>
-   <div className="project-story-intro-main"><div className="eyebrow">THE PROJECT</div><h2>{hasProjectInfo(p.title)&&p.title.trim().toLowerCase()!==p.name.trim().toLowerCase()?p.title:<>Project<br/>overview.</>}</h2>{visibility.enquiry&&<a className="project-story-pill" href="#enquiry">Enquire about this project <Icon name="arrowUpRight"/></a>}</div>
-
-   </>}
+   {visibility.overview&&<div className={`project-story-intro-main${editorial?' has-project-summary':''}`}>
+    <div className="eyebrow">THE PROJECT</div>
+    <h2>{hasProjectInfo(p.title)&&p.title.trim().toLowerCase()!==p.name.trim().toLowerCase()?p.title:<>Project<br/>overview.</>}</h2>
+    {editorial&&<p className="project-summary">{editorial.summary}</p>}
+    {(Boolean(editorial?.sources.length)||guide)&&<div className="project-summary-sources">
+     <ul aria-label={guide?'Project sources and buyer guide':'Project sources'}>
+      {editorial?.sources.map(([label,url])=><li key={label}><a href={url}>{label}</a></li>)}
+      {guide&&<li><Link href={guidePath(guide.slug)}>Read the buyer guide</Link></li>}
+     </ul>
+     {editorial?.checkedOn&&<span>Sources checked <time dateTime={editorial.checkedOn}>{new Date(editorial.checkedOn+'T00:00:00Z').toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}</time></span>}
+    </div>}
+    {visibility.enquiry&&<a className="project-story-pill" href="#enquiry">Enquire about this project <Icon name="arrowUpRight"/></a>}
+   </div>}
   </ProjectScrollIntroduction>}
 
   {visibility.photos&&p.images.length>0&&<section className="project-story-section project-story-photography" id="project-photos"><ContainerScroll titleComponent={<SectionHeading label="TAKE A LOOK AROUND" title={<>A first look at<br/>{p.name}.</>}><p>Explore the project, one photo at a time.</p></SectionHeading>}><ProjectGallery photos={p.images} name={p.name}/></ContainerScroll></section>}

@@ -243,7 +243,7 @@ export default function PenangHome({featuredProjects=[],popularProjects=false}){
    {HERO_LANDMARKS.filter(l=>!l.front).map((l,i)=><img key={l.src} className="hh-float" src={l.src} alt="" aria-hidden="true" width="1254" height="1254" style={floatStyle(l,i)}/>)}
    <h1 id="hh-hero-title" className="hh-hero-title"><span className="hh-hero-kicker">Find your rhythm. In</span>{' '}<span className="hh-wordmark">Penang</span></h1>
    {HERO_LANDMARKS.filter(l=>l.front).map((l,i)=><img key={l.src} className="hh-float hh-float-front" src={l.src} alt="" aria-hidden="true" width="1254" height="1254" style={floatStyle(l,i+2)}/>)}
-   <p className="hh-hero-tagline">Explore Penang property.<br/>Compare layouts and prices.</p>
+   <p className="hh-hero-tagline">Explore Penang projects.<br/>Compare prices and floor plans.</p>
    <a className="hh-hero-scroll" href="#hh-places"><Icon name="arrowDown"/><span>Scroll to discover</span></a>
    </div>
   </section>

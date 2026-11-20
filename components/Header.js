@@ -5,6 +5,7 @@ import {usePathname} from 'next/navigation';
 import {useEffect,useRef,useState} from 'react';
 import Icon from './Icon';
 
+const GUIDE_LINK=['/guides','list','Buyer guides','Compare projects and prepare for a viewing'];
 const TOOLS=[
  ['/tools/loan-calculator','calculator','Loan calculator','Plan your monthly repayments'],
  ['/tools/upfront-cash-calculator','wallet','Upfront cash','Understand your starting costs'],
@@ -43,8 +44,8 @@ export default function Header(){
     <Link prefetch={false} className="hz-nav-link" href="/projects" aria-current={active('/projects')?'page':undefined}>Penang<br/>projects</Link>
     {brand}
     <details className="hz-tools" ref={tools} onPointerEnter={e=>{if(e.pointerType==='mouse'){hoveringTools.current=true;tools.current.open=true}}} onPointerLeave={e=>{if(e.pointerType==='mouse'){hoveringTools.current=false;if(!tools.current.contains(document.activeElement))tools.current.open=false}}}>
-     <summary onClick={e=>{if(hoveringTools.current&&e.detail>0)e.preventDefault()}} className="hz-nav-link" aria-current={path.startsWith('/tools/')?'true':undefined}>Property<br/>tools <Icon name="chevronDown"/></summary>
-     <div className="hz-tools-popover"><span className="hz-menu-label">PLAN YOUR NEXT MOVE</span>{TOOLS.map(([href,icon,label,description])=><Link prefetch={false} key={href} href={href} aria-current={active(href)?'page':undefined} onClick={()=>tools.current.open=false}><Icon name={icon}/><span><strong>{label}</strong><small>{description}</small></span><Icon name="arrowUpRight"/></Link>)}</div>
+     <summary onClick={e=>{if(hoveringTools.current&&e.detail>0)e.preventDefault()}} className="hz-nav-link" aria-current={path.startsWith('/tools/')||active('/guides')?'true':undefined}>Property<br/>tools <Icon name="chevronDown"/></summary>
+     <div className="hz-tools-popover"><span className="hz-menu-label">PLAN YOUR NEXT MOVE</span>{[...TOOLS,GUIDE_LINK].map(([href,icon,label,description])=><Link prefetch={false} key={href} href={href} aria-current={active(href)?'page':undefined} onClick={()=>tools.current.open=false}><Icon name={icon}/><span><strong>{label}</strong><small>{description}</small></span><Icon name="arrowUpRight"/></Link>)}</div>
     </details>
     <Link prefetch={false} className="hz-nav-link" href="/about" aria-current={active('/about')?'page':undefined}>About<br/>me</Link>
    </nav>
@@ -54,7 +55,7 @@ export default function Header(){
   <dialog id="hauszy-navigation-panel" className="hz-drawer" ref={drawer} aria-label="Explore Hauszy" onKeyDown={e=>{if(e.key!=='Tab')return;const items=[...drawer.current.querySelectorAll('a[href],button')].filter(el=>el.getClientRects().length),first=items[0],last=items[items.length-1];if(e.shiftKey&&(document.activeElement===first||document.activeElement===drawer.current)){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}} onClose={()=>{setOpen(false);trigger.current?.focus()}} onClick={e=>{if(e.target!==drawer.current)return;const rect=drawer.current.getBoundingClientRect();if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom)close()}}>
    <div className="hz-drawer-top"><button type="button" className="hz-menu-button hz-close" aria-label="Close navigation menu" onClick={close}><Icon name="x"/></button><Link prefetch={false} className="logo" href="/" onClick={close} aria-label="Hauszy home">hauszy</Link></div>
    <nav className="hz-drawer-pages" aria-label="All pages">{PAGES.map(([href,label])=><Link prefetch={false} key={href} href={href} onClick={close} aria-current={active(href)?'page':undefined}>{label}<span><Icon name="chevronRight"/></span></Link>)}</nav>
-   <div className="hz-drawer-tools"><span className="hz-menu-label">PROPERTY TOOLS</span><nav aria-label="Property calculators">{TOOLS.map(([href,icon,label])=><Link prefetch={false} key={href} href={href} onClick={close} aria-current={active(href)?'page':undefined}><Icon name={icon}/>{label}<Icon name="arrowUpRight"/></Link>)}</nav></div>
+   <div className="hz-drawer-tools"><span className="hz-menu-label">PROPERTY TOOLS</span><nav aria-label="Property tools and guides">{[...TOOLS,GUIDE_LINK].map(([href,icon,label])=><Link prefetch={false} key={href} href={href} onClick={close} aria-current={active(href)?'page':undefined}><Icon name={icon}/>{label}<Icon name="arrowUpRight"/></Link>)}</nav></div>
    <div className="hz-drawer-bottom"><span className="hz-menu-label">PENANG ISLAND & MAINLAND</span><p>Your next move.<br/><em>A little closer.</em></p><Link prefetch={false} href="/about" onClick={close}>Meet your property contact <Icon name="arrowUpRight"/></Link></div>
   </dialog>
  </>;

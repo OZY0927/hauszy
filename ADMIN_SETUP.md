@@ -13,13 +13,14 @@ The approved UID must match in `lib/admin-access.js`, `firestore.rules` and `sto
 firebase deploy --only firestore:rules,storage --project hauszy
 ```
 
-3. Deploy the Next.js app. Sign out and sign in as the approved owner; verify project editing, Categories, About Me, image uploads, publishing and cache refresh. A production build alone does not deploy the Firebase rules.
+3. Deploy the Next.js app. Sign out and sign in as the approved owner; verify project editing, Guides, Categories, About Me, image uploads, publishing and cache refresh. A production build alone does not deploy the Firebase rules.
 4. Test denial using an ordinary account in an emulator/staging environment. Do not weaken the UID checks to debug sign-in failures.
 
 ## Data and sessions
 
 - `projects/{id}` and `adminSettings/projectOptions`: approved owner only.
 - `publicProjects/{id}`: anonymous reads require Published status; owner controls writes. Public project queries must filter by Published status.
+- `guideDrafts/{slug}`: approved owner only. `guidePublications/{slug}` contains the current published article or a withdrawal marker. Saving a draft keeps the existing publication. Publishing or withdrawing updates both records in one transaction.
 - `siteContent/about`: public profile and gallery; approved owner controls writes.
 - Storage `projects/{id}/{file}` and `profile/{file}`: approved owner can upload JPEG/PNG/WebP files up to 5 MB and delete them. Updates and other paths are denied. Download-token URLs remain shareable bearer links; do not upload confidential documents.
 - Admin authentication uses browser-session persistence and signs out after 30 minutes of inactivity. The browser needs to stay online for remote sign-out and saves. Public pages cache data for up to five minutes, with authenticated cache refresh after saves.
@@ -33,6 +34,8 @@ See `SECURITY.md` for the implemented defenses, their limits, and validation.
 ## Admin sections
 
 Project listing, About Me, Categories and Settings separate the workspace. Categories stores shared dropdown options in `adminSettings/projectOptions`. Settings reauthenticates the current account before changing its password. Removing or renaming dropdown values does not rewrite existing projects.
+
+In **Guides**, choose **New article**, paste the draft, format the article, and add labeled source links. Use **Preview** to check the article at desktop and mobile widths. **Save draft** keeps edits in the studio. **Publish** updates the public page and sitemap. **Unpublish** removes the public copy and keeps the draft. Review the URL ending before the first save, when it is still editable. Uploaded covers use the same publicly served image storage as project photos.
 
 ## Supabase uploads
 

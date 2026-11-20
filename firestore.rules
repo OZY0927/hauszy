@@ -9,6 +9,24 @@ service cloud.firestore {
     match /siteContent/about { allow read: if true; allow write: if isAdmin(); }
     match /adminSettings/projectOptions { allow read, write: if isAdmin(); }
     match /projects/{id} { allow read, write: if isAdmin(); }
+    match /guideDrafts/{slug} { allow read, write: if isAdmin(); }
+    match /guidePublications/{slug} {
+      allow read: if true;
+      allow create, update: if isAdmin() && (
+        (request.resource.data.status == 'Published'
+          && request.resource.data.keys().hasOnly([
+            'status', 'title', 'summary', 'body', 'author', 'seoTitle', 'seoDescription',
+            'category', 'coverUrl', 'coverAlt', 'projectId', 'tools', 'sources', 'publishedAt', 'updatedAt'
+          ])
+          && request.resource.data.title is string
+          && request.resource.data.summary is string
+          && request.resource.data.body is string
+          && request.resource.data.author is string
+          && request.resource.data.publishedAt is string
+          && request.resource.data.updatedAt is string)
+        || (request.resource.data.status == 'Withdrawn' && request.resource.data.keys().hasOnly(['status']))
+      );
+    }
     match /publicProjects/{id} {
       allow read: if isAdmin() || resource.data.status == 'Published';
       allow create, update: if isAdmin() && request.resource.data.status == 'Published';

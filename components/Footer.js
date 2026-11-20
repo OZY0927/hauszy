@@ -6,7 +6,7 @@ import SocialIcon,{SOCIALS} from './SocialIcon';
 import {getProfile} from '../lib/firestore-server';
 import {safeUrl} from '../lib/project';
 import {phoneDisplay,phoneE164} from '../lib/phone';
-const TOOLS=[['/tools/loan-calculator','calculator','Loan Calculator'],['/tools/upfront-cash-calculator','wallet','Upfront Cash Calculator'],['/tools/loan-eligibility','shieldCheck','Loan Eligibility (DSR)'],['/tools/roi-calculator','trendingUp','ROI Calculator']];
+const TOOLS=[['/guides/','list','Penang Property Guides'],['/tools/loan-calculator','calculator','Loan Calculator'],['/tools/upfront-cash-calculator','wallet','Upfront Cash Calculator'],['/tools/loan-eligibility','shieldCheck','Loan Eligibility (DSR)'],['/tools/roi-calculator','trendingUp','ROI Calculator']];
 // Contact details and social links come from siteContent/about, edited in the admin "About me" section.
 export default async function Footer(){let p={};try{p=await getProfile()||{}}catch{}
   const social=SOCIALS.filter(([key])=>safeUrl(p.social?.[key])),phone=phoneDisplay(p.phone),whatsapp=phoneE164(p.whatsapp).slice(1),email=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email||'')?p.email:'',ren=String(p.ren||'').trim();

@@ -19,17 +19,27 @@ export default function Motion(){const path=usePathname();useEffect(()=>{
  useEffect(()=>{
   if(!('IntersectionObserver' in window)||!document.getAnimations)return;
   const watched=new WeakSet();
-  const io=new IntersectionObserver(entries=>{for(const e of entries)e.target.toggleAttribute('data-offscreen',!e.isIntersecting)},{rootMargin:'200px 0px'});
+  const io=new IntersectionObserver(entries=>{
+   for(const {target,isIntersecting} of entries){
+    if(target.closest('[data-motion-pending]')){
+     io.unobserve(target);
+     watched.delete(target);
+     continue;
+    }
+    target.toggleAttribute('data-offscreen',!isIntersecting);
+   }
+  },{rootMargin:'200px 0px'});
   let timer=0;
   const scan=()=>{timer=0;for(const animation of document.getAnimations()){
    const target=animation.effect?.target;
-   if(!target||watched.has(target)||typeof CSSAnimation==='undefined'||!(animation instanceof CSSAnimation))continue;
+   // Project content can still be hydrating after the root layout's effects have run.
+   if(!target||watched.has(target)||target.closest('[data-motion-pending]')||typeof CSSAnimation==='undefined'||!(animation instanceof CSSAnimation))continue;
    if(animation.effect.getTiming().iterations!==Infinity)continue;
    watched.add(target);io.observe(target);
   }};
   // New loops start as components mount or toggle classes; rescan shortly after DOM changes settle.
   const mo=new MutationObserver(()=>{if(!timer)timer=setTimeout(scan,400)});
-  scan();mo.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  scan();mo.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','data-motion-pending']});
   return()=>{clearTimeout(timer);mo.disconnect();io.disconnect();for(const el of document.querySelectorAll('[data-offscreen]'))el.removeAttribute('data-offscreen')};
  },[path]);
  return null}

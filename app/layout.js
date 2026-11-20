@@ -11,6 +11,7 @@ import './project-glass.css';
 import './project-gallery.css';
 import './project-details.css';
 import './project-dialogs.css';
+import './guides.css';
 import Header from '../components/Header';
 import PublicScrollScript from '../components/PublicScrollScript';
 import SiteIntro from '../components/SiteIntro';

@@ -8,7 +8,7 @@ import LayoutAtmosphere from './LayoutAtmosphere';
 
 export default function ProjectLayouts({units,enquiry}){
  return <section className="project-story-layouts layout-studio layout-scroll-studio" id="units"><div className="project-story-section">
-  <div className="layout-studio-heading" data-reveal><div><span className="eyebrow">EXPLORE THE LAYOUTS</span><h2>A space for<br/><em>every chapter.</em></h2></div><p>{units.length} {units.length===1?'layout':'layouts'} to explore.</p></div>
+  <div className="layout-studio-heading" data-reveal><div><span className="eyebrow">EXPLORE THE LAYOUTS</span><h2>Floor plans<br/><em>and unit sizes.</em></h2></div><p>{units.length} {units.length===1?'layout':'layouts'} to explore.</p></div>
 
   <ProjectDeck renderScene={props=><LayoutAtmosphere {...props}/>}>{units.map((unit,index)=>{
    const facts=[['Built-up size',hasProjectInfo(unit.size)?unit.size+' sqft':null,'ruler'],['Bedrooms',unit.bedrooms,'bed'],['Bathrooms',unit.bathrooms,'bath'],['Car parks',unit.carParks,'car']].filter(([,value])=>hasProjectInfo(value));

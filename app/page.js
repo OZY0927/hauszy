@@ -5,8 +5,8 @@ import {getFeaturedProjectPool} from '../lib/featured-projects-server';
 import {cardProject} from '../lib/project';
 import {homeStructuredData,pageMetadata} from '../lib/seo';
 
-const homeTitle='Hauszy | Penang Property Search & Buyer Tools';
-const description='Explore properties across Penang Island and Seberang Perai. Compare project layouts and listed prices, estimate purchase costs and ask about viewings.';
+const homeTitle='Penang Property Projects & New Launches | Hauszy';
+const description='Compare property projects on Penang Island and in Seberang Perai by area, listed price, floor plan and tenure. Estimate purchase costs or ask about a viewing.';
 export const metadata={
  ...pageMetadata(homeTitle,description,'/',['/penang/skyline.jpg']),
  title:{absolute:homeTitle},

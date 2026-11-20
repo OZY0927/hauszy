@@ -3,12 +3,16 @@ import {money} from '../../../lib/project';
 import {purchaseBudget} from '../../../lib/purchase-budget';
 import UpfrontCashCalculator from '../../../components/UpfrontCashCalculator';
 import JsonLd from '../../../components/JsonLd';
+import Link from 'next/link';
+import {getPublishedGuide} from '../../../lib/firestore-server';
+import {guidePath} from '../../../lib/guides';
 export const metadata=pageMetadata("Malaysia Property Upfront Cash Calculator","Estimate the down payment, legal fees, stamp duty and upfront cash for a Malaysian property purchase. Confirm final costs with your solicitor.","/tools/upfront-cash-calculator/");
 
 const example=purchaseBudget({price:500000,margin:90,buyer:'local',payment:'loan',firstHome:'no'});
 const exampleFees=example.rows.filter(row=>row.payable!==null);
 
-export default function Page(){
+export default async function Page(){
+ const guide=await getPublishedGuide('first-home-buyer-penang').catch(()=>null);
  return <><JsonLd data={toolStructuredData(metadata)}/><main className="calculator-shell upfront-shell">
   <div className="tools-intro">
    <div className="eyebrow">PLAN YOUR PURCHASE</div>
@@ -32,6 +36,7 @@ export default function Page(){
        <tfoot><tr><th scope="row">Subtotal before quoted charges</th><td>{money(example.total)}</td></tr></tfoot>
       </table>
       <p>Ask your solicitor about disbursements, separate agreement stamping, any applicable consent charges and any transfer legal work billed separately.</p>
+      {guide&&<p className="project-guide-link"><Link href={guidePath(guide.slug)}>Read the Penang first-home buyer guide</Link></p>}
      </section>
      <h2>Calculation assumptions and sources</h2>
      <p>For a residential developer purchase under the Housing Development Act in Peninsular Malaysia. Sale and purchase agreement (SPA) and loan legal estimates use the Solicitors’ Remuneration Order 2023 and assume 8% SST. Enter transfer legal fees only if your solicitor quotes them separately. Cash purchases exclude loan fees.</p>
