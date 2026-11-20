@@ -8,7 +8,7 @@ import {notFound} from 'next/navigation';
 import {getProfile,getPublishedProject,getPublishedProjects} from '../../../lib/firestore-server';
 import {whatsappNumber,whatsappLink,projectMessage} from '../../../lib/whatsapp';
 import {hasProjectInfo,visibleFacts,projectSections,applyFieldVisibility} from '../../../lib/project-visibility';
-import {sinkingFundText,maintenanceText,money,unitCountRange,safeUrl,startingPrice,cardProject,listingName,publicImages} from '../../../lib/project';
+import {sinkingFundText,maintenanceText,unitCountRange,safeUrl,startingPrice,priceText,wholeMoney,cardProject,listingName,publicImages} from '../../../lib/project';
 import ProjectGallery from '../../../components/ProjectGallery';
 import ProjectSectionNav,{ProjectStory} from '../../../components/ProjectSectionNav';
 import ShowroomGallery from '../../../components/ShowroomGallery';
@@ -23,7 +23,24 @@ import ProjectScrollIntroduction from '../../../components/ProjectScrollIntroduc
 import ProjectDetails from '../../../components/ProjectDetails';
 
 export async function generateStaticParams(){return []}
-export async function generateMetadata({params}){const {id}=await params;const project=await getPublishedProject(id);if(!project)return {title:'Project unavailable',robots:{index:false,follow:false}};const p=applyFieldVisibility(project);return pageMetadata(listingName(p),`${listingName(p)}${hasProjectInfo(p.location)?` in ${p.location}`:''}. Explore layouts, facilities and project details.`,`/projects/${encodeURIComponent(id)}/`,publicImages(p).slice(0,1))}
+function projectDescription(p){
+ const location=hasProjectInfo(p.location)?` in ${p.location}`:'';
+ const facts=[
+  p.type,
+  p.tag,
+  hasProjectInfo(p.size)?`${p.size} sqft`:null,
+  priceText(p,wholeMoney),
+ ].filter(hasProjectInfo);
+ return `${p.name}${location}. ${facts.length?facts.join(' · ')+'.':'Explore the project details.'}`;
+}
+
+export async function generateMetadata({params}){
+ const {id}=await params;
+ const project=await getPublishedProject(id);
+ if(!project)return {title:'Project unavailable',robots:{index:false,follow:false}};
+ const p=applyFieldVisibility({...project,name:listingName(project)});
+ return pageMetadata(p.name,projectDescription(p),`/projects/${encodeURIComponent(id)}/`,publicImages(p).slice(0,1));
+}
 function Facts({rows}){return <dl className="property-facts">{visibleFacts(rows).map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
 function SectionHeading({label,title,children}){return <div className="project-story-section-heading"><div><span className="eyebrow">{label}</span><h2>{title}</h2></div>{children&&<div className="project-story-section-note">{children}</div>}</div>}
 
@@ -33,12 +50,27 @@ export default async function Project({params}){
  if(!project)notFound();
  const p=applyFieldVisibility({...project,name:listingName(project)});
  const visibility=projectSections(p),related=(all||[]).filter(v=>v.id!==id).sort((a,b)=>Number(b.mode===p.mode)-Number(a.mode===p.mode)).slice(0,12);
+ const listedPrice=priceText(p,wholeMoney);
+ const summary=visibleFacts([
+  ['Location',p.location],['Property type',p.type],['Tenure',p.tag],
+  ['Built-up size',hasProjectInfo(p.size)?`${p.size} sqft`:null],
+  ['Listed price',listedPrice],
+  ['Maintenance fee',visibility.maintenance&&hasProjectInfo(p.maintenance)?maintenanceText(p):null],
+ ]);
+ const purchaseTool=p.mode==='New launch'&&['Residential','Commercial under HDA'].includes(p.titleType)
+  ? ['/tools/upfront-cash-calculator/','Estimate upfront purchase costs']
+  : p.titleType==='Residential'?['/tools/loan-calculator/','Estimate monthly loan repayments']:null;
  const sections=[...(visibility.overview||visibility.photos?[['overview','The project']]:[]),...(visibility.photos&&p.images.length?[['project-photos','Gallery']]:[]),...(visibility.details?[['details','Details']]:[]),...(visibility.units.length?[['units','Layouts']]:[]),...(visibility.facilities.length?[['amenities','Facilities']]:[]),...(visibility.location?[['location','Neighbourhood']]:[]),...(visibility.maintenance?[['maintenance','Charges']]:[]),...(visibility.showroom.length?[['showroom','Showroom']]:[])];
  return <ProjectStory key={id} previewImages={[...(visibility.photos?p.images:[]),...visibility.units.flatMap(unit=>unit.floorPlanUrls),...visibility.showroom]}>
-  <JsonLd data={projectStructuredData(p)}/>
+  <JsonLd data={projectStructuredData(p,projectDescription(p))}/>
   <ProjectGallery photos={visibility.photos?p.images:[]} name={p.name} hero={{id:p.id,location:hasProjectInfo(p.location)?p.location:null,type:p.type,mode:p.mode,price:startingPrice(p),target:sections[0]?.[0]||(visibility.enquiry?'enquiry':null)}}/>
   <ProjectSectionNav sections={sections} enquiry={visibility.enquiry}/>
-
+  {visibility.overview&&summary.length>0&&<section className="project-story-section project-cost-overview" aria-labelledby="project-cost-overview-title">
+   <h2 id="project-cost-overview-title">{p.name} at a glance</h2>
+   <Facts rows={summary}/>
+   {listedPrice&&<p>Confirm the current price and availability before making a purchase decision.</p>}
+   {purchaseTool&&<Link className="outline" href={purchaseTool[0]}>{purchaseTool[1]}</Link>}
+  </section>}
 
   {(visibility.overview||visibility.photos)&&<ProjectScrollIntroduction photos={visibility.photos?p.images:[]}>
    {visibility.overview&&<>
@@ -59,7 +91,7 @@ export default async function Project({params}){
 
   {visibility.location&&<ProjectNeighbourhood project={{id:p.id,name:p.name,location:p.location,latitude:p.latitude??null,longitude:p.longitude??null}} hasCoordinates={visibility.hasCoordinates} amenities={visibility.nearby}/>}
 
-  {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<><span className="charges-heading-line">A clearer view</span><span className="charges-heading-line">of ongoing costs.</span></>}/><Facts rows={[["Maintenance fee",hasProjectInfo(p.maintenance)?maintenanceText(p):null],["Sinking fund",sinkingFundText(p)]]}/></section>}
+  {visibility.maintenance&&<section className="project-story-section project-story-charges" id="maintenance"><SectionHeading label="PLAN THE EVERYDAY DETAILS" title={<><span className="charges-heading-line">A clearer view</span><span className="charges-heading-line">of ongoing costs.</span></>}/><Facts rows={[["Maintenance fee",hasProjectInfo(p.maintenance)?maintenanceText(p):null],["Sinking fund",sinkingFundText(p)]]}/>{!visibility.overview&&purchaseTool&&<Link className="outline" href={purchaseTool[0]}>{purchaseTool[1]}</Link>}</section>}
 
   {visibility.showroom.length>0&&<section className="project-story-section project-story-showroom" id="showroom"><SectionHeading label="STEP INSIDE" title={<>Picture the<br/>possibilities.</>}><p>A look inside the showroom.</p></SectionHeading><ShowroomGallery photos={visibility.showroom} name={p.name}/><p className="project-story-fine-print">Showroom units are for illustration only and may include furnishings and finishes not included in the sale.</p></section>}
 

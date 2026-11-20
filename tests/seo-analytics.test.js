@@ -11,6 +11,20 @@ test('canonical metadata uses the configured origin and project paths, structure
 test('analytics allowlists public paths and excludes admin, arbitrary paths and query strings',()=>{
  assert.equal(analyticsPage('/admin/','https://hauszy.example'),null);assert.equal(analyticsPage('/api/revalidate/','https://hauszy.example'),null);assert.equal(analyticsPage('/someone@example.com/','https://hauszy.example'),null);assert.equal(analyticsPage('/projects/id/','https://hauszy.example').page_title,'Project details');assert.equal(analyticsPage('/tools/loan-calculator/?income=2000','https://hauszy.example'),null);assert.equal(analyticsPage('/tools/loan-calculator/','https://hauszy.example').page_referrer,'');
 });
+test('Hauszy uses its verified origin on Vercel production when the site URL is missing',()=>{
+ const previousUrl=process.env.NEXT_PUBLIC_SITE_URL,previousVercelEnv=process.env.VERCEL_ENV;
+ try{
+  delete process.env.NEXT_PUBLIC_SITE_URL;
+  process.env.VERCEL_ENV='production';
+  assert.equal(getSiteUrl(),'https://www.hauszy.com');
+  assert.equal(pageMetadata('Projects','Penang listings','/projects/').alternates.canonical,'https://www.hauszy.com/projects/');
+  process.env.VERCEL_ENV='preview';
+  assert.equal(getSiteUrl(),null);
+ }finally{
+  if(previousUrl===undefined)delete process.env.NEXT_PUBLIC_SITE_URL;else process.env.NEXT_PUBLIC_SITE_URL=previousUrl;
+  if(previousVercelEnv===undefined)delete process.env.VERCEL_ENV;else process.env.VERCEL_ENV=previousVercelEnv;
+ }
+});
 test('explicit archive instructions prevent publishing and public rendering without blocking ordinary qualifications',()=>{
  const blocked={name:'Project',location:'Penang',status:'Published',sinkingFund:'Developerapprovalrequired;retainarchived.'};assert.ok(publicationHold(blocked));assert.equal(isPublicProject(blocked),false);assert.throws(()=>buildProject(blocked,[],[],'id'),/archived/);assert.equal(isPublicProject({status:'Published',sinkingFund:'Returns are not guaranteed.'}),true);assert.equal(isPublicProject({status:'Archived'}),false);
 });

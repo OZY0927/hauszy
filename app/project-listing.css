@@ -196,6 +196,8 @@ body:has(.projects-page)>header.hz-header:not(.is-scrolled){background:transpare
 .projects-page #project-listing-title>span{display:block;font-weight:800}
 .projects-page #project-listing-title .listing-title-lead{font-size:clamp(24px,3vw,40px);line-height:1.25;letter-spacing:-.035em;margin-bottom:8px}
 .projects-page #project-listing-title .listing-title-place{font-size:clamp(48px,8vw,108px);line-height:1.08;letter-spacing:-.055em}
+.projects-page .all-projects-heading>.outline{margin-top:16px}
+.catalogue-page-nav{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
 
 /* Grid view: 3:4 cards, three to a row from tablet width up, inset from the page edges with extra side space
    (about 86px a side at 1440px) so the larger cards sit in a centred column. */
